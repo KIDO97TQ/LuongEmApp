@@ -1,0 +1,711 @@
+﻿<style >
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="2.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+        animation: sparkle 20s linear infinite;
+        pointer-events: none;
+    }
+
+@keyframes sparkle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(255, 182, 193, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.8);
+    border: 3px solid rgba(255, 192, 203, 0.5);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+}
+
+    .container::before {
+        content: "🌸";
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 30px;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .container::after {
+        content: "✨";
+        position: absolute;
+        bottom: -10px;
+        left: -10px;
+        font-size: 25px;
+        animation: bounce 2s ease-in-out infinite 1s;
+    }
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+
+    66% {
+        transform: translateY(-5px) rotate(-1deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.3) rotate(15deg);
+    }
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    color: #ff69b4;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.5);
+    animation: fadeInDown 0.8s ease-out 0.2s both;
+    text-align: center;
+    position: relative;
+}
+
+    .section-title::before {
+        content: "🎀 ";
+        font-size: 24px;
+    }
+
+    .section-title::after {
+        content: " 🎀";
+        font-size: 24px;
+    }
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    margin-bottom: 25px;
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+    .form-group:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .form-group:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .form-group:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .form-group:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.custom-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+    .custom-checkbox input {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: linear-gradient(135deg, #ffb3d9, #ff99cc);
+    border: 2px solid #ff69b4;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.custom-checkbox:hover .checkmark {
+    background: linear-gradient(135deg, #ff99cc, #ff66b3);
+    transform: scale(1.2) rotate(10deg);
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background: linear-gradient(135deg, #ff1493, #ff69b4);
+    border-color: #ff1493;
+    animation: heartBeat 0.6s ease;
+}
+
+@keyframes heartBeat {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.3) rotate(10deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    75% {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkmark:after {
+    content: "💖";
+    position: absolute;
+    display: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+    animation: heartPop 0.3s ease;
+}
+
+@keyframes heartPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.date-input {
+    background: linear-gradient(135deg, #fff0f5, #ffe4e6);
+    border: 3px solid #ffb3d9;
+    border-radius: 20px;
+    padding: 15px 20px;
+    color: #d63384;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 220px;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+}
+
+    .date-input:focus {
+        outline: none;
+        border-color: #ff69b4;
+        background: linear-gradient(135deg, #ffe4e6, #ffd0dc);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4), 0 0 0 5px rgba(255, 105, 180, 0.1);
+        animation: wiggle 0.5s ease;
+    }
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: translateY(-5px) scale(1.05) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-5px) scale(1.05) rotate(2deg);
+    }
+
+    75% {
+        transform: translateY(-5px) scale(1.05) rotate(-2deg);
+    }
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.radio-container {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+    .radio-container input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.radio-button {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #ffb3d9;
+    border-radius: 50%;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #fff0f5, #ffe4e6);
+    box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+}
+
+.radio-container:hover .radio-button {
+    border-color: #ff69b4;
+    transform: scale(1.2) rotate(10deg);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+}
+
+.radio-container input:checked ~ .radio-button {
+    border-color: #ff1493;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    animation: starSpin 0.6s ease;
+}
+
+@keyframes starSpin {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(1.4) rotate(180deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+.radio-button::after {
+    content: "⭐";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 12px;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+}
+
+.radio-container input:checked ~ .radio-button::after {
+    transform: translate(-50%, -50%) scale(1);
+    animation: starTwinkle 0.5s ease;
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+}
+
+.label {
+    color: #d63384;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(255, 182, 193, 0.3);
+}
+
+.radio-container:hover .label,
+.checkbox-container:hover .label {
+    color: #ff1493;
+    transform: scale(1.05);
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.4);
+}
+
+.query-section {
+    background: linear-gradient(135deg, #fff5f8, #ffe0e6);
+    border-radius: 25px;
+    padding: 30px;
+    border: 3px solid rgba(255, 182, 193, 0.5);
+    animation: slideInRight 0.8s ease-out 0.5s both;
+    box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    position: relative;
+}
+
+    .query-section::before {
+        content: "🦄";
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 25px;
+        animation: unicornDance 3s ease-in-out infinite;
+    }
+
+@keyframes unicornDance {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotate(10deg) scale(1.1);
+    }
+
+    50% {
+        transform: rotate(-10deg) scale(1.2);
+    }
+
+    75% {
+        transform: rotate(5deg) scale(1.1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.query-title {
+    color: #ff1493;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.5);
+    position: relative;
+}
+
+    .query-title::before {
+        content: "🌟 ";
+    }
+
+    .query-title::after {
+        content: " 🌟";
+    }
+
+.search-button {
+    background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 25px auto;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+    animation: rainbowShimmer 3s ease-in-out infinite;
+}
+
+@keyframes rainbowShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.search-button:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.6);
+}
+
+.search-button:active {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.search-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.6s ease;
+    transform: translate(-50%, -50%);
+}
+
+.search-button:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.floating-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    background: linear-gradient(45deg, #ff69b4, #ffb3d9, #ff1493);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+    .particle:nth-child(1) {
+        width: 12px;
+        height: 12px;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+        width: 18px;
+        height: 18px;
+        left: 20%;
+        animation-delay: 1s;
+    }
+
+    .particle:nth-child(3) {
+        width: 10px;
+        height: 10px;
+        left: 30%;
+        animation-delay: 2s;
+    }
+
+    .particle:nth-child(4) {
+        width: 15px;
+        height: 15px;
+        left: 40%;
+        animation-delay: 3s;
+    }
+
+    .particle:nth-child(5) {
+        width: 8px;
+        height: 8px;
+        left: 50%;
+        animation-delay: 4s;
+    }
+
+    .particle:nth-child(6) {
+        width: 16px;
+        height: 16px;
+        left: 60%;
+        animation-delay: 5s;
+    }
+
+    .particle:nth-child(7) {
+        width: 11px;
+        height: 11px;
+        left: 70%;
+        animation-delay: 0.5s;
+    }
+
+    .particle:nth-child(8) {
+        width: 14px;
+        height: 14px;
+        left: 80%;
+        animation-delay: 1.5s;
+    }
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10%, 90% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-10vh) rotate(180deg);
+    }
+}
+
+.glow {
+    animation: cuteGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes cuteGlow {
+    from {
+        box-shadow: 0 0 20px rgba(255, 105, 180, 0.5), 0 0 40px rgba(255, 182, 193, 0.3);
+    }
+
+    to {
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.8), 0 0 60px rgba(255, 182, 193, 0.5);
+    }
+}
+
+/* Hiệu ứng kawaii hearts */
+.kawaii-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.heart {
+    position: absolute;
+    font-size: 20px;
+    color: rgba(255, 182, 193, 0.6);
+    animation: floatHeart 6s ease-in-out infinite;
+}
+
+    .heart:nth-child(1) {
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .heart:nth-child(2) {
+        left: 20%;
+        animation-delay: 0.8s;
+    }
+
+    .heart:nth-child(3) {
+        left: 30%;
+        animation-delay: 1.6s;
+    }
+
+    .heart:nth-child(4) {
+        left: 40%;
+        animation-delay: 2.4s;
+    }
+
+    .heart:nth-child(5) {
+        left: 60%;
+        animation-delay: 3.2s;
+    }
+
+    .heart:nth-child(6) {
+        left: 70%;
+        animation-delay: 4s;
+    }
+
+    .heart:nth-child(7) {
+        left: 80%;
+        animation-delay: 4.8s;
+    }
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(80vh) scale(1);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translateY(20vh) scale(1);
+    }
+
+    100% {
+        transform: translateY(-20vh) scale(0);
+        opacity: 0;
+    }
+}
+
+</style >

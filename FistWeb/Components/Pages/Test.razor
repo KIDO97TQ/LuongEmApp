@@ -1,0 +1,28 @@
+﻿@page "/test"
+@rendermode InteractiveServer
+@inject ILogger<Test> Logger
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button type="button" @onclick="TimKiem" class="btn btn-primary mt-2">🔍 Tìm</button>
+
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    private void TimKiem()
+    {
+        Console.WriteLine("TimKiem called");
+        Logger.LogInformation("TimKiem called from logger1");
+    }
+}
