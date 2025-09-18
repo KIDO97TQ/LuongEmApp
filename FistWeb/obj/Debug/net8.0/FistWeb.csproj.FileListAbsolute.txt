@@ -51,3 +51,4 @@ D:\Bak_DESKTOP\FREE CODE\FistWeb\FistWeb\obj\Debug\net8.0\refint\FistWeb.dll
 D:\Bak_DESKTOP\FREE CODE\FistWeb\FistWeb\obj\Debug\net8.0\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\FistWeb\FistWeb\obj\Debug\net8.0\FistWeb.genruntimeconfig.cache
 D:\Bak_DESKTOP\FREE CODE\FistWeb\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
+D:\Bak_DESKTOP\FREE CODE\FistWeb\FistWeb\obj\Debug\net8.0\FistWeb.sourcelink.json
