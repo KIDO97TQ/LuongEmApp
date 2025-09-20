@@ -3,32 +3,36 @@
   "WorkspaceRootPath": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\pages\\listorder.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\listorder.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\pages\\doanhthu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\doanhthu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\wwwroot\\css\\csslistthuedo.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\wwwroot\\css\\csslistthuedo.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\wwwroot\\css\\csssum.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\wwwroot\\css\\csssum.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\wwwroot\\js\\charsumjs.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\wwwroot\\js\\charsumjs.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\data\\services\\callservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\data\\services\\callservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\fistweb\\fistweb\\wwwroot\\js\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\wwwroot\\js\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,89 +46,107 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\appsettings.json",
-              "RelativeDocumentMoniker": "FistWeb\\appsettings.json",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\appsettings.json",
-              "RelativeToolTip": "FistWeb\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-18T08:56:47.904Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Program.cs",
-              "RelativeDocumentMoniker": "FistWeb\\Program.cs",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Program.cs*",
-              "RelativeToolTip": "FistWeb\\Program.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAswBUAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T08:48:00.383Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "CharSumJs.js",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
-              "RelativeDocumentMoniker": "FistWeb\\wwwroot\\js\\CharSumJs.js",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
-              "RelativeToolTip": "FistWeb\\wwwroot\\js\\CharSumJs.js",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAQwHEAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-09-17T03:39:20.743Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Home.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Home.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\Home.razor",
-              "RelativeToolTip": "FistWeb\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-10T07:56:09.548Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "CssSum.css",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
               "RelativeDocumentMoniker": "FistWeb\\wwwroot\\css\\CssSum.css",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
               "RelativeToolTip": "FistWeb\\wwwroot\\css\\CssSum.css",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAABEBAAAAAAAAAAAEwCQBAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-09-12T11:22:06.502Z"
+              "WhenOpened": "2025-09-20T12:40:36.853Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ListOrder.razor",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\ListOrder.razor",
+              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\ListOrder.razor",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\ListOrder.razor",
+              "RelativeToolTip": "FistWeb\\Components\\Pages\\ListOrder.razor",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAAAG8AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-20T03:52:22.696Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DoanhThu.razor",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\DoanhThu.razor",
+              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\DoanhThu.razor",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\DoanhThu.razor",
+              "RelativeToolTip": "FistWeb\\Components\\Pages\\DoanhThu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-20T07:41:06.135Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "CssListThueDo.css",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+              "RelativeDocumentMoniker": "FistWeb\\wwwroot\\css\\CssListThueDo.css",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+              "RelativeToolTip": "FistWeb\\wwwroot\\css\\CssListThueDo.css",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAUwHIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-09-20T07:10:05.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CallService.cs",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Data\\Services\\CallService.cs",
+              "RelativeDocumentMoniker": "FistWeb\\Data\\Services\\CallService.cs",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Data\\Services\\CallService.cs",
+              "RelativeToolTip": "FistWeb\\Data\\Services\\CallService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAmwH4AAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-20T03:28:14.692Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "app.js",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+              "RelativeDocumentMoniker": "FistWeb\\wwwroot\\js\\app.js",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+              "RelativeToolTip": "FistWeb\\wwwroot\\js\\app.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-09-19T09:47:37.414Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Home.razor",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Home.razor",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "FistWeb\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-19T06:44:15.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "App.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\App.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\App.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\App.razor",
               "RelativeToolTip": "FistWeb\\Components\\App.razor",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABAAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB0AAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-10T08:45:26.466Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MainLayout.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Layout\\MainLayout.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Layout\\MainLayout.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\Components\\Layout\\MainLayout.razor",
-              "RelativeToolTip": "FistWeb\\Components\\Layout\\MainLayout.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-10T06:09:39.92Z"
+              "WhenOpened": "2025-09-10T08:45:26.466Z",
+              "EditorCaption": ""
             }
           ]
         }

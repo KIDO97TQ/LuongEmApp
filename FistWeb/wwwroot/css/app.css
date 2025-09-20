@@ -29,4 +29,9 @@
     min-width: 200px;
 }
 
+.nav-link .bi {
+    font-size: 1.4rem;
+    line-height: 1; /* bỏ khoảng dư trên/dưới */
+    vertical-align: middle; /* đảm bảo icon căn giữa dòng */
+}
 </style >
