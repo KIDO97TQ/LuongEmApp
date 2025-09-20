@@ -1,6 +1,7 @@
-﻿using FistWeb.Components.DTOs;
+﻿using FistWeb.Data.DTOs;
 using FistWeb.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace FistWeb.Data
 {
@@ -28,6 +29,8 @@ namespace FistWeb.Data
                 .ToTable("orders", "clothings");
 
             modelBuilder.Entity<DoanhThuThueDoDto>().HasNoKey();
+            modelBuilder.Entity<RentalSummary>().HasNoKey();
+            modelBuilder.Entity<InfoThueDoDto>().HasNoKey();
 
         }
     }

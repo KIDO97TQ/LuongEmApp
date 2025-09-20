@@ -18,6 +18,8 @@ body {
     flex-wrap: wrap;
     margin: auto;
     padding: auto;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 /* Sidebar */
@@ -31,7 +33,7 @@ body {
 }
 
 .logo {
-    padding: 20px;
+    padding: 40px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -188,6 +190,7 @@ body {
     position: relative;
     overflow: hidden;
     height: 100%;
+    width: 750px
 }
 
     .chart-card::before {
@@ -220,9 +223,10 @@ body {
     height: 100%;
 }
 
+
 .chart-container {
     position: relative;
-    height: 250px;
+    height: 280px;
     margin-bottom: 20px;
     align-items: flex-start;
 }
@@ -260,6 +264,7 @@ body {
 
 /* Staff Statistics */
 .staff-section {
+    /*width: auto;  */
     background: white;
     border-radius: 20px;
     padding: 25px;
@@ -308,7 +313,7 @@ body {
     }
 
 .staff-chart {
-    height: 250px;
+    height: 320px;
     position: relative;
 }
 

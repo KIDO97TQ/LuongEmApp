@@ -1,0 +1,156 @@
+﻿@page "/oderlist"
+@using Microsoft.EntityFrameworkCore
+@using System.Data
+@using FistWeb.Data.Services
+@inject Data.AppDbContext Db
+@inject GetListThueDo GetListThueDo
+@rendermode InteractiveServer
+
+
+<div class="container">
+    <div class="content">
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab1">WorkLog Report</button>
+            <button class="tab-btn" data-tab="tab2">WorkLogs</button>
+            <button class="tab-btn" data-tab="tab3">Analytics</button>
+        </div>
+
+        <div class="tab-content active" id="tab1">
+            <h3>
+                📊 WorkLog Report
+                <select class="control-select" value="type" @onchange="OnTypeChanged">
+                    <option>All</option>
+                    <option>Đã trả</option>
+                    <option>Chưa trả</option>
+                    <option>Bị hủy</option>
+                </select>
+                <select class="control-select" value="month" @onchange="OnMonthChanged">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                    }
+                </select>
+            </h3>
+            <div class="chart-order">
+                @*Hiện lên table*@
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Họ tên</th>
+                            <th>SĐT/Facebook</th>
+                            <th>Ngày mượn</th>
+                            <th>Ngày trả</th>
+                            <th>Loại sản phẩm</th>
+                            <th>Size</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Giá/ngày</th>
+                            <th>Tiền cọc</th>
+                            <th>Phát sinh</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (InfoThueDoDto != null && InfoThueDoDto.Any())
+                        {
+                            @foreach (var item in InfoThueDoDto)
+                            {
+                                <tr>
+                                    <td>@item.fullname</td>
+                                    <td>@item.facebookphone</td>
+                                    <td>@item.borrowdate.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.returndate?.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.type_production</td>
+                                    <td>@item.size</td>
+                                    <td>@item.qty</td>
+                                    <td>@item.totalamount</td>
+                                    <td>@item.priceperday</td>
+                                    <td>@item.moneycoc</td>
+                                    <td>@item.tienphatsinh</td>
+                                    <td>@item.status</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <p>⏳ Đang tải dữ liệu...</p>
+                            
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab2">
+            <h3>📝 WorkLogs</h3>
+            <p>Nội dung quản lý log công việc...</p>
+        </div>
+
+        <div class="tab-content" id="tab3">
+            <h3>📈 Analytics</h3>
+            <p>Nội dung biểu đồ phân tích...</p>
+        </div>
+        <script>
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+            // đổi active trên nút
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // đổi nội dung hiển thị
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(this.dataset.tab).classList.add('active');
+            });
+            });
+        </script>
+    </div>
+</div>
+
+
+@code {
+    private List<Data.DTOs.InfoThueDoDto> InfoThueDoDto;
+    private string type = "ALL";
+    private int month;
+    private int year;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.month = int.Parse(DateTime.Now.Month.ToString());
+        this.year = int.Parse(DateTime.Now.Year.ToString());
+
+        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
+    }
+
+    private async Task OnTypeChanged(ChangeEventArgs e)
+    {
+      string kieu = e.Value.ToString();
+        type = kieu switch
+        {
+            "All" => "ALL",
+            "Đã trả" => "RETURN",
+            "Chưa trả" => "BORROW",
+            "Bị hủy" => "CANCEL",
+            _ => "ALL"
+        };
+
+        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
+        StateHasChanged();
+    }
+
+    private async Task OnMonthChanged(ChangeEventArgs e)
+    {
+        month = int.Parse(e.Value.ToString());
+
+        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // await TimKiem();
+        }
+    }
+}
