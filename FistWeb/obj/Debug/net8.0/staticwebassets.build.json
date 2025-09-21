@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "EPt+LwJXkftg7TibvhQISxFTF/U/Yn+3yt2kVkKFL6c=",
+  "Hash": "aEV/CrtCiMVj3QKXw6TXaUg+QG33aqhKtBvPcVyszB8=",
   "Source": "FistWeb",
   "BasePath": "_content/FistWeb",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "FistWeb\\wwwroot",
       "Source": "FistWeb",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "Pattern": "**"
     }
@@ -248,10 +248,10 @@
       "OriginalItemSpec": "C:\\Users\\kido_nguyen\\.nuget\\packages\\chartjs.blazor\\1.1.0\\staticwebassets\\tsconfig.json"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
       "SourceId": "FistWeb",
       "SourceType": "Computed",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "FistWeb#[.{fingerprint}]?.styles.css",
       "AssetKind": "All",
@@ -266,13 +266,13 @@
       "Integrity": "1WpMwqvCK5266VZst7Id2RWM2UF0DipkrP2NH8Vbv9s=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css"
+      "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "SourceId": "FistWeb",
       "SourceType": "Computed",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "FistWeb#[.{fingerprint}]!.bundle.scp.css",
       "AssetKind": "All",
@@ -287,13 +287,13 @@
       "Integrity": "1WpMwqvCK5266VZst7Id2RWM2UF0DipkrP2NH8Vbv9s=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css"
+      "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "bootstrap/bootstrap.min#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -304,17 +304,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "bpk8xqwxhs",
-      "Integrity": "z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg=",
+      "Fingerprint": "6gzpyzhau4",
+      "Integrity": "SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "bootstrap/bootstrap.min.css#[.{fingerprint}]?.map",
       "AssetKind": "All",
@@ -332,10 +332,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\app.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "css/app#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -353,10 +353,10 @@
       "OriginalItemSpec": "wwwroot\\css\\app.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "css/CssListThueDo#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -367,17 +367,17 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "v80mukd58n",
-      "Integrity": "QZdr6B7H5+WaijZEYsuOuh63ahaJGL4dbo5gI9pBB4c=",
+      "Fingerprint": "3i5j8sxwcx",
+      "Integrity": "m6r93iyXPLhFqIaxCGLfPTaap7ZJ03bD4HJTx2eYgTw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\CssListThueDo.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssSum.css",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "css/CssSum#[.{fingerprint}]?.css",
       "AssetKind": "All",
@@ -395,10 +395,10 @@
       "OriginalItemSpec": "wwwroot\\css\\CssSum.css"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\favicon.png",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "favicon#[.{fingerprint}]?.png",
       "AssetKind": "All",
@@ -416,10 +416,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.png"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "js/app#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -437,10 +437,10 @@
       "OriginalItemSpec": "wwwroot\\js\\app.js"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "js/CharSumJs#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -458,10 +458,10 @@
       "OriginalItemSpec": "wwwroot\\js\\CharSumJs.js"
     },
     {
-      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\ListThueDo.js",
+      "Identity": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",
       "SourceId": "FistWeb",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\",
+      "ContentRoot": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\",
       "BasePath": "_content/FistWeb",
       "RelativePath": "js/ListThueDo#[.{fingerprint}]?.js",
       "AssetKind": "All",
@@ -888,8 +888,8 @@
       ]
     },
     {
-      "Route": "bootstrap/bootstrap.min.bpk8xqwxhs.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Route": "bootstrap/bootstrap.min.6gzpyzhau4.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -898,7 +898,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "162720"
+          "Value": "162726"
         },
         {
           "Name": "Content-Type",
@@ -906,11 +906,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg=\""
+          "Value": "\"SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -920,7 +920,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "bpk8xqwxhs"
+          "Value": "6gzpyzhau4"
         },
         {
           "Name": "label",
@@ -928,13 +928,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg="
+          "Value": "sha256-SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0="
         }
       ]
     },
     {
       "Route": "bootstrap/bootstrap.min.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -943,7 +943,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "162720"
+          "Value": "162726"
         },
         {
           "Name": "Content-Type",
@@ -951,11 +951,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg=\""
+          "Value": "\"SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -965,13 +965,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-z8OR40MowJ8GgK6P89Y+hiJK5+cclzFHzLhFQLL92bg="
+          "Value": "sha256-SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0="
         }
       ]
     },
     {
       "Route": "bootstrap/bootstrap.min.css.8inm30yfxf.map",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -992,7 +992,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1016,7 +1016,7 @@
     },
     {
       "Route": "bootstrap/bootstrap.min.css.map",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1037,7 +1037,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1053,7 +1053,7 @@
     },
     {
       "Route": "css/app.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\app.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1074,7 +1074,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 03:15:56 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1090,7 +1090,7 @@
     },
     {
       "Route": "css/app.urx2oqusk1.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\app.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1111,7 +1111,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 03:15:56 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1134,8 +1134,8 @@
       ]
     },
     {
-      "Route": "css/CssListThueDo.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+      "Route": "css/CssListThueDo.3i5j8sxwcx.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1144,7 +1144,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "2294"
+          "Value": "3436"
         },
         {
           "Name": "Content-Type",
@@ -1152,48 +1152,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"QZdr6B7H5+WaijZEYsuOuh63ahaJGL4dbo5gI9pBB4c=\""
+          "Value": "\"m6r93iyXPLhFqIaxCGLfPTaap7ZJ03bD4HJTx2eYgTw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:41:36 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-QZdr6B7H5+WaijZEYsuOuh63ahaJGL4dbo5gI9pBB4c="
-        }
-      ]
-    },
-    {
-      "Route": "css/CssListThueDo.v80mukd58n.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "2294"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"QZdr6B7H5+WaijZEYsuOuh63ahaJGL4dbo5gI9pBB4c=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:41:36 GMT"
+          "Value": "Sun, 21 Sep 2025 13:58:49 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1203,7 +1166,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "v80mukd58n"
+          "Value": "3i5j8sxwcx"
         },
         {
           "Name": "label",
@@ -1211,13 +1174,50 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-QZdr6B7H5+WaijZEYsuOuh63ahaJGL4dbo5gI9pBB4c="
+          "Value": "sha256-m6r93iyXPLhFqIaxCGLfPTaap7ZJ03bD4HJTx2eYgTw="
+        }
+      ]
+    },
+    {
+      "Route": "css/CssListThueDo.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3436"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"m6r93iyXPLhFqIaxCGLfPTaap7ZJ03bD4HJTx2eYgTw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 21 Sep 2025 13:58:49 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-m6r93iyXPLhFqIaxCGLfPTaap7ZJ03bD4HJTx2eYgTw="
         }
       ]
     },
     {
       "Route": "css/CssSum.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssSum.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1238,7 +1238,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 09:48:09 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1254,7 +1254,7 @@
     },
     {
       "Route": "css/CssSum.e3ubktnkfb.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssSum.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1275,7 +1275,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 09:48:09 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1299,7 +1299,7 @@
     },
     {
       "Route": "favicon.ifv42okdf2.png",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\favicon.png",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1320,7 +1320,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1344,7 +1344,7 @@
     },
     {
       "Route": "favicon.png",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\favicon.png",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1365,7 +1365,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Sep 2025 02:25:59 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1381,7 +1381,7 @@
     },
     {
       "Route": "FistWeb.bundle.scp.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1402,7 +1402,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:38:46 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:32 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1418,7 +1418,7 @@
     },
     {
       "Route": "FistWeb.nh3i30h3zn.bundle.scp.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1439,7 +1439,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:38:46 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:32 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1463,7 +1463,7 @@
     },
     {
       "Route": "FistWeb.nh3i30h3zn.styles.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1484,7 +1484,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:38:46 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:32 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1508,7 +1508,7 @@
     },
     {
       "Route": "FistWeb.styles.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1529,7 +1529,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:38:46 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:32 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1545,7 +1545,7 @@
     },
     {
       "Route": "js/app.4h29l1edar.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1566,7 +1566,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 03:13:02 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1590,7 +1590,7 @@
     },
     {
       "Route": "js/app.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1611,7 +1611,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 03:13:02 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1627,7 +1627,7 @@
     },
     {
       "Route": "js/CharSumJs.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1648,7 +1648,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 17 Sep 2025 11:13:10 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1664,7 +1664,7 @@
     },
     {
       "Route": "js/CharSumJs.zpiwlygu50.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1685,7 +1685,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 17 Sep 2025 11:13:10 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1709,7 +1709,7 @@
     },
     {
       "Route": "js/ListThueDo.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\ListThueDo.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1730,7 +1730,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:03:43 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1746,7 +1746,7 @@
     },
     {
       "Route": "js/ListThueDo.nbe50fqdak.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\ListThueDo.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1767,7 +1767,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 20 Sep 2025 12:03:43 GMT"
+          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
         },
         {
           "Name": "Cache-Control",

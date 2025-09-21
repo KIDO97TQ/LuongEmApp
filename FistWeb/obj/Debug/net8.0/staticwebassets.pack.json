@@ -1,43 +1,43 @@
 {
   "Files": [
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "PackagePath": "staticwebassets\\FistWeb.nh3i30h3zn.bundle.scp.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
       "PackagePath": "staticwebassets\\css\\CssListThueDo.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\CssSum.css",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssSum.css",
       "PackagePath": "staticwebassets\\css\\CssSum.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\css\\app.css",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\favicon.png",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\CharSumJs.js",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "PackagePath": "staticwebassets\\js\\CharSumJs.js"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\ListThueDo.js",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",
       "PackagePath": "staticwebassets\\js\\ListThueDo.js"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\FistWeb\\FistWeb\\wwwroot\\js\\app.js",
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
       "PackagePath": "staticwebassets\\js\\app.js"
     },
     {
