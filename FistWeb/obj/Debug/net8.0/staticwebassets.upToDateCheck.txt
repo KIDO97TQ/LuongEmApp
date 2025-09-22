@@ -1,9 +1,11 @@
 wwwroot\bootstrap\bootstrap.min.css
 wwwroot\bootstrap\bootstrap.min.css.map
 wwwroot\css\app.css
-wwwroot\css\CssListThueDo.css
-wwwroot\css\CssSum.css
 wwwroot\favicon.png
+wwwroot\image\25803.jpg
+wwwroot\image\mountain.jpg
+wwwroot\image\R.jpg
 wwwroot\js\app.js
 wwwroot\js\CharSumJs.js
 wwwroot\js\ListThueDo.js
+wwwroot\js\Quanlydo.js

@@ -9,78 +9,60 @@
 @inject IThongKeService ThongKeService
 
 
-<div class="container">
-    <div class="content">
-        @* <h1 class="page-title">Tổng hợp doanh thu</h1> *@
-
-        <!-- Charts Grid -->
-        <div class="dashboard-grid">
-            <!-- Tổng doanh thu tháng -->
-            <div class="chart-card">
-                <h3 class="card-title">
-                    📈 Tổng doanh thu tháng @month
-                    <div class="staff-controls">
-                        <select class="control-select" value="Month" @onchange="OnMonthChanged">
-                            @for (int i = 1; i <= 12; i++)
-                            {
-                                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                            }
-                        </select>
-                    </div>
-                </h3>
-                <div class="chart-wrapper">
-                    <div class="chart-container">
-                        <canvas id="Doanhthuthang"></canvas>
-                        <h4 class="chart-legend">Tổng doanh thu tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tổng doanh thu năm -->
-            <div class="chart-card">
-                <h3 class="card-title">
-                    📈 Tổng doanh thu năm @year
-                    <div class="staff-controls">
-                        @* <select class="control-select" @bind="year" @bind:after="async () => await OnYearChanged()"> *@
-                        <select class="control-select" value="year" @onchange="OnYearChanged">
-                            <option value="@yearFix1">@yearFix1</option>
-                            <option value="@yearFix0">@yearFix0</option>
-                            <option value="@yearFix2">@yearFix2</option>
-                        </select>
-                    </div>
-                </h3>
-                <div class="chart-container">
-                    <canvas id="Doanhthunam"></canvas>
-                    <h4 class="chart-legend">Tổng doanh thu năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
-                </div>
+<div class="dashboard-row">
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                📈 Tổng doanh thu tháng @month
+            </h3>
+            <div class="staff-controls">
+                <select class="control-select" value="Month" @onchange="OnMonthChanged">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                    }
+                </select>
             </div>
         </div>
-
-        <!-- Tổng doanh thu theo sản phẩm trong năm -->
-        <div class="staff-section">
-            <div class="staff-header">
-                <h3 class="card-title">
-                    📈 Tổng doanh thu theo sản phẩm trong năm @year
-                </h3>
-                @* <div class="staff-controls">
-                    <select class="control-select">
-                        <option>Plant-Cust</option>
-                    </select>
-                    <select class="control-select">
-                        <option>VN2</option>
-                    </select>
-                    <select class="control-select">
-                        <option>A31</option>
-                    </select>
-                </div> *@
+        <div class="chart-wrapper">
+            <div class="chart-container">
+                <canvas id="Doanhthuthang"></canvas>
+                <h4 class="chart-legend">Tổng doanh thu tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
             </div>
-            <div class="staff-chart">
-                <canvas id="DoanhthunamtheoSP"></canvas>
+        </div>
+    </div>
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                📈 Tổng doanh thu năm @year
+            </h3>
+            <div class="staff-controls">
+                <select class="control-select" value="year" @onchange="OnYearChanged">
+                    <option value="@yearFix1">@yearFix1</option>
+                    <option value="@yearFix0">@yearFix0</option>
+                    <option value="@yearFix2">@yearFix2</option>
+                </select>
             </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="Doanhthunam"></canvas>
+            <h4 class="chart-legend">Tổng doanh thu năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
         </div>
     </div>
 </div>
 
+<div class="dashboard-row">
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                📈 Tổng doanh thu theo sản phẩm trong năm @year
+            </h3>
+        </div>
+        <div class="staff-chart">
+            <canvas id="DoanhthunamtheoSP"></canvas>
+        </div>
+    </div>
+</div>
 
 @code {
     private DateTime selectedDate = DateTime.Today;
@@ -113,10 +95,9 @@
 
     private async Task OnMonthChanged(ChangeEventArgs e)
     {
-        int nam = int.Parse(this.year);
+        int nam = int.Parse(DateTime.Now.Year.ToString());
         int thang = int.Parse(e.Value.ToString());
         month = thang.ToString("D2");
-        year = nam.ToString();
 
         var dataDoanhthuthang = await Getdoanhthuthang(nam, thang);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");

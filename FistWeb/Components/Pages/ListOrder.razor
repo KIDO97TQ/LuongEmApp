@@ -5,118 +5,130 @@
 @inject Data.AppDbContext Db
 @inject GetListThueDo GetListThueDo
 @rendermode InteractiveServer
+@inject IJSRuntime JS
 
 
-<div class="container">
-    <div class="content">
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab1">📝 Danh sách Mượn - Trả đồ</button>
+    <button class="tab-btn" data-tab="tab2">Mượn đồ</button>
+    <button class="tab-btn" data-tab="tab3">Trả đồ</button>
+</div>
 
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="tab1">📝 Danh sách Mượn - Trả đồ</button>
-            <button class="tab-btn" data-tab="tab2">Mượn đồ</button>
-            <button class="tab-btn" data-tab="tab3">Trả đồ</button>
-        </div>
-
-        <div class="tab-content active" id="tab1">
-            <h3>
-                Trạng Thái
-                <select class="control-select" value="type" @onchange="OnTypeChanged">
-                    <option>All</option>
-                    <option>Đã trả</option>
-                    <option>Chưa trả</option>
-                    <option>Bị hủy</option>
-                </select>
-                Tháng
-                <select class="control-select" value="month" @onchange="OnMonthChanged">
-                    @for (int i = 1; i <= 12; i++)
+<div class="tab-content active" id="tab1">
+    <h3>
+        Trạng Thái
+        <select class="control-select" value="type" @onchange="OnTypeChanged">
+            <option>All</option>
+            <option>Đã trả</option>
+            <option>Chưa trả</option>
+            <option>Bị hủy</option>
+        </select>
+        Tháng
+        <select class="control-select" value="month" @onchange="OnMonthChanged">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+            }
+        </select>
+    </h3>
+    <div class="chart-order">
+        @*Hiện lên table*@
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ tên</th>
+                    <th>SĐT/Facebook</th>
+                    <th>Ngày mượn</th>
+                    <th>Ngày trả</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Size</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Giá/ngày</th>
+                    <th>Tiền cọc</th>
+                    <th>Phát sinh</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (currentPageData != null && currentPageData.Any())
+                {
+                    int count = (currentPage - 1) * rowsPerPage + 1;
+                    foreach (var item in currentPageData)
                     {
-                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                    }
-                </select>
-            </h3>
-            <div class="chart-order">
-                @*Hiện lên table*@
-                <table class="table-custom">
-                    <thead>
                         <tr>
-                            <th>STT</th>
-                            <th>Họ tên</th>
-                            <th>SĐT/Facebook</th>
-                            <th>Ngày mượn</th>
-                            <th>Ngày trả</th>
-                            <th>Loại sản phẩm</th>
-                            <th>Size</th>
-                            <th>Số lượng</th>
-                            <th>Thành tiền</th>
-                            <th>Giá/ngày</th>
-                            <th>Tiền cọc</th>
-                            <th>Phát sinh</th>
-                            <th>Trạng thái</th>
+                            <td data-label="STT">@count</td>
+                            <td data-label="Họ tên">@item.fullname</td>
+                            <td data-label="SĐT/Facebook">@item.facebookphone</td>
+                            <td data-label="Ngày mượn">@item.borrowdate.ToString("dd/MM/yyyy")</td>
+                            <td data-label="Ngày trả">@item.returndate?.ToString("dd/MM/yyyy")</td>
+                            <td data-label="Loại sản phẩm">@item.type_production</td>
+                            <td data-label="Size">@item.size</td>
+                            <td data-label="Số lượng">@item.qty</td>
+                            <td data-label="Thành tiền">@item.totalamount</td>
+                            <td data-label="Giá/ngày">@item.priceperday</td>
+                            <td data-label="Tiền cọc">@item.moneycoc</td>
+                            <td data-label="Phát sinh">@item.tienphatsinh</td>
+                            <td data-label="Trạng thái">@item.status</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @if (InfoThueDoDto != null && InfoThueDoDto.Any())
-                        {
-                            int count = (currentPage - 1) * pageSize + 1;
-                            foreach (var item in PagedData)
-                            {
-                                <tr>
-                                    <td>@count</td>
-                                    <td>@item.fullname</td>
-                                    <td>@item.facebookphone</td>
-                                    <td>@item.borrowdate.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.returndate?.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.type_production</td>
-                                    <td>@item.size</td>
-                                    <td>@item.qty</td>
-                                    <td>@item.totalamount</td>
-                                    <td>@item.priceperday</td>
-                                    <td>@item.moneycoc</td>
-                                    <td>@item.tienphatsinh</td>
-                                    <td>@item.status</td>
-                                </tr>
-                                count++;
-                            }
-                        }
-                        else if (checkNull)
-                        {
-                            <tr>
-                                <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="13" style="text-align:center">⏳ Đang tải dữ liệu...</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        count++;
+                    }
+                }
+                else if (checkNull)
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="13" style="text-align:center">⏳ Đang tải dữ liệu...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-        <!-- Page control -->
-        <div class="pagination">
-            <button @onclick="PrevPage" disabled="@(!CanPrev)">
-                <i class="fa-solid fa-arrow-left"></i> Trước
-            </button>
-            <span>Trang @currentPage / @totalPages</span>
-            <button @onclick="NextPage" disabled="@(!CanNext)">
-                Sau <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
+<!-- Page control -->
+<!-- tab1 -->
+<div class="pagination">
+    <button @onclick="PrevPage" disabled="@(!CanPrev)">
+        <i class="fa-solid fa-arrow-left"></i> Trước
+    </button>
+    <span>Trang @currentPage / @totalPages</span>
+    <button @onclick="NextPage" disabled="@(!CanNext)">
+        Sau <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
 
-        <div class="tab-content" id="tab2">
-            <h3>📝 Thuê đồ </h3>
-            <p>Nội dung quản lý log công việc...</p>
-        </div>
+<!-- tab2 -->
+<div class="tab-content" id="tab2">
+    <h3>📝 Thuê đồ </h3>
+    <p>Nội dung quản lý log công việc...</p>
+</div>
 
-        <div class="tab-content" id="tab3">
-            <h3>📈 Trả đồ </h3>
-            <p>Nội dung biểu đồ phân tích...</p>
-        </div>
-        <script>
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
+<!-- tab3 -->
+<div class="tab-content" id="tab3">
+    <h3>📈 Trả đồ </h3>
+    <p>Nội dung biểu đồ phân tích...</p>
+</div>
+
+<script>
+      window.screenHelper = {
+        getHeight: function() {
+            return window.innerHeight;
+        },
+        registerResizeHandler: function(dotNetHelper) {
+            window.addEventListener('resize', () => {
+                dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
+            });
+        }
+    };
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
             // đổi active trên nút
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
@@ -124,61 +136,93 @@
             // đổi nội dung hiển thị
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(this.dataset.tab).classList.add('active');
-            });
-            });
-        </script>
-    </div>
-</div>
+        });
+    });
+</script>
 
 
 @code {
-    private List<Data.DTOs.InfoThueDoDto> InfoThueDoDto;
+    private List<Data.DTOs.InfoThueDoDto> allData = new();
+    private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
     private string type = "ALL";
     private int month;
     private int year;
     private bool checkNull = false;
+    private DotNetObjectReference<ListOrder> objRef;
 
     #region phân trang
     private int currentPage = 1;
-    private int pageSize = 14;
-    private int totalPages => (int)Math.Ceiling((decimal)(InfoThueDoDto?.Count ?? 0) / pageSize);
-
-    private IEnumerable<Data.DTOs.InfoThueDoDto> PagedData
-        => InfoThueDoDto
-            ?.Skip((currentPage - 1) * pageSize)
-            .Take(pageSize);
-
+    private int rowsPerPage = 15;
     private bool CanPrev => currentPage > 1;
     private bool CanNext => currentPage < totalPages;
+    private int totalPages => (int)Math.Ceiling((decimal)(allData.Count) / rowsPerPage);
 
-    private void PrevPage()
+
+    private void UpdateRowsPerPage(int screenHeight)
     {
-        if (CanPrev)
-        {
-            currentPage--;
-        }
+        int headerHeight = 200; // chiều cao phần menu + header
+        int rowHeight = 50;     // chiều cao 1 row (tùy CSS thực tế)
+
+        rowsPerPage = (screenHeight - headerHeight) / rowHeight;
+        if (rowsPerPage < 1) rowsPerPage = 1;
+    }
+
+    private void LoadPage()
+    {
+        currentPageData = allData
+            .Skip((currentPage - 1) * rowsPerPage)
+            .Take(rowsPerPage)
+            .ToList();
+
+        StateHasChanged();
     }
 
     private void NextPage()
     {
-        if (CanNext)
+        if (currentPage * rowsPerPage < allData.Count)
         {
             currentPage++;
+            LoadPage();
         }
+    }
+
+    private void PrevPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            LoadPage();
+        }
+    }
+
+    [JSInvokable]
+    public void OnResize(int newHeight)
+    {
+        UpdateRowsPerPage(newHeight);
+        currentPage = 1; // reset về trang đầu khi resize
+        LoadPage();
     }
     #endregion
 
-    protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
+    protected override async Task OnInitializedAsync()
     {
-        this.month = int.Parse(DateTime.Now.Month.ToString());
-        this.year = int.Parse(DateTime.Now.Year.ToString());
+        this.month = DateTime.Now.Month;
+        this.year = DateTime.Now.Year;
+    }
 
+    private async Task LoadData()
+    {
+        allData = await GetListThueDo.GetListThueDo(type, year, month);
+
+        checkNull = !(allData != null && allData.Any());
+
+        currentPage = 1;
+        LoadPage();
     }
 
     private async Task OnTypeChanged(ChangeEventArgs e)
     {
-        this.checkNull = false;
-        string kieu = e.Value.ToString();
+        string kieu = e.Value?.ToString() ?? "All";
         type = kieu switch
         {
             "All" => "ALL",
@@ -188,40 +232,30 @@
             _ => "ALL"
         };
 
-        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-        if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-        else
-        {
-            this.checkNull = true;
-        }
-        StateHasChanged();
+        await LoadData();
     }
 
     private async Task OnMonthChanged(ChangeEventArgs e)
     {
-        this.checkNull = false;
-        month = int.Parse(e.Value.ToString());
-
-        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-        if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-        else
-        {
-            this.checkNull = true;
-        }
-        StateHasChanged();
+        month = int.Parse(e.Value?.ToString() ?? DateTime.Now.Month.ToString());
+        await LoadData();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-            if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-            else
-            {
-                this.checkNull = true;
-            }
-            StateHasChanged();
+            await LoadData();
+            // Lấy chiều cao màn hình
+            int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
+            UpdateRowsPerPage(height);
+
+            // Đăng ký handler khi resize
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
+
+            // Gọi lần đầu để lấy dữ liệu
+            await LoadData();
         }
     }
 }

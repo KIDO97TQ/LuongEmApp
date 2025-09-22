@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "PackagePath": "staticwebassets\\FistWeb.nh3i30h3zn.bundle.scp.css"
+      "PackagePath": "staticwebassets\\FistWeb.vod60tpzz2.bundle.scp.css"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -13,14 +13,6 @@
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssListThueDo.css",
-      "PackagePath": "staticwebassets\\css\\CssListThueDo.css"
-    },
-    {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\CssSum.css",
-      "PackagePath": "staticwebassets\\css\\CssSum.css"
-    },
-    {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
@@ -29,12 +21,28 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\25803.jpg",
+      "PackagePath": "staticwebassets\\image\\25803.jpg"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\R.jpg",
+      "PackagePath": "staticwebassets\\image\\R.jpg"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\mountain.jpg",
+      "PackagePath": "staticwebassets\\image\\mountain.jpg"
+    },
+    {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "PackagePath": "staticwebassets\\js\\CharSumJs.js"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",
       "PackagePath": "staticwebassets\\js\\ListThueDo.js"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\Quanlydo.js",
+      "PackagePath": "staticwebassets\\js\\Quanlydo.js"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",

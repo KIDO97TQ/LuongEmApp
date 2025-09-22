@@ -1,4 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\iis\publish\</_PublishTargetUrl>
+    <History>True|2025-09-21T20:15:05.1198295Z||;False|2025-09-22T03:14:22.3781387+07:00||;True|2025-09-22T02:50:48.3401402+07:00||;True|2025-09-22T02:03:53.6893830+07:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>

@@ -11,109 +11,134 @@
     <div class="content">
 
         <div class="tabs">
-            <button class="tab-btn active" data-tab="tab1">📝 Danh sách Mượn - Trả đồ</button>
-            <button class="tab-btn" data-tab="tab2">Mượn đồ</button>
-            <button class="tab-btn" data-tab="tab3">Trả đồ</button>
+            <button class="tab-btn active" data-tab="tab1">Thêm hàng mới</button>
+            <button class="tab-btn" data-tab="tab2">Sửa thông tin đồ</button>
+            <button class="tab-btn" data-tab="tab3">Tổng hợp đồ</button>
         </div>
 
+        @* tab1 *@
         <div class="tab-content active" id="tab1">
-            <h3>
-                Trạng Thái
-                <select class="control-select" value="type" @onchange="OnTypeChanged">
-                    <option>All</option>
-                    <option>Đã trả</option>
-                    <option>Chưa trả</option>
-                    <option>Bị hủy</option>
-                </select>
-                Tháng
-                <select class="control-select" value="month" @onchange="OnMonthChanged">
-                    @for (int i = 1; i <= 12; i++)
-                    {
-                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                    }
-                </select>
-            </h3>
-            <div class="chart-order">
-                @*Hiện lên table*@
-                <table class="table-custom">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Họ tên</th>
-                            <th>SĐT/Facebook</th>
-                            <th>Ngày mượn</th>
-                            <th>Ngày trả</th>
-                            <th>Loại sản phẩm</th>
-                            <th>Size</th>
-                            <th>Số lượng</th>
-                            <th>Thành tiền</th>
-                            <th>Giá/ngày</th>
-                            <th>Tiền cọc</th>
-                            <th>Phát sinh</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (InfoThueDoDto != null && InfoThueDoDto.Any())
-                        {
-                            int count = (currentPage - 1) * pageSize + 1;
-                            foreach (var item in PagedData)
-                            {
-                                <tr>
-                                    <td>@count</td>
-                                    <td>@item.fullname</td>
-                                    <td>@item.facebookphone</td>
-                                    <td>@item.borrowdate.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.returndate?.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.type_production</td>
-                                    <td>@item.size</td>
-                                    <td>@item.qty</td>
-                                    <td>@item.totalamount</td>
-                                    <td>@item.priceperday</td>
-                                    <td>@item.moneycoc</td>
-                                    <td>@item.tienphatsinh</td>
-                                    <td>@item.status</td>
-                                </tr>
-                                count++;
-                            }
-                        }
-                        else if (checkNull)
-                        {
-                            <tr>
-                                <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="13" style="text-align:center">⏳ Đang tải dữ liệu...</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="form-container">
+                <div class="form-content">
+                    <!-- Left side - Form -->
+                    <div class="form-left">
+                        <!-- Tên SP -->
+                        <div class="form-group">
+                            <label class="form-label">Tên SP:</label>
+                            <input type="text" class="form-input" placeholder="Nhập tên sản phẩm...">
+                            <div></div>
+                        </div>
+
+                        <!-- Loại SP -->
+                        <div class="form-group">
+                            <label class="form-label">Loại SP:</label>
+                            <select class="form-select">
+                                <option value="">Chọn loại sản phẩm</option>
+                                <option value="ao">Áo</option>
+                                <option value="quan">Quần</option>
+                                <option value="vay">Váy</option>
+                                <option value="set">Set đồ</option>
+                            </select>
+                            <button class="btn btn-danger">
+                                <span>🗑️</span> Xóa
+                            </button>
+                        </div>
+
+                        <!-- Size SP -->
+                        <div class="form-group">
+                            <label class="form-label">Size SP:</label>
+                            <input type="text" class="form-input" placeholder="S, M, L, XL...">
+                            <div></div>
+                        </div>
+
+                        <!-- Giá thuê theo ngày -->
+                        <div class="form-group">
+                            <label class="form-label">Giá thuê theo ngày:</label>
+                            <select class="form-select">
+                                <option value="">Chọn mức giá</option>
+                                <option value="100000">100,000 VNĐ</option>
+                                <option value="150000">150,000 VNĐ</option>
+                                <option value="200000">200,000 VNĐ</option>
+                                <option value="250000">250,000 VNĐ</option>
+                                <option value="300000">300,000 VNĐ</option>
+                            </select>
+                            <button class="btn btn-danger">
+                                <span>🗑️</span> Xóa
+                            </button>
+                        </div>
+
+                        <!-- Số lượng -->
+                        <div class="form-group">
+                            <label class="form-label">Số lượng:</label>
+                            <input type="number" class="form-input" placeholder="Nhập số lượng..." min="1">
+                            <div></div>
+                        </div>
+
+                        <!-- Mô tả thêm về SP -->
+                        <div class="form-group">
+                            <label class="form-label">Mô tả thêm về SP:</label>
+                            <textarea class="form-input" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                            <div></div>
+                        </div>
+
+                        <!-- Dynamic sections -->
+                        <div class="dynamic-section">
+                            <div class="section-header">
+                                <span>🏷️</span>
+                                <span>Thêm mới loại SP</span>
+                            </div>
+                            <div id="productTypes">
+                                <!-- Dynamic product types will be added here -->
+                            </div>
+                            <button class="btn btn-success">
+                                <span>➕</span> Thêm
+                            </button>
+                        </div>
+
+                        <div class="dynamic-section">
+                            <div class="section-header">
+                                <span>💰</span>
+                                <span>Thêm giá thuê theo ngày</span>
+                            </div>
+                            <div id="priceRanges">
+                                <!-- Dynamic price ranges will be added here -->
+                            </div>
+                            <button class="btn btn-success">
+                                <span>➕</span> Thêm
+                            </button>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button class="btn btn-primary">
+                            <span>✅</span> Thêm
+                        </button>
+                    </div>
+
+                    <!-- Right side - Image -->
+                    <div class="image-section">
+                        <div class="image-title">Ảnh về SP: <em>Image</em></div>
+                        <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
+                            <div class="image-upload-icon">📷</div>
+                            <div class="image-upload-text">Click để tải ảnh lên</div>
+                            <input type="file" id="imageInput" class="file-input" accept="image/*" onchange="previewImage(this)">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Page control -->
-        <div class="pagination">
-            <button @onclick="PrevPage" disabled="@(!CanPrev)">
-                <i class="fa-solid fa-arrow-left"></i> Trước
-            </button>
-            <span>Trang @currentPage / @totalPages</span>
-            <button @onclick="NextPage" disabled="@(!CanNext)">
-                Sau <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
-
+        @* tab2 *@
         <div class="tab-content" id="tab2">
             <h3>📝 Thuê đồ </h3>
             <p>Nội dung quản lý log công việc...</p>
         </div>
 
+        @* tab3 *@
         <div class="tab-content" id="tab3">
             <h3>📈 Trả đồ </h3>
             <p>Nội dung biểu đồ phân tích...</p>
         </div>
+
         <script>
             document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function () {
@@ -132,41 +157,12 @@
 
 
 @code {
-    private List<Data.DTOs.InfoThueDoDto> InfoThueDoDto;
+
     private string type = "ALL";
     private int month;
     private int year;
     private bool checkNull = false;
-
-    #region phân trang
-    private int currentPage = 1;
-    private int pageSize = 14;
-    private int totalPages => (int)Math.Ceiling((decimal)(InfoThueDoDto?.Count ?? 0) / pageSize);
-
-    private IEnumerable<Data.DTOs.InfoThueDoDto> PagedData
-        => InfoThueDoDto
-            ?.Skip((currentPage - 1) * pageSize)
-            .Take(pageSize);
-
-    private bool CanPrev => currentPage > 1;
-    private bool CanNext => currentPage < totalPages;
-
-    private void PrevPage()
-    {
-        if (CanPrev)
-        {
-            currentPage--;
-        }
-    }
-
-    private void NextPage()
-    {
-        if (CanNext)
-        {
-            currentPage++;
-        }
-    }
-    #endregion
+ 
 
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
@@ -177,51 +173,16 @@
 
     private async Task OnTypeChanged(ChangeEventArgs e)
     {
-        this.checkNull = false;
-        string kieu = e.Value.ToString();
-        type = kieu switch
-        {
-            "All" => "ALL",
-            "Đã trả" => "RETURN",
-            "Chưa trả" => "BORROW",
-            "Bị hủy" => "CANCEL",
-            _ => "ALL"
-        };
-
-        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-        if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-        else
-        {
-            this.checkNull = true;
-        }
-        StateHasChanged();
+        
     }
 
     private async Task OnMonthChanged(ChangeEventArgs e)
     {
-        this.checkNull = false;
-        month = int.Parse(e.Value.ToString());
-
-        InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-        if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-        else
-        {
-            this.checkNull = true;
-        }
-        StateHasChanged();
+        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
     {
-        if (firstRender)
-        {
-            InfoThueDoDto = await GetListThueDo.GetListThueDo(type, year, month);
-            if (InfoThueDoDto != null && InfoThueDoDto.Any()) { }
-            else
-            {
-                this.checkNull = true;
-            }
-            StateHasChanged();
-        }
+        
     }
 }
