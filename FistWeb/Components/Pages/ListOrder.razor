@@ -14,6 +14,8 @@
     <button class="tab-btn" data-tab="tab3">Trả đồ</button>
 </div>
 
+<!-- Page control -->
+<!-- tab1 -->
 <div class="tab-content active" id="tab1">
     <h3>
         Trạng Thái
@@ -90,18 +92,16 @@
             </tbody>
         </table>
     </div>
-</div>
 
-<!-- Page control -->
-<!-- tab1 -->
-<div class="pagination">
-    <button @onclick="PrevPage" disabled="@(!CanPrev)">
-        <i class="fa-solid fa-arrow-left"></i> Trước
-    </button>
-    <span>Trang @currentPage / @totalPages</span>
-    <button @onclick="NextPage" disabled="@(!CanNext)">
-        Sau <i class="fa-solid fa-arrow-right"></i>
-    </button>
+    <div class="pagination">
+        <button @onclick="PrevPage" disabled="@(!CanPrev)">
+            <i class="fa-solid fa-arrow-left"></i> Trước
+        </button>
+        <span>Trang @currentPage / @totalPages</span>
+        <button @onclick="NextPage" disabled="@(!CanNext)">
+            Sau <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
 </div>
 
 <!-- tab2 -->

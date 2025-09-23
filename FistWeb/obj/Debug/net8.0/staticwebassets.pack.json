@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "PackagePath": "staticwebassets\\FistWeb.vod60tpzz2.bundle.scp.css"
+      "PackagePath": "staticwebassets\\FistWeb.g4v9ruuu8w.bundle.scp.css"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -19,18 +19,6 @@
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
-    },
-    {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\25803.jpg",
-      "PackagePath": "staticwebassets\\image\\25803.jpg"
-    },
-    {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\R.jpg",
-      "PackagePath": "staticwebassets\\image\\R.jpg"
-    },
-    {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\image\\mountain.jpg",
-      "PackagePath": "staticwebassets\\image\\mountain.jpg"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",

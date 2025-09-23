@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserService, CallService>();
 builder.Services.AddScoped<IThongKeService, CallService>();
 builder.Services.AddScoped<GetListThueDo, CallService>();
+builder.Services.AddScoped<IGetParamaterService, CallService>();
 
 
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "80";

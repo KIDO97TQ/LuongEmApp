@@ -28,10 +28,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -51,6 +47,10 @@ build_metadata.AdditionalFiles.CssScope = b-4axgcipqhk
 [D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Pages/DoanhThu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2FuaFRodS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-5jmtznnos0
+
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-l54ik2cc7b
 
 [D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Pages/ListOrder.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0T3JkZXIucmF6b3I=

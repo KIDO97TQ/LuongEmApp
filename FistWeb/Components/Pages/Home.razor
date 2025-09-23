@@ -1,22 +1,30 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 
-<script>
-    document.addEventListener("click", function (event) {
-      // Nếu click bên ngoài sidebar thì đóng
-      if (!event.target.closest("#sidebar")) {
-        closeSidebar();
-      }
-    });
-</script>
-
-<PageTitle>Counter</PageTitle>
-
-<h1 class="text">Chúc ngày mới tốt lành !</h1>
-
-@* <p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button> *@
+<PageTitle>Home</PageTitle>
+<div class="full-screen-center">
+    <div class="form-area">
+        <div class="wrapper">
+            <h2>Admin Login</h2>
+            <form>
+                <div class="box">
+                    <input type="text" placeholder="Nhập tên đăng nhập...">
+                    <i class="fa fa-user"></i>
+                </div>
+                <div class="box">
+                    <input type="password" placeholder="Nhập mật khẩu...">
+                    <i class="fa fa-lock"></i>
+                </div>
+                <div class="options">
+                    <label><input type="checkbox"> Remember Me</label>
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <p>Don't have an account? <a href="#">Register</a></p>
+        </div>
+    </div>
+</div>
 
 @code {
     private int currentCount = 0;

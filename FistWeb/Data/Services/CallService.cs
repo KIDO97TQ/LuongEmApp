@@ -8,7 +8,7 @@ using System.Text;
 
 namespace FistWeb.Data.Services
 {
-    public class CallService : IUserService, IThongKeService, GetListThueDo, SumGetListThueDo
+    public class CallService : IUserService, IThongKeService, GetListThueDo, SumGetListThueDo, IGetParamaterService
     {
         private readonly AppDbContext _context;
 
@@ -156,5 +156,16 @@ namespace FistWeb.Data.Services
                     .ToListAsync();
         }
 
+        public async Task<List<ListParamater>> GetParamater()
+        {
+            var query = from u in _context.Paramater
+                        select new ListParamater
+                        {
+                            KeyPara = u.FunctionName,
+                            keyData = u.item_key1
+                        };
+
+            return await query.ToListAsync();
+        }
     }
 }

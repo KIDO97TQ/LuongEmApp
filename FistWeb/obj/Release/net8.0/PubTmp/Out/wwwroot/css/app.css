@@ -3,10 +3,17 @@
 .page {
 }
 
+.MainBackground {
+    background-image: linear-gradient(to right, #bdc3c7, #2c3e50); /*url('../image/HH.jpg') ;*/
+    background-size: cover; /* Đảm bảo ảnh phủ toàn bộ vùng */
+    background-repeat: no-repeat; /* Không lặp */
+    background-position: center;
+    /*color: #f0f0f0;*/
+}
+
 .mainweb {
     flex: 1;
     width: 100%;
-    background: yellow;
 }
 
 

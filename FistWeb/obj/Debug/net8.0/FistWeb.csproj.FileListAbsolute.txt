@@ -56,3 +56,10 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.genruntimeconfig.cache
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Auth.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Core.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Drive.v3.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.CodeDom.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.Management.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll

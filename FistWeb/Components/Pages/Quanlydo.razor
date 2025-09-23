@@ -3,166 +3,154 @@
 @using System.Data
 @using FistWeb.Data.Services
 @inject Data.AppDbContext Db
-@inject GetListThueDo GetListThueDo
+@inject IGetParamaterService GetListParamater
 @rendermode InteractiveServer
+@inject IJSRuntime JS
+@using System.Globalization
 
 
-<div class="container">
-    <div class="content">
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab1">Thêm - Sửa - Xóa đồ</button>
+    <button class="tab-btn" data-tab="tab3">Tổng hợp đồ</button>
+</div>
 
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="tab1">Thêm hàng mới</button>
-            <button class="tab-btn" data-tab="tab2">Sửa thông tin đồ</button>
-            <button class="tab-btn" data-tab="tab3">Tổng hợp đồ</button>
-        </div>
+@* tab1 *@
+<div class="tab-content active" id="tab1">
+    <div class="form-container">
+        <div class="form-content">
+            <!-- Left side - Form -->
+            <div class="form-section-left">
+                <!-- Tên SP -->
+                <div class="form-group">
+                    <label class="form-label">Tên SP:</label>
+                    <input type="text" class="form-input" placeholder="Nhập tên sản phẩm..." />
+                    <div></div>
+                </div>
 
-        @* tab1 *@
-        <div class="tab-content active" id="tab1">
-            <div class="form-container">
-                <div class="form-content">
-                    <!-- Left side - Form -->
-                    <div class="form-left">
-                        <!-- Tên SP -->
-                        <div class="form-group">
-                            <label class="form-label">Tên SP:</label>
-                            <input type="text" class="form-input" placeholder="Nhập tên sản phẩm...">
-                            <div></div>
+                <!-- Loại SP -->
+                <div class="form-group">
+                    <label class="form-label">Loại SP:</label>
+                    <select class="form-select">
+                        <option value="">Chọn loại sản phẩm</option>
+                        @{
+                            if (this.ListType != null)
+                            {
+                                foreach (var item in this.ListType)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <div class="option-wrapper">
+                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+
+                        <div class="option-menu">
+                            <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
+                            <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
+                            <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
                         </div>
-
-                        <!-- Loại SP -->
-                        <div class="form-group">
-                            <label class="form-label">Loại SP:</label>
-                            <select class="form-select">
-                                <option value="">Chọn loại sản phẩm</option>
-                                <option value="ao">Áo</option>
-                                <option value="quan">Quần</option>
-                                <option value="vay">Váy</option>
-                                <option value="set">Set đồ</option>
-                            </select>
-                            <button class="btn btn-danger">
-                                <span>🗑️</span> Xóa
-                            </button>
-                        </div>
-
-                        <!-- Size SP -->
-                        <div class="form-group">
-                            <label class="form-label">Size SP:</label>
-                            <input type="text" class="form-input" placeholder="S, M, L, XL...">
-                            <div></div>
-                        </div>
-
-                        <!-- Giá thuê theo ngày -->
-                        <div class="form-group">
-                            <label class="form-label">Giá thuê theo ngày:</label>
-                            <select class="form-select">
-                                <option value="">Chọn mức giá</option>
-                                <option value="100000">100,000 VNĐ</option>
-                                <option value="150000">150,000 VNĐ</option>
-                                <option value="200000">200,000 VNĐ</option>
-                                <option value="250000">250,000 VNĐ</option>
-                                <option value="300000">300,000 VNĐ</option>
-                            </select>
-                            <button class="btn btn-danger">
-                                <span>🗑️</span> Xóa
-                            </button>
-                        </div>
-
-                        <!-- Số lượng -->
-                        <div class="form-group">
-                            <label class="form-label">Số lượng:</label>
-                            <input type="number" class="form-input" placeholder="Nhập số lượng..." min="1">
-                            <div></div>
-                        </div>
-
-                        <!-- Mô tả thêm về SP -->
-                        <div class="form-group">
-                            <label class="form-label">Mô tả thêm về SP:</label>
-                            <textarea class="form-input" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
-                            <div></div>
-                        </div>
-
-                        <!-- Dynamic sections -->
-                        <div class="dynamic-section">
-                            <div class="section-header">
-                                <span>🏷️</span>
-                                <span>Thêm mới loại SP</span>
-                            </div>
-                            <div id="productTypes">
-                                <!-- Dynamic product types will be added here -->
-                            </div>
-                            <button class="btn btn-success">
-                                <span>➕</span> Thêm
-                            </button>
-                        </div>
-
-                        <div class="dynamic-section">
-                            <div class="section-header">
-                                <span>💰</span>
-                                <span>Thêm giá thuê theo ngày</span>
-                            </div>
-                            <div id="priceRanges">
-                                <!-- Dynamic price ranges will be added here -->
-                            </div>
-                            <button class="btn btn-success">
-                                <span>➕</span> Thêm
-                            </button>
-                        </div>
-
-                        <!-- Submit button -->
-                        <button class="btn btn-primary">
-                            <span>✅</span> Thêm
-                        </button>
                     </div>
+                </div>
 
-                    <!-- Right side - Image -->
-                    <div class="image-section">
-                        <div class="image-title">Ảnh về SP: <em>Image</em></div>
-                        <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
-                            <div class="image-upload-icon">📷</div>
-                            <div class="image-upload-text">Click để tải ảnh lên</div>
-                            <input type="file" id="imageInput" class="file-input" accept="image/*" onchange="previewImage(this)">
+                <!-- Size SP -->
+                <div class="form-group">
+                    <label class="form-label">Size SP:</label>
+                    <input type="text" class="form-input" placeholder="S, M, L, XL..." />
+                    <div></div>
+                </div>
+
+                <!-- Giá thuê theo ngày -->
+                <div class="form-group">
+                    <label class="form-label">Giá thuê theo ngày:</label>
+                    <select class="form-select">
+                        <option value="">Chọn mức giá</option>
+                        @{
+                            if (this.ListPrice != null)
+                            {
+                                @foreach (var item in this.ListPrice)
+                                {
+                                    if (decimal.TryParse(item, NumberStyles.Number, new CultureInfo("vi-VN"), out var parsedValue))
+                                    {
+                                        <option value="@item">@parsedValue.ToString("N0", new CultureInfo("vi-VN")) Vnđ</option>
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                    <div class="option-wrapper">
+                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+
+                        <div class="option-menu">
+                            <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
+                            <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
+                            <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Số lượng -->
+                <div class="form-group">
+                    <label class="form-label">Số lượng:</label>
+                    <input type="number" class="form-input" placeholder="Nhập số lượng..." min="1" />
+                    <div></div>
+                </div>
+
+                <!-- Mô tả thêm về SP -->
+                <div class="form-group">
+                    <label class="form-label">Mô tả thêm về SP:</label>
+                    <textarea class="form-input" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- Right side - Image -->
+            <div class="form-section-right">
+                <div class="image-section">
+                    <div class="image-title">Ảnh về SP: <em>Image</em></div>
+                    <div class="image-upload-area">
+                        <div class="image-upload-icon">📷</div>
+                        <div class="image-upload-text">Click để tải ảnh lên</div>
+                        <img class="image-preview" style="display: none;" />
+                        <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)" />
                     </div>
                 </div>
             </div>
         </div>
-
-        @* tab2 *@
-        <div class="tab-content" id="tab2">
-            <h3>📝 Thuê đồ </h3>
-            <p>Nội dung quản lý log công việc...</p>
+        <!-- store info -->
+        <div class="store-info">
+            <button class="tab-btn"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
         </div>
-
-        @* tab3 *@
-        <div class="tab-content" id="tab3">
-            <h3>📈 Trả đồ </h3>
-            <p>Nội dung biểu đồ phân tích...</p>
-        </div>
-
-        <script>
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-            // đổi active trên nút
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-
-            // đổi nội dung hiển thị
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(this.dataset.tab).classList.add('active');
-            });
-            });
-        </script>
     </div>
 </div>
 
+@* tab2 *@
+<div class="tab-content" id="tab3">
+    <h3>📈 Trả đồ</h3>
+    <p>Nội dung biểu đồ phân tích...</p>
+</div>
+
+<script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
+    });
+</script>
+
 
 @code {
-
-    private string type = "ALL";
     private int month;
     private int year;
-    private bool checkNull = false;
- 
+    private List<Data.DTOs.ListParamater> datapara = new();
+    List<string> ListType;
+    List<string> ListPrice;
 
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
@@ -171,18 +159,26 @@
 
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
+    {
+        if (firstRender)
+        {
+            datapara = await GetListParamater.GetParamater();
+            this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).ToList();
+            this.ListPrice = datapara.Where(x => x.KeyPara == "price").Select(x => x.keyData).ToList();
+            StateHasChanged();
+        }
+    }
+
     private async Task OnTypeChanged(ChangeEventArgs e)
     {
-        
+
     }
 
     private async Task OnMonthChanged(ChangeEventArgs e)
     {
-        
+
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
-    {
-        
-    }
+
 }

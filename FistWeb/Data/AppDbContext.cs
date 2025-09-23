@@ -12,21 +12,26 @@ namespace FistWeb.Data
         {
         }
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<users> Users { get; set; }
         public DbSet<Order> Order { get; set; }
+        public DbSet<Paramater> Paramater { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Users>().HasNoKey();
-            modelBuilder.Entity<Users>().HasKey(u => u.UserId);
+            modelBuilder.Entity<users>().HasKey(u => u.UserId);
+
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Users>()
+            modelBuilder.Entity<users>()
                 .ToTable("users", "clothings");
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Order>()
                 .ToTable("orders", "clothings");
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Paramater>()
+                .ToTable("paramater", "clothings");
 
             modelBuilder.Entity<DoanhThuThueDoDto>().HasNoKey();
             modelBuilder.Entity<RentalSummary>().HasNoKey();

@@ -7,6 +7,10 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\FistWeb.runtimeconfig.json
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\ChartJs.Blazor.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Google.Apis.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Google.Apis.Auth.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Google.Apis.Core.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Google.Apis.Drive.v3.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
@@ -22,4 +26,7 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Newtonsoft.Json.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Npgsql.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\System.CodeDom.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\System.Diagnostics.DiagnosticSource.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\System.Management.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net7.0\System.Management.dll

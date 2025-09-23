@@ -22,4 +22,9 @@ namespace FistWeb.Data.Services
     {
         Task<List<InfoThueDoDto>> GetListThueDo(string status, int year, int? month = null);
     }
+
+    public interface IGetParamaterService
+    {
+        Task<List<ListParamater>> GetParamater();
+    }
 }

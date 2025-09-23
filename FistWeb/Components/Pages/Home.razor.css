@@ -1,24 +1,141 @@
 ﻿<style >
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+
+body {
+    /*font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;*/
+}
+/* Căn giữa toàn màn hình */
+.full-screen-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('your-background.jpg') no-repeat center center fixed; /* thêm hình nền nếu muốn */
+    background-size: cover;
 }
 
-.text {
-    display: flex;
-    justify-content: center; /* căn giữa ngang */
-    align-items: center; /* căn giữa dọc */
-    height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    font-size: 60px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Căn giữa hoàn hảo */
-    color: white;
-    text-align: center;
+/* Khung login */
+.wrapper {
+    width: 400px;
+    padding: 50px 30px;
+    color: #fff;
+    position: relative;
+    background: rgba(255, 255, 255, 0.15); /* nền trắng trong suốt mờ */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18); /* viền trắng mờ */
+    box-shadow: 0 8px 32px 0 rgba(76, 175, 80, 0.4);
+    backdrop-filter: blur(10px); /* làm mờ nền phía sau */
+    -webkit-backdrop-filter: blur(10px);
 }
+
+    /* Tiêu đề */
+    .wrapper h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    /* Mô tả bên dưới */
+    .wrapper p {
+        margin: 0;
+        padding: 0;
+        font-weight: 300;
+        text-align: center;
+    }
+
+/* Input kèm icon */
+.box {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    .box input {
+        width: 100%;
+        padding: 15px 50px 15px 15px;
+        border-radius: 50px;
+        border: 1px solid #bababa;
+        background: transparent;
+        color: #fff;
+        font-size: 16px;
+        outline: none;
+    }
+
+    .box i {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        color: #fff;
+        font-size: 18px;
+    }
+
+/* Các tùy chọn (checkbox, link) */
+.wrapper .options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+    .wrapper .options label {
+        color: #fff;
+        user-select: none;
+    }
+
+.options input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #4CAF50; /* màu checkbox */
+}
+
+/* Link */
+.wrapper a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+    .wrapper a:hover {
+        text-decoration: underline;
+    }
+
+/* Nút submit */
+.wrapper button {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 50px;
+    background: #fff;
+    color: #262626;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .wrapper button:hover {
+        background: #4CAF50;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    }
+
+
+.wrapper button {
+    background: #fff;
+    color: #262626;
+    font-weight: bold;
+}
+
+    .wrapper button:hover {
+        background: #4CAF50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
 
 </style >

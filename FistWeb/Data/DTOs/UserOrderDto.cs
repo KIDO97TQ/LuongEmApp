@@ -36,6 +36,11 @@
         public decimal? moneycoc { get; set; }         //moneycoc as Tiền_Cọc,
         public decimal? tienphatsinh { get; set; }     //tienphatsinh as Tiền_Phát_Sinh,
         public string? status { get; set; }            //status as Trạng_Thái
+    }
 
+    public class ListParamater
+    {
+        public string KeyPara { get; set; }
+        public string keyData { get; set; }
     }
 }

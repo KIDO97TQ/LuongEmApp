@@ -1,8 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FistWeb.Data.Entities
 {
+    [Table("users", Schema = "clothings")]
+    public class users
+    {
+        [Column("userid")]
+        public long UserId { get; set; }
+
+        [Column("fullname")]
+        public string Username { get; set; }
+
+        [Column("facebookphone")]
+        public string Phone { get; set; }
+
+        [Column("CrateDate")]
+        public DateTime CreateDate { get; set; }
+    }
+
     [Table("orders", Schema = "clothings")]
     public class Order
     {
@@ -30,5 +45,27 @@ namespace FistWeb.Data.Entities
         public decimal TienPhatSinh { get; set; }
         [Column("lastmoney")]
         public decimal LastMoney { get; set; }
+    }
+
+    [Table("paramate", Schema = "clothings")]
+    public class Paramater
+    {
+        [Column("id")]
+        public int id { get; set; }
+
+        [Column("function_name")]
+        public string FunctionName { get; set; }
+
+        [Column("item_key1")]
+        public string item_key1 { get; set; }
+
+        [Column("item_key2")]
+        public string item_key2 { get; set; }
+
+        [Column("item_key3")]
+        public string item_key3 { get; set; }
+
+        [Column("item_key4")]
+        public string item_key4 { get; set; }
     }
 }
