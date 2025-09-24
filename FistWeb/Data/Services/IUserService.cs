@@ -3,11 +3,6 @@ using System.Data;
 
 namespace FistWeb.Data.Services
 {
-    public interface IUserService
-    {
-        Task<List<UserOrderDto>> GetUserOrdersAsync();
-    }
-
     public interface IThongKeService
     {
         Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null);
@@ -26,5 +21,9 @@ namespace FistWeb.Data.Services
     public interface IGetParamaterService
     {
         Task<List<ListParamater>> GetParamater();
+    }
+    public interface IGetParaUserService
+    {
+        Task<List<ListParaUser>> GetLoginUser(string fun, string user, string pass);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using FistWeb.Components;
 using FistWeb.Data;
 using FistWeb.Data.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +14,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //var tester = new ConnectionTester(connectionString);
 //await tester.TestAsync();
-builder.Services.AddScoped<IUserService, CallService>();
 builder.Services.AddScoped<IThongKeService, CallService>();
 builder.Services.AddScoped<GetListThueDo, CallService>();
 builder.Services.AddScoped<IGetParamaterService, CallService>();
+builder.Services.AddScoped<IGetParaUserService, CallService>();
 
+builder.Services.AddScoped<LoginStateService>();
+builder.Services.AddScoped<ProtectedSessionStorage>();
 
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 //builder.WebHost.UseUrls($"http://0.0.0.0:{port}");

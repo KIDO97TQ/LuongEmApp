@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "m7BNd6Ea0Q35YuOdg4dy9xZLzhyc1xStQEsjq4/WNIg=",
+  "Hash": "MON5VSDdDKw7Sniiv93BE05c45wQYXmrg6yjQxMkDoI=",
   "Source": "FistWeb",
   "BasePath": "_content/FistWeb",
   "Mode": "Default",
@@ -262,8 +262,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "g4v9ruuu8w",
-      "Integrity": "0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=",
+      "Fingerprint": "4ig8af7z8s",
+      "Integrity": "jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css"
@@ -283,8 +283,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "g4v9ruuu8w",
-      "Integrity": "0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=",
+      "Fingerprint": "4ig8af7z8s",
+      "Integrity": "jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css"
@@ -1195,6 +1195,96 @@
       ]
     },
     {
+      "Route": "FistWeb.4ig8af7z8s.bundle.scp.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "32021"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 24 Sep 2025 00:31:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "4ig8af7z8s"
+        },
+        {
+          "Name": "label",
+          "Value": "FistWeb.bundle.scp.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg="
+        }
+      ]
+    },
+    {
+      "Route": "FistWeb.4ig8af7z8s.styles.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "32021"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 24 Sep 2025 00:31:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "4ig8af7z8s"
+        },
+        {
+          "Name": "label",
+          "Value": "FistWeb.styles.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg="
+        }
+      ]
+    },
+    {
       "Route": "FistWeb.bundle.scp.css",
       "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "Selectors": [],
@@ -1205,7 +1295,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "29624"
+          "Value": "32021"
         },
         {
           "Name": "Content-Type",
@@ -1213,11 +1303,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=\""
+          "Value": "\"jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 00:35:39 GMT"
+          "Value": "Wed, 24 Sep 2025 00:31:08 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1227,97 +1317,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444="
-        }
-      ]
-    },
-    {
-      "Route": "FistWeb.g4v9ruuu8w.bundle.scp.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "29624"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 00:35:39 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "g4v9ruuu8w"
-        },
-        {
-          "Name": "label",
-          "Value": "FistWeb.bundle.scp.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444="
-        }
-      ]
-    },
-    {
-      "Route": "FistWeb.g4v9ruuu8w.styles.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "29624"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 00:35:39 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "g4v9ruuu8w"
-        },
-        {
-          "Name": "label",
-          "Value": "FistWeb.styles.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444="
+          "Value": "sha256-jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg="
         }
       ]
     },
@@ -1332,7 +1332,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "29624"
+          "Value": "32021"
         },
         {
           "Name": "Content-Type",
@@ -1340,11 +1340,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444=\""
+          "Value": "\"jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 00:35:39 GMT"
+          "Value": "Wed, 24 Sep 2025 00:31:08 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1354,7 +1354,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-0JixUu9eToUR3CP+8OaNj4YuVfscLiJxPHzdtgSK444="
+          "Value": "sha256-jBua0yrupqs9bjzyxjDG85fBfkhoIoAR76249OmD3Dg="
         }
       ]
     },

@@ -1,36 +1,174 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject LoginStateService LoginState
+@inject NavigationManager Navigation
+@using FistWeb.Data.Services
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject ProtectedSessionStorage sessionStorage
+@inject NavigationManager Navigation
+@inject GetListThueDo GetListThueDo
+@inject IGetParaUserService GetLoginUser
 
 <PageTitle>Home</PageTitle>
-<div class="full-screen-center">
-    <div class="form-area">
-        <div class="wrapper">
-            <h2>Admin Login</h2>
-            <form>
-                <div class="box">
-                    <input type="text" placeholder="Nhập tên đăng nhập...">
-                    <i class="fa fa-user"></i>
-                </div>
-                <div class="box">
-                    <input type="password" placeholder="Nhập mật khẩu...">
-                    <i class="fa fa-lock"></i>
-                </div>
-                <div class="options">
-                    <label><input type="checkbox"> Remember Me</label>
-                    <a href="#">Forgot Password?</a>
-                </div>
-                <button type="submit">Submit</button>
-            </form>
-            <p>Don't have an account? <a href="#">Register</a></p>
+
+@if (isRestoring)
+{
+    <p>🔄 Đang kiểm tra trạng thái đăng nhập...</p>
+}
+else if (!LoginState.IsLoggedIn)
+{
+    <div class="full-screen-center">
+        <div class="form-area">
+            <div class="wrapper">
+                <h2>Admin Login</h2>
+
+                <form @onsubmit:preventDefault="true">
+                    <div class="box">
+                        <input type="text" @bind="username" placeholder="Nhập tên đăng nhập..." />
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <div class="box">
+                        <input type="password" @bind="pass" placeholder="Nhập mật khẩu..." />
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <div class="options">
+                        <label><input type="checkbox" /> Remember Me</label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+
+                    @if (isLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <button type="button" @onclick="LoginDB">Submit</button>
+                    }
+                </form>
+
+                <p>Don't have an account? <a href="#">Register</a></p>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="full-screen-center">
+        <div class="form-area">
+            <div class="wrapper">
+                <h2>Welcome!</h2>
+                <button @onclick="Logout">Logout</button>
+            </div>
+        </div>
+    </div>
+}
+@if (showLoginError)
+{
+    <div class="popup-bubble">
+        @loginErrorMessage
+    </div>
+}
 
 @code {
-    private int currentCount = 0;
+    private string username;
+    private string pass;
+    private bool isLoginPending = false;
+    private bool isRestoring = false;
+    private List<Data.DTOs.ListParaUser> datapara;
+    private string loginErrorMessage = "";
+    private bool isLoading = false;
+    private bool showLoginError = false;
 
-    private void IncrementCount()
+    private async Task LoginDB()
     {
-        currentCount++;
+        if (isLoginPending) return;
+        isLoginPending = true;
+        isLoading = true;
+        StateHasChanged();
+
+        string username = this.username?.Trim();
+        string password = this.pass?.Trim();
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            await ShowErrorAsync("Vui lòng nhập tài khoản và mật khẩu");
+            isLoading = false;
+            isLoginPending = false;
+            return;
+        }
+
+        try
+        {       
+            // datapara = await GetLoginUser.GetLoginUser("admin", username, pass);
+            // if (datapara != null && datapara.Any())
+            if(username == "a" && password == "a")
+            {
+                LoginState.Login(username);
+                await sessionStorage.SetAsync("isLoggedIn", true);
+                await sessionStorage.SetAsync("username", username);               
+                StateHasChanged();
+            }
+            else
+            {
+                await ShowErrorAsync("Tài khoản hoặc mật khẩu không đúng");
+            }
+        }
+         catch (Exception ex)
+        {
+            string message = "Lỗi đăng nhập: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+            isLoginPending = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ShowErrorAsync(string message)
+    {
+        loginErrorMessage = message;
+        showLoginError = true;
+        StateHasChanged();
+
+        await Task.Delay(1400);
+
+        showLoginError = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var loginResult = await sessionStorage.GetAsync<bool>("isLoggedIn");
+                if (loginResult.Success && loginResult.Value)
+                {
+                    var usernameResult = await sessionStorage.GetAsync<string>("username");
+                    if (!LoginState.IsLoggedIn)
+                    {
+                        LoginState.Login(usernameResult.Value);
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            isRestoring = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Logout()
+    {
+        await sessionStorage.DeleteAsync("isLoggedIn");
+        await sessionStorage.DeleteAsync("username");
+        LoginState.Logout();
+        username = string.Empty;
+        pass = string.Empty;
+        StateHasChanged();
     }
 }

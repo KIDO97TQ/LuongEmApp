@@ -15,7 +15,7 @@ namespace FistWeb.Data
         public DbSet<users> Users { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Paramater> Paramater { get; set; }
-
+        public DbSet<ListParaUser> ListParaUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +36,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<DoanhThuThueDoDto>().HasNoKey();
             modelBuilder.Entity<RentalSummary>().HasNoKey();
             modelBuilder.Entity<InfoThueDoDto>().HasNoKey();
-
+            modelBuilder.Entity<ListParaUser>().HasNoKey();
         }
     }
 }

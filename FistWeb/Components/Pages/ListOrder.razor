@@ -6,6 +6,9 @@
 @inject GetListThueDo GetListThueDo
 @rendermode InteractiveServer
 @inject IJSRuntime JS
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage sessionStorage
 
 
 <div class="tabs">
@@ -205,7 +208,7 @@
     #endregion
 
     protected override async Task OnInitializedAsync()
-    {
+    {   
         this.month = DateTime.Now.Month;
         this.year = DateTime.Now.Year;
     }
@@ -245,17 +248,26 @@
     {
         if (firstRender)
         {
-            await LoadData();
-            // Lấy chiều cao màn hình
-            int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
-            UpdateRowsPerPage(height);
+            try
+            {
+                var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
 
-            // Đăng ký handler khi resize
-            objRef = DotNetObjectReference.Create(this);
-            await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
-
-            // Gọi lần đầu để lấy dữ liệu
-            await LoadData();
+                if (result.Success && result.Value)
+                {
+                    int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
+                    UpdateRowsPerPage(height);
+                    objRef = DotNetObjectReference.Create(this);
+                    await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
+                    await LoadData();
+                }
+                else
+                {
+                    Navigation.NavigateTo("/", true);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }

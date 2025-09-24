@@ -10,28 +10,6 @@
     overflow: hidden;
     height: 100%;*/
 }
-/*.chart-order::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.chart-order:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.chart-order, .staff-section {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-    .chart-order:nth-child(2) {
-        animation-delay: 0.1s;
-    }*/
 
 .control-select[b-yie3h92shu] {
     padding: 8px 12px;

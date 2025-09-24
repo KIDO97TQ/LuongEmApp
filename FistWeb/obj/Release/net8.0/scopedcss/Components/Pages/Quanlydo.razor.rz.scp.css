@@ -380,4 +380,86 @@ body {
 
     color: white;
 }
+    .store-info .tab-btn:hover[b-auhx5faxoe] {
+        background: #4CAF50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+/*-----------------------css button add--------------------*/
+.bi[b-auhx5faxoe] {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    top: -1px;
+    background-size: cover;
+}
+
+/*-----------------------css option--------------------*/
+.option-wrapper[b-auhx5faxoe] {
+    position: relative;
+    display: inline-block;
+}
+
+.option-menu[b-auhx5faxoe] {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 10;
+    min-width: 120px;
+    animation: fadeIn-b-auhx5faxoe 0.2s ease-in-out;
+}
+
+.option-item[b-auhx5faxoe] {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+    .option-item:hover[b-auhx5faxoe] {
+        background: #f1f1f1;
+    }
+
+.option-menu.show[b-auhx5faxoe] {
+    display: block;
+}
+
+@keyframes fadeIn-b-auhx5faxoe {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*---------------------loading---------------*/
+.spinner[b-auhx5faxoe] {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin-b-auhx5faxoe 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin-b-auhx5faxoe {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
 </style[b-auhx5faxoe] >

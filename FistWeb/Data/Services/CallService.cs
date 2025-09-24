@@ -8,7 +8,7 @@ using System.Text;
 
 namespace FistWeb.Data.Services
 {
-    public class CallService : IUserService, IThongKeService, GetListThueDo, SumGetListThueDo, IGetParamaterService
+    public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService
     {
         private readonly AppDbContext _context;
 
@@ -17,22 +17,6 @@ namespace FistWeb.Data.Services
             _context = context;
         }
 
-        public async Task<List<UserOrderDto>> GetUserOrdersAsync()
-        {
-            var query = from u in _context.Users
-                        join o in _context.Order
-                            on u.UserId equals o.UserId
-                        select new UserOrderDto
-                        {
-                            Username = u.Username,
-                            phone = u.Phone,
-                            OrderId = o.OrderId,
-                            TotalAmount = o.TotalAmount
-                        };
-
-            return await query.ToListAsync();
-        }
-     
         public async Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null)
         {
             try
@@ -92,25 +76,25 @@ namespace FistWeb.Data.Services
                            JOIN clothings.products p ON b.productid = p.productid
                            WHERE EXTRACT(YEAR FROM b.borrowdate) = :year ");
 
-            parameters.Add(new NpgsqlParameter("year", year));
+                parameters.Add(new NpgsqlParameter("year", year));
 
-            if (month != null)
-            {
-                sql.Append(" AND EXTRACT(MONTH FROM b.borrowdate) = :month ");
-                parameters.Add(new NpgsqlParameter("month", month));
-            }
+                if (month != null)
+                {
+                    sql.Append(" AND EXTRACT(MONTH FROM b.borrowdate) = :month ");
+                    parameters.Add(new NpgsqlParameter("month", month));
+                }
 
-            if (status != "ALL")
-            {
-                sql.Append(" AND b.status = :status ");
-                parameters.Add(new NpgsqlParameter("status", status));
-            }
+                if (status != "ALL")
+                {
+                    sql.Append(" AND b.status = :status ");
+                    parameters.Add(new NpgsqlParameter("status", status));
+                }
 
-            sql.Append(" GROUP BY rental_date, p.type_production ORDER BY rental_date");
+                sql.Append(" GROUP BY rental_date, p.type_production ORDER BY rental_date");
 
-            return await _context.Set<RentalSummary>()
-                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
-                    .ToListAsync();
+                return await _context.Set<RentalSummary>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
             }
             catch (Exception ex) { }
             return new List<RentalSummary>();
@@ -166,6 +150,39 @@ namespace FistWeb.Data.Services
                         };
 
             return await query.ToListAsync();
+        }
+
+        public async Task<List<ListParaUser>> GetLoginUser(string fun, string user, string pass)
+        {
+            List<ListParaUser> kqqqq = new List<ListParaUser>();
+            try
+            {
+                //List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+                StringBuilder sql = new StringBuilder(@" SELECT b.item_key1
+                                             FROM clothings.paramater b
+                                             WHERE b.function_name = @function_name and b.item_key1=@taikhoan and b.item_key2=@matkau ");
+                //parameters.Clear();
+                //parameters.Add(new NpgsqlParameter("function_name", fun));
+                //parameters.Add(new NpgsqlParameter("taikhoan", user));
+                //parameters.Add(new NpgsqlParameter("matkau", pass));
+                var parameters = new[]
+                {
+                    new NpgsqlParameter("function_name", fun),
+                    new NpgsqlParameter("taikhoan", user),
+                    new NpgsqlParameter("matkau", pass)
+                };
+
+
+                kqqqq = await _context.ListParaUsers
+                             .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                             .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message;
+            }
+            return kqqqq;
         }
     }
 }

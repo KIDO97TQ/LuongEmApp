@@ -4,10 +4,12 @@
 @rendermode InteractiveServer
 @inject IJSRuntime JS
 @page "/doanhthu"
-@* @inject ILogger<ViewDoanhThu> Logger *@
-@inject IUserService CallService
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage sessionStorage
 @inject IThongKeService ThongKeService
-
+@inject LoginStateService LoginState
+@inject NavigationManager Navigation
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -254,7 +256,16 @@
     {
         if (firstRender)
         {
-            await TimKiem();
+            var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
+
+            if (result.Success && result.Value)
+            {
+                await TimKiem();
+            }
+            else
+            {
+                Navigation.NavigateTo("/", true);
+            }
         }
     }
 

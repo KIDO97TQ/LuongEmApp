@@ -7,7 +7,9 @@
 @rendermode InteractiveServer
 @inject IJSRuntime JS
 @using System.Globalization
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage sessionStorage
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">Thêm - Sửa - Xóa đồ</button>
@@ -33,7 +35,7 @@
                     <select class="form-select">
                         <option value="">Chọn loại sản phẩm</option>
                         @{
-                            if (this.ListType != null)
+                            if (this.ListType != null && !isLoading)
                             {
                                 foreach (var item in this.ListType)
                                 {
@@ -42,15 +44,22 @@
                             }
                         }
                     </select>
-                    <div class="option-wrapper">
-                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                    @if (isLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <div class="option-wrapper">
+                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
 
-                        <div class="option-menu">
-                            <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
-                            <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
-                            <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
+                            <div class="option-menu">
+                                <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
+                                <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
+                                <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
 
                 <!-- Size SP -->
@@ -66,7 +75,7 @@
                     <select class="form-select">
                         <option value="">Chọn mức giá</option>
                         @{
-                            if (this.ListPrice != null)
+                            if (this.ListPrice != null && !isLoading)
                             {
                                 @foreach (var item in this.ListPrice)
                                 {
@@ -78,15 +87,29 @@
                             }
                         }
                     </select>
-                    <div class="option-wrapper">
-                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                    @if (isLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <div class="option-wrapper">
+                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
 
-                        <div class="option-menu">
-                            <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
-                            <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
-                            <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
+                            <div class="option-menu">
+                                <div class="option-item">❌ Xóa</div>
+                                @if (!isEditing)
+                                {
+                                    <div class="option-item" @onclick="EnableEditing">➕ Thêm</div>
+                                }
+                                else
+                                {
+                                    <input type="text" @bind="newValue" placeholder="Nhập dữ liệu..." @onblur="OnInputBlur" @onkeydown="OnKeyDown" autofocus />
+                                }
+                                <div class="option-item">❎ Hủy</div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
 
                 <!-- Số lượng -->
@@ -119,7 +142,7 @@
         </div>
         <!-- store info -->
         <div class="store-info">
-            <button class="tab-btn"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
+            <button class="button-add" type="button" @onclick="addClick"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
         </div>
     </div>
 </div>
@@ -151,6 +174,9 @@
     private List<Data.DTOs.ListParamater> datapara = new();
     List<string> ListType;
     List<string> ListPrice;
+    private bool isLoading = true;
+    private bool isEditing = false;
+    private string newValue;
 
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
@@ -163,22 +189,56 @@
     {
         if (firstRender)
         {
-            datapara = await GetListParamater.GetParamater();
-            this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).ToList();
-            this.ListPrice = datapara.Where(x => x.KeyPara == "price").Select(x => x.keyData).ToList();
-            StateHasChanged();
+            var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
+
+            if (result.Success && result.Value)
+            {
+                isLoading = true;
+                datapara = await GetListParamater.GetParamater();
+                this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).ToList();
+                this.ListPrice = datapara.Where(x => x.KeyPara == "price").Select(x => x.keyData).ToList();
+                isLoading = false;
+                StateHasChanged();
+            }
+            else
+            {
+                Navigation.NavigateTo("/", true);
+            }
         }
     }
 
-    private async Task OnTypeChanged(ChangeEventArgs e)
+    private async Task addClick()
     {
-
+        this.month = int.Parse(DateTime.Now.Month.ToString());
+        this.year = int.Parse(DateTime.Now.Year.ToString());
     }
 
-    private async Task OnMonthChanged(ChangeEventArgs e)
+    void EnableEditing()
     {
-
+        isEditing = true;
     }
 
+    void OnInputBlur()
+    {
+        if (string.IsNullOrWhiteSpace(newValue))
+        {
+            // Không nhập gì thì trở về trạng thái ban đầu
+            isEditing = false;
+        }
+        else
+        {
+            // Có dữ liệu nhập vào -> làm gì đó với newValue
+            Console.WriteLine($"Dữ liệu nhập: {newValue}");
+            isEditing = false;
+            // Có thể cập nhật UI hoặc lưu dữ liệu ở đây
+        }
+    }
 
+    void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            OnInputBlur();
+        }
+    }
 }

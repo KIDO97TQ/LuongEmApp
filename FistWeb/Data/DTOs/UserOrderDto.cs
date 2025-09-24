@@ -43,4 +43,10 @@
         public string KeyPara { get; set; }
         public string keyData { get; set; }
     }
+    public class ListParaUser
+    {
+        //public string KeyPara { get; set; }
+        public string keyUsername { get; set; }
+        //public string keyUserpass { get; set; }
+    }
 }

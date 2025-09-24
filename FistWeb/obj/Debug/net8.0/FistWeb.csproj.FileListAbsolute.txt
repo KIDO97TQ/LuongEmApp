@@ -9,6 +9,10 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\FistWeb.runt
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\FistWeb.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\ChartJs.Blazor.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Auth.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Core.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Drive.v3.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
@@ -24,7 +28,10 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Microsoft.Ex
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Npgsql.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.CodeDom.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.Management.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.csproj.AssemblyReference.cache
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.GeneratedMSBuildEditorConfig.editorconfig
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.AssemblyInfoInputs.cache
@@ -35,6 +42,7 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.sour
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\DoanhThu.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\ListOrder.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Quanlydo.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\bundle\FistWeb.styles.css
@@ -55,11 +63,3 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\refint\FistW
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.genruntimeconfig.cache
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Auth.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Core.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\Google.Apis.Drive.v3.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.CodeDom.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\System.Management.dll
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
