@@ -1,14 +1,18 @@
 ﻿using FistWeb.Data;
 using FistWeb.Data.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
+using System;
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 
 namespace FistWeb.Data.Services
 {
-    public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService
+    public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService,
+    IDeleteParaService, IInsertSPService
     {
         private readonly AppDbContext _context;
 
@@ -152,37 +156,93 @@ namespace FistWeb.Data.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<ListParaUser>> GetLoginUser(string fun, string user, string pass)
+        public async Task<List<ListParaUser>> GetLoginUser(string fun, string user, string? pass)
         {
-            List<ListParaUser> kqqqq = new List<ListParaUser>();
-            try
-            {
-                //List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
-                StringBuilder sql = new StringBuilder(@" SELECT b.item_key1
+            StringBuilder sql = new StringBuilder(@" SELECT b.item_key1
                                              FROM clothings.paramater b
-                                             WHERE b.function_name = @function_name and b.item_key1=@taikhoan and b.item_key2=@matkau ");
-                //parameters.Clear();
-                //parameters.Add(new NpgsqlParameter("function_name", fun));
-                //parameters.Add(new NpgsqlParameter("taikhoan", user));
-                //parameters.Add(new NpgsqlParameter("matkau", pass));
-                var parameters = new[]
-                {
-                    new NpgsqlParameter("function_name", fun),
-                    new NpgsqlParameter("taikhoan", user),
-                    new NpgsqlParameter("matkau", pass)
-                };
+                                             WHERE b.function_name = @function_name ");
 
+            parameters.Add(new NpgsqlParameter("function_name", fun));
 
-                kqqqq = await _context.ListParaUsers
-                             .FromSqlRaw(sql.ToString(), parameters.ToArray())
-                             .ToListAsync();
-            }
-            catch (Exception ex)
+            if (fun == "type")
             {
-                string err = ex.Message;
+                sql.Append(" and UPPER(b.item_key1)=@taikhoan ");
+                parameters.Add(new NpgsqlParameter("taikhoan", user));
             }
-            return kqqqq;
+            else
+            {
+                sql.Append(" and b.item_key1=@taikhoan ");
+                parameters.Add(new NpgsqlParameter("taikhoan", user));
+            }
+
+            if (pass != null)
+            {
+                sql.Append(" and b.item_key2=@matkau ");
+                parameters.Add(new NpgsqlParameter("matkau", pass));
+            }
+
+            return await _context.ListParaUsers
+                           .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                           .ToListAsync();
+        }
+
+        public async Task<int> InsertParamaterRawAsync(string fun, string key1, string? key2)
+        {
+            var sql = new StringBuilder(@"INSERT INTO clothings.paramater (function_name, item_key1, item_key2)
+                                               VALUES (@function_name, @item_key1, @item_key2)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("function_name", fun),
+                new NpgsqlParameter("item_key1", key1),
+                new NpgsqlParameter("item_key2", (object?)key2 ?? DBNull.Value)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> DeleteParamaterRawAsync(string fun, string key1, string? key2 = null)
+        {
+            var sql = new StringBuilder(@"DELETE FROM clothings.paramater
+                                                WHERE function_name = @function_name AND item_key1 = @item_key1");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("function_name", fun),
+                new NpgsqlParameter("item_key1", key1)
+            };
+
+            if (!string.IsNullOrEmpty(key2))
+            {
+                sql.Append(" AND item_key2 = @item_key2");
+                parameters.Add(new NpgsqlParameter("item_key2", key2));
+            }
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> InserProduct(long productID, string nameSP, string? DescSP, decimal PriceSP, int QtySP, string sizeSP, string typeSP)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            var sql = new StringBuilder(@"INSERT INTO clothings.products (ProductID, ProductName, Description, PricePerDay, StockQuantity, Size, Type_production, saveqty,createdate) 
+                         VALUES (@productID, @productName, @description, @priceperday, @stockquantity, @size, @typeproduct, @qtysave,@createdate)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("productID", productID),
+                new NpgsqlParameter("productName", nameSP),
+                new NpgsqlParameter("description", (object?)DescSP ?? DBNull.Value),
+                new NpgsqlParameter("priceperday", PriceSP),
+                new NpgsqlParameter("stockquantity", QtySP),
+                new NpgsqlParameter("size", sizeSP),
+                new NpgsqlParameter("typeproduct", typeSP),
+                new NpgsqlParameter("qtysave", QtySP),
+                new NpgsqlParameter("createdate", gioVN)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
     }
 }

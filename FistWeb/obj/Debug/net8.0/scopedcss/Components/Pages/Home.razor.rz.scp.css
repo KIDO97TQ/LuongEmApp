@@ -118,15 +118,6 @@ body[b-l54ik2cc7b] {
     transition: all 0.3s ease;
 }
 
-   /* .wrapper button:hover {
-        background: #4CAF50;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
-    }*/
-
-
-
     .wrapper button:hover[b-l54ik2cc7b] {
         background: #4CAF50;
         transform: translateY(-2px);

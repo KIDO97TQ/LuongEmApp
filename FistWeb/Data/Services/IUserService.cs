@@ -24,6 +24,21 @@ namespace FistWeb.Data.Services
     }
     public interface IGetParaUserService
     {
-        Task<List<ListParaUser>> GetLoginUser(string fun, string user, string pass);
+        Task<List<ListParaUser>> GetLoginUser(string fun, string user, string? pass);
+    }
+
+    public interface IAddParaService
+    {
+        Task<int> InsertParamaterRawAsync(string fun, string user, string? pass);
+    }
+
+    public interface IDeleteParaService
+    {
+        Task<int> DeleteParamaterRawAsync(string fun, string user, string? pass);
+    }
+
+    public interface IInsertSPService
+    {
+        Task<int> InserProduct(long productID, string nameSP, string? DescSP, decimal PriceSP, int QtySP, string sizeSP, string typeSP);
     }
 }

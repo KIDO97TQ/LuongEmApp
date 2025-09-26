@@ -1,7 +1,9 @@
 ﻿@page "/quanlydo"
 @using Microsoft.EntityFrameworkCore
 @using System.Data
+@using System.Text.Json
 @using FistWeb.Data.Services
+@using System.Text.RegularExpressions
 @inject Data.AppDbContext Db
 @inject IGetParamaterService GetListParamater
 @rendermode InteractiveServer
@@ -10,6 +12,12 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
+@inject IGetParaUserService GetSPInfo
+@inject IAddParaService AddPara
+@inject IDeleteParaService DeletePara
+@inject IInsertSPService InserSP
+@inject HttpClient Http
+
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">Thêm - Sửa - Xóa đồ</button>
@@ -20,19 +28,31 @@
 <div class="tab-content active" id="tab1">
     <div class="form-container">
         <div class="form-content">
+            <!-- Right side - Image -->
+            <div class="form-section-right">
+                <label for="fileInput" class="image-upload-area">
+                    @if (!openImage)
+                    {
+                        <div class="image-upload-icon">📷</div>
+                        <div class="image-upload-text">Click để tải ảnh lên</div>
+                    }
+                    <img src="@previewImageUrl" style="max-width: 100%; margin-top: 10px;" />
+                </label>
+                <InputFile id="fileInput" OnChange="OnFileSelected" accept="image/*" style="display:none" />
+            </div>
             <!-- Left side - Form -->
             <div class="form-section-left">
                 <!-- Tên SP -->
                 <div class="form-group">
                     <label class="form-label">Tên SP:</label>
-                    <input type="text" class="form-input" placeholder="Nhập tên sản phẩm..." />
+                    <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên sản phẩm..." />
                     <div></div>
                 </div>
 
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label">Loại SP:</label>
-                    <select class="form-select">
+                    <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
                         <option value="">Chọn loại sản phẩm</option>
                         @{
                             if (this.ListType != null && !isLoading)
@@ -52,11 +72,20 @@
                     {
                         <div class="option-wrapper">
                             <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
-
                             <div class="option-menu">
-                                <div class="option-item" onclick="handleOption('delete')">❌ Xóa</div>
-                                <div class="option-item" onclick="handleOption('add')">➕ Thêm</div>
-                                <div class="option-item" onclick="handleOption('cancel')">❎ Hủy</div>
+                                @* <div class="option-item" @onclick="EnableEditing">➕ Thêm</div> *@
+                                <div class="New-price">
+                                    <input id="priceInput" type="text"
+                                    @bind="newValueSP"
+                                    @bind:event="oninput"
+                                    placeholder="Thêm mới loại sp..." />
+
+                                    <button class="option-itemAdd" type="button" @onclick="addSpClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="option-item" @onclick="XoaSpClick">🗑️ Xóa loại sp đang chọn</div>
+
                             </div>
                         </div>
                     }
@@ -65,14 +94,14 @@
                 <!-- Size SP -->
                 <div class="form-group">
                     <label class="form-label">Size SP:</label>
-                    <input type="text" class="form-input" placeholder="S, M, L, XL..." />
+                    <input type="text" @bind="TextValueSizeSP" @bind:event="oninput" class="form-input" placeholder="S, M, L, XL..." />
                     <div></div>
                 </div>
 
                 <!-- Giá thuê theo ngày -->
                 <div class="form-group">
                     <label class="form-label">Giá thuê theo ngày:</label>
-                    <select class="form-select">
+                    <select class="form-select" @bind="SelectValuePrice" @bind:event="oninput">
                         <option value="">Chọn mức giá</option>
                         @{
                             if (this.ListPrice != null && !isLoading)
@@ -97,16 +126,17 @@
                             <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
 
                             <div class="option-menu">
-                                <div class="option-item">❌ Xóa</div>
-                                @if (!isEditing)
-                                {
-                                    <div class="option-item" @onclick="EnableEditing">➕ Thêm</div>
-                                }
-                                else
-                                {
-                                    <input type="text" @bind="newValue" placeholder="Nhập dữ liệu..." @onblur="OnInputBlur" @onkeydown="OnKeyDown" autofocus />
-                                }
-                                <div class="option-item">❎ Hủy</div>
+                                <div class="New-price">
+                                    <input id="priceInput" type="text"
+                                    @bind="newValuePrice"
+                                    placeholder="Thêm mới mức giá..."
+                                    @oninput="OnPriceInput"
+                                    autofocus />
+                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá sp đang chọn</div>
                             </div>
                         </div>
                     }
@@ -115,42 +145,52 @@
                 <!-- Số lượng -->
                 <div class="form-group">
                     <label class="form-label">Số lượng:</label>
-                    <input type="number" class="form-input" placeholder="Nhập số lượng..." min="1" />
+                    <input type="number" @bind="TextValueQTY" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng..." min="1" />
                     <div></div>
                 </div>
 
                 <!-- Mô tả thêm về SP -->
                 <div class="form-group">
                     <label class="form-label">Mô tả thêm về SP:</label>
-                    <textarea class="form-input" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                    <textarea class="form-input" @bind="TextValueDesc" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
                     <div></div>
                 </div>
-            </div>
 
-            <!-- Right side - Image -->
-            <div class="form-section-right">
-                <div class="image-section">
-                    <div class="image-title">Ảnh về SP: <em>Image</em></div>
-                    <div class="image-upload-area">
-                        <div class="image-upload-icon">📷</div>
-                        <div class="image-upload-text">Click để tải ảnh lên</div>
-                        <img class="image-preview" style="display: none;" />
-                        <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)" />
-                    </div>
+                <!-- store info -->
+                <div class="store-info">
+                    @if (UpdateisLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <button class="button-add" type="button" @onclick="UploadSP"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
+                    }
                 </div>
             </div>
-        </div>
-        <!-- store info -->
-        <div class="store-info">
-            <button class="button-add" type="button" @onclick="addClick"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
         </div>
     </div>
 </div>
 
 @* tab2 *@
 <div class="tab-content" id="tab3">
-    <h3>📈 Trả đồ</h3>
-    <p>Nội dung biểu đồ phân tích...</p>
+     <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                📈 Tổng hàng hóa
+            </h3>
+             <div class="staff-controls">
+                @* <select class="control-select" value="typeSelect"  @onchange="OnTypeChanged" >
+                    <option value="all">Tất cả trong kho hiện có</option>
+                    <option value="nonReturn">Khách cầm chưa trả</option>
+                    <option value="allEnter">Tổng số đã nhập kho</option>
+                </select> *@
+            </div> 
+        </div>
+        <div class="chart-container">
+            <canvas id="Doanhthunam"></canvas>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -174,9 +214,9 @@
     private List<Data.DTOs.ListParamater> datapara = new();
     List<string> ListType;
     List<string> ListPrice;
-    private bool isLoading = true;
-    private bool isEditing = false;
-    private string newValue;
+    private bool isLoading = true, UpdateisLoading = false;
+    private string newValueSP, newValuePrice, SelectValueSP, SelectValuePrice, TextValueNameSP, TextValueSizeSP, TextValueQTY, TextValueDesc;
+    [Inject] private IJSRuntime JSx { get; set; }
 
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
@@ -195,50 +235,282 @@
             {
                 isLoading = true;
                 datapara = await GetListParamater.GetParamater();
-                this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).ToList();
-                this.ListPrice = datapara.Where(x => x.KeyPara == "price").Select(x => x.keyData).ToList();
+                this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                this.ListPrice = datapara.Where(x => x.KeyPara == "price")
+                                     .OrderBy(x =>
+                                     {
+                                         if (decimal.TryParse(x.keyData, out var number))
+                                             return number;
+                                         return decimal.MaxValue;
+                                     })
+                                     .Select(x => x.keyData)
+                                     .ToList();
                 isLoading = false;
                 StateHasChanged();
             }
             else
             {
                 Navigation.NavigateTo("/", true);
+
+            }
+        }
+
+    }
+
+    private async Task addSpClick()
+    {
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("type", newValueSP.ToUpper(), null);
+        if (datapara != null && datapara.Any())
+        {
+            await JS.InvokeVoidAsync("alert", $"Loại sp ({newValueSP}) đã tồn tại!");
+        }
+        else
+        {
+            isLoading = true;
+            int checkInsert = await AddPara.InsertParamaterRawAsync("type", newValueSP, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamater> data = await GetListParamater.GetParamater();
+                this.ListType = data.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Thêm loại sp ({newValueSP}) thành công!");
+                newValueSP = "";
+                StateHasChanged();
+            }
+            else
+            {
+                isLoading = false;
+                await JS.InvokeVoidAsync("alert", $"Thêm loại sp ({newValueSP}) không thành công!");
             }
         }
     }
 
-    private async Task addClick()
+    private async Task XoaSpClick()
     {
-        this.month = int.Parse(DateTime.Now.Month.ToString());
-        this.year = int.Parse(DateTime.Now.Year.ToString());
-    }
-
-    void EnableEditing()
-    {
-        isEditing = true;
-    }
-
-    void OnInputBlur()
-    {
-        if (string.IsNullOrWhiteSpace(newValue))
+        if (string.IsNullOrEmpty(SelectValueSP))
         {
-            // Không nhập gì thì trở về trạng thái ban đầu
-            isEditing = false;
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn loại SP cần xóa trước");
+            await JS.InvokeVoidAsync("closeAllOptionMenus");
+            return;
+        }
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
+
+        if (confirmed)
+        {
+            isLoading = true;
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("type", SelectValueSP, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamater> data = await GetListParamater.GetParamater();
+                this.ListType = data.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Delete loại sp ({SelectValueSP}) thành công!");
+                newValueSP = "";
+                StateHasChanged();
+            }
+            else
+            {
+                isLoading = false;
+                await JS.InvokeVoidAsync("alert", $"Delete loại sp ({newValueSP}) không thành công!");
+            }
+        }
+    }
+
+    private async Task addPriceClick()
+    {
+        isLoading = true;
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("price", newValuePrice, null);
+        if (datapara != null && datapara.Any())
+        {
+            await JS.InvokeVoidAsync("alert", $"Giá sp ({newValuePrice}) đã tồn tại!");
+            isLoading = false;
         }
         else
         {
-            // Có dữ liệu nhập vào -> làm gì đó với newValue
-            Console.WriteLine($"Dữ liệu nhập: {newValue}");
-            isEditing = false;
-            // Có thể cập nhật UI hoặc lưu dữ liệu ở đây
+            int checkInsert = await AddPara.InsertParamaterRawAsync("price", newValuePrice, null);
+            if (checkInsert > 0)
+            {
+
+                List<Data.DTOs.ListParamater> data = await GetListParamater.GetParamater();
+                this.ListPrice = data.Where(x => x.KeyPara == "price")
+                                     .OrderBy(x =>
+                                     {
+                                         if (decimal.TryParse(x.keyData, out var number))
+                                             return number;
+                                         return decimal.MaxValue;
+                                     })
+                                     .Select(x => x.keyData)
+                                     .ToList();
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá sp ({newValuePrice}) thành công!");
+                newValuePrice = "";
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá sp ({newValuePrice}) không thành công!");
+                isLoading = false;
+            }
         }
     }
 
-    void OnKeyDown(KeyboardEventArgs e)
+    private async Task XoaPriceClick()
     {
-        if (e.Key == "Enter")
+        if (string.IsNullOrEmpty(SelectValuePrice))
         {
-            OnInputBlur();
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá SP cần xóa trước");
+            await JS.InvokeVoidAsync("closeAllOptionMenus");
+            return;
+        }
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá SP này không?");
+
+        if (confirmed)
+        {
+            isLoading = true;
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("price", SelectValuePrice, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamater> data = await GetListParamater.GetParamater();
+                this.ListPrice = data.Where(x => x.KeyPara == "price")
+                                     .OrderBy(x =>
+                                     {
+                                         if (decimal.TryParse(x.keyData, out var number))
+                                             return number;
+                                         return decimal.MaxValue;
+                                     })
+                                     .Select(x => x.keyData)
+                                     .ToList();
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Delete giá sp ({SelectValuePrice}) thành công!");
+                newValueSP = "";
+                isLoading = false;
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Delete giá sp ({SelectValuePrice}) không thành công!");
+            }
         }
     }
+
+    private void OnPriceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            newValuePrice = "";
+            return;
+        }
+
+        if (int.TryParse(digitsOnly, out int number))
+        {
+            // newValuePrice = $"{number:N0}";
+            var culture = new CultureInfo("vi-VN");
+            newValuePrice = number.ToString("N0", culture);
+        }
+        else
+            newValuePrice = "";
+    }
+
+    private IBrowserFile uploadedFile;
+    private string previewImageUrl;
+    private bool openImage = false;
+    private MemoryStream? fileStream;
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        openImage = true;
+        uploadedFile = e.File;
+
+        using var stream = uploadedFile.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024); // 5MB
+
+        fileStream = new MemoryStream();
+        await stream.CopyToAsync(fileStream);
+
+        var base64 = Convert.ToBase64String(fileStream.ToArray());
+        previewImageUrl = $"data:{uploadedFile.ContentType};base64,{base64}";
+    }
+
+    private async Task UploadSP()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(SelectValueSP) 
+            || string.IsNullOrEmpty(TextValueNameSP) || string.IsNullOrEmpty(TextValueSizeSP) || string.IsNullOrEmpty(TextValueQTY))
+            {
+                await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+            }
+            if (fileStream == null || uploadedFile == null)
+            {
+                await JS.InvokeVoidAsync("alert", "Chưa chọn ảnh");
+                return;
+            }
+            fileStream.Position = 0;
+            UpdateisLoading = true;
+
+            long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+            Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
+            int QtySP = int.Parse(TextValueQTY);
+
+            var fileName = productID.ToString();
+            var contentType = uploadedFile.ContentType;
+            await fileStream.CopyToAsync(fileStream);
+            var base64Data = Convert.ToBase64String(fileStream.ToArray());
+
+            #region doing image
+            var values = new Dictionary<string, string>
+            {
+                { "data", base64Data },
+                { "filename", fileName },
+                { "mimeType", contentType }
+            };
+            var content = new FormUrlEncodedContent(values);
+            var response = await Http.PostAsync("https://script.google.com/macros/s/AKfycbz_4Dtc0b1v_NS1A3fhBbflxfYDU2VIm7Viz3ArSk86zSBtrMbgWL1s0IPHuuxRAovi/exec", content);
+            #endregion
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(responseString);
+            bool success = doc.RootElement.GetProperty("success").GetBoolean();
+            if (success)
+            {
+                int checkInsert = await InserSP.InserProduct(productID, TextValueNameSP, TextValueDesc, PriceSP, QtySP, TextValueSizeSP, SelectValueSP);
+                if (checkInsert > 0)
+                {
+                    fileStream.Dispose();
+                    fileStream = null;
+                    openImage = false;
+                    previewImageUrl = null;
+                    uploadedFile = null;
+                    SelectValuePrice =null;
+                    SelectValueSP = null;
+                    TextValueNameSP = null;
+                    TextValueSizeSP = null;
+                    TextValueQTY = null;
+                    TextValueDesc = null;
+
+                    await JS.InvokeVoidAsync("alert", "Thêm Sp mới ok!");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("alert", "Thêm Sp mới lỗi!");
+                }
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Upload thất bại");
+            }
+            UpdateisLoading = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload ảnh: {ex.Message}");
+        }
+    }
+
 }
