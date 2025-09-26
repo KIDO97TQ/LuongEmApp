@@ -21,7 +21,7 @@
 }
 
 .navbar-brand[b-4axgcipqhk] {
-    font-size: 1.1rem;
+    font-size: 2.1rem;
 }
 
 .bi[b-4axgcipqhk] {
@@ -83,6 +83,7 @@
 
 .nav-scrollable[b-4axgcipqhk] {
     display: none;
+    background-color:rgba(0, 0, 0, 0.4);
 }
 
 .navbar-toggler:checked ~ .nav-scrollable[b-4axgcipqhk] {

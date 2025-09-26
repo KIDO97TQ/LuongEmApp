@@ -10,7 +10,7 @@ main[b-sru35o4vx1] {
 }
 
 .sidebar[b-sru35o4vx1] {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    /*background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);*/
 }
 
 .top-row[b-sru35o4vx1] {
@@ -119,7 +119,7 @@ main[b-sru35o4vx1] {
 }
 
 .navbar-brand[b-4axgcipqhk] {
-    font-size: 1.1rem;
+    font-size: 2.1rem;
 }
 
 .bi[b-4axgcipqhk] {
@@ -181,6 +181,7 @@ main[b-sru35o4vx1] {
 
 .nav-scrollable[b-4axgcipqhk] {
     display: none;
+    background-color:rgba(0, 0, 0, 0.4);
 }
 
 .navbar-toggler:checked ~ .nav-scrollable[b-4axgcipqhk] {
