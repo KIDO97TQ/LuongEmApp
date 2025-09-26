@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\credentials\**" />
+    <Content Remove="wwwroot\credentials\**" />
+    <EmbeddedResource Remove="wwwroot\credentials\**" />
+    <None Remove="wwwroot\credentials\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ChartJs.Blazor" Version="1.1.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.70.0.3893" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
@@ -14,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Components\Shared\" />
-    <Folder Include="wwwroot\credentials\" />
   </ItemGroup>
 
 </Project>

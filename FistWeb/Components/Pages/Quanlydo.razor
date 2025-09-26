@@ -76,9 +76,9 @@
                                 @* <div class="option-item" @onclick="EnableEditing">➕ Thêm</div> *@
                                 <div class="New-price">
                                     <input id="priceInput" type="text"
-                                    @bind="newValueSP"
-                                    @bind:event="oninput"
-                                    placeholder="Thêm mới loại sp..." />
+                                           @bind="newValueSP"
+                                           @bind:event="oninput"
+                                           placeholder="Thêm mới loại sp..." />
 
                                     <button class="option-itemAdd" type="button" @onclick="addSpClick">
                                         <i class="bi-option bi-plus-circle-fill"></i>
@@ -128,10 +128,10 @@
                             <div class="option-menu">
                                 <div class="New-price">
                                     <input id="priceInput" type="text"
-                                    @bind="newValuePrice"
-                                    placeholder="Thêm mới mức giá..."
-                                    @oninput="OnPriceInput"
-                                    autofocus />
+                                           @bind="newValuePrice"
+                                           placeholder="Thêm mới mức giá..."
+                                           @oninput="OnPriceInput"
+                                           autofocus />
                                     <button class="option-itemAdd" type="button" @onclick="addPriceClick">
                                         <i class="bi-option bi-plus-circle-fill"></i>
                                     </button>
@@ -174,18 +174,35 @@
 
 @* tab2 *@
 <div class="tab-content" id="tab3">
-     <div class="chart-card">
+    <div class="chart-card">
         <div class="staff-header">
             <h3 class="card-title">
                 📈 Tổng hàng hóa
             </h3>
-             <div class="staff-controls">
-                @* <select class="control-select" value="typeSelect"  @onchange="OnTypeChanged" >
-                    <option value="all">Tất cả trong kho hiện có</option>
-                    <option value="nonReturn">Khách cầm chưa trả</option>
-                    <option value="allEnter">Tổng số đã nhập kho</option>
-                </select> *@
-            </div> 
+            <div class="staff-select">
+                <div class="staff-controls">
+                    <select class="control-select" value="typeSelect" @onchange="TypeChange">
+                        <option value="all">All</option>
+                        @{
+                            if (this.ListType != null && !isLoading)
+                            {
+                                foreach (var item in this.ListType)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="staff-controls">
+                    <select class="control-select" value="typeWHSelect" @onchange="TypeChange">
+                        <option value="">Chọn loại sản phẩm</option>
+                        <option value="all">Tất cả trong kho hiện có</option>
+                        <option value="NotReturn">Khách cầm chưa trả</option>
+                        <option value="AllEnter">Tổng số đã nhập kho</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-container">
             <canvas id="Doanhthunam"></canvas>
@@ -209,7 +226,6 @@
 
 
 @code {
-    private string newtest;
     private int month;
     private int year;
     private List<Data.DTOs.ListParamater> datapara = new();
@@ -217,8 +233,10 @@
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false;
     private string newValueSP, newValuePrice, SelectValueSP, SelectValuePrice, TextValueNameSP, TextValueSizeSP, TextValueQTY, TextValueDesc;
+    private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
 
+    #region add SP
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
         this.month = int.Parse(DateTime.Now.Month.ToString());
@@ -441,10 +459,11 @@
     {
         try
         {
-            if (string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(SelectValueSP) 
+            if (string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(SelectValueSP)
             || string.IsNullOrEmpty(TextValueNameSP) || string.IsNullOrEmpty(TextValueSizeSP) || string.IsNullOrEmpty(TextValueQTY))
             {
                 await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+                return;
             }
             if (fileStream == null || uploadedFile == null)
             {
@@ -487,7 +506,7 @@
                     openImage = false;
                     previewImageUrl = null;
                     uploadedFile = null;
-                    SelectValuePrice =null;
+                    SelectValuePrice = null;
                     SelectValueSP = null;
                     TextValueNameSP = null;
                     TextValueSizeSP = null;
@@ -513,5 +532,12 @@
             await JS.InvokeVoidAsync("alert", $"Lỗi khi upload ảnh: {ex.Message}");
         }
     }
+    #endregion
 
+    #region Dummary chart
+    private async Task TypeChange()
+    {
+       
+    }
+    #endregion
 }

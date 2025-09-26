@@ -4,7 +4,8 @@
 }
 
 .MainBackground {
-    background-image: linear-gradient(to right, #bdc3c7, #2c3e50); /*url('../image/HH.jpg') ;*/
+
+    background-image: url("https://images.wallpapersden.com/image/download/anime-city-4k-top-view_bmZrbWeUmZqaraWkpJRmbmdlrWZlbWU.jpg");
     background-size: cover; /* Đảm bảo ảnh phủ toàn bộ vùng */
     background-repeat: no-repeat; /* Không lặp */
     background-position: center;

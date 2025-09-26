@@ -1,6 +1,5 @@
 wwwroot\bootstrap\bootstrap.min.css
 wwwroot\bootstrap\bootstrap.min.css.map
-wwwroot\credentials\luongemweb-687e67e3b62f.json
 wwwroot\css\app.css
 wwwroot\favicon.png
 wwwroot\js\app.js

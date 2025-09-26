@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "PackagePath": "staticwebassets\\FistWeb.qkois220c8.bundle.scp.css"
+      "PackagePath": "staticwebassets\\FistWeb.n5q1sy3yuc.bundle.scp.css"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -11,10 +11,6 @@
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
-    },
-    {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\credentials\\luongemweb-687e67e3b62f.json",
-      "PackagePath": "staticwebassets\\credentials\\luongemweb-687e67e3b62f.json"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
