@@ -1,4 +1,4 @@
-<style >
+﻿<style >
 *[b-5jmtznnos0] {
     margin: 0;
     padding: 0;
@@ -25,6 +25,7 @@ body[b-5jmtznnos0] {
     display: flex;
     flex-direction: column;
 }
+
 article.dashboard-page[b-5jmtznnos0] {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -68,7 +69,7 @@ article.dashboard-page[b-5jmtznnos0] {
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
-    display: inline-block ;
+    display: inline-block;
     align-items: center;
     gap: 10px;
 }

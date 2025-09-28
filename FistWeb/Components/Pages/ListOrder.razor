@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
+@inject IGetParamaterService GetListParamater
 
 
 <div class="tabs">
@@ -20,146 +21,382 @@
 <!-- Page control -->
 <!-- tab1 -->
 <div class="tab-content active" id="tab1">
-    <h3>
-        Trạng Thái
-        <select class="control-select" value="type" @onchange="OnTypeChanged">
-            <option>All</option>
-            <option>Đã trả</option>
-            <option>Chưa trả</option>
-            <option>Bị hủy</option>
-        </select>
-        Tháng
-        <select class="control-select" value="month" @onchange="OnMonthChanged">
-            @for (int i = 1; i <= 12; i++)
-            {
-                <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-            }
-        </select>
-    </h3>
-    <div class="chart-order">
-        @*Hiện lên table*@
-        <table class="table-custom">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Họ tên</th>
-                    <th>SĐT/Facebook</th>
-                    <th>Ngày mượn</th>
-                    <th>Ngày trả</th>
-                    <th>Loại sản phẩm</th>
-                    <th>Size</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                    <th>Giá/ngày</th>
-                    <th>Tiền cọc</th>
-                    <th>Phát sinh</th>
-                    <th>Trạng thái</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (currentPageData != null && currentPageData.Any())
+    @if (isLoading)
+    {
+        <div> ⏳ Đang tải dữ liệu...</div>
+    }
+    else
+    {
+        <h3>
+            Trạng Thái
+            <select class="control-select" value="type" @onchange="OnTypeChanged">
+                <option>All</option>
+                <option>Đã trả</option>
+                <option>Chưa trả</option>
+                <option>Bị hủy</option>
+            </select>
+            Tháng
+            <select class="control-select" value="month" @onchange="OnMonthChanged">
+                @for (int i = 1; i <= 12; i++)
                 {
-                    int count = (currentPage - 1) * rowsPerPage + 1;
-                    foreach (var item in currentPageData)
+                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                }
+            </select>
+        </h3>
+        <div class="chart-order">
+            @*Hiện lên table*@
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ tên</th>
+                        <th>SĐT/Facebook</th>
+                        <th>Ngày mượn</th>
+                        <th>Ngày trả</th>
+                        <th>Loại sản phẩm</th>
+                        <th>Size</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Giá/ngày</th>
+                        <th>Tiền cọc</th>
+                        <th>Phát sinh</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (currentPageData != null && currentPageData.Any())
+                    {
+                        int count = (currentPage - 1) * rowsPerPage + 1;
+                        foreach (var item in currentPageData)
+                        {
+                            <tr>
+                                <td data-label="STT">@count</td>
+                                <td data-label="Họ tên">@item.fullname</td>
+                                <td data-label="SĐT/Facebook">@item.facebookphone</td>
+                                <td data-label="Ngày mượn">@item.borrowdate.ToString("dd/MM/yyyy")</td>
+                                <td data-label="Ngày trả">@item.returndate?.ToString("dd/MM/yyyy")</td>
+                                <td data-label="Loại sản phẩm">@item.type_production</td>
+                                <td data-label="Size">@item.size</td>
+                                <td data-label="Số lượng">@item.qty</td>
+                                <td data-label="Thành tiền">@item.totalamount</td>
+                                <td data-label="Giá/ngày">@item.priceperday</td>
+                                <td data-label="Tiền cọc">@item.moneycoc</td>
+                                <td data-label="Phát sinh">@item.tienphatsinh</td>
+                                <td data-label="Trạng thái">@item.status</td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                    else if (checkNull)
                     {
                         <tr>
-                            <td data-label="STT">@count</td>
-                            <td data-label="Họ tên">@item.fullname</td>
-                            <td data-label="SĐT/Facebook">@item.facebookphone</td>
-                            <td data-label="Ngày mượn">@item.borrowdate.ToString("dd/MM/yyyy")</td>
-                            <td data-label="Ngày trả">@item.returndate?.ToString("dd/MM/yyyy")</td>
-                            <td data-label="Loại sản phẩm">@item.type_production</td>
-                            <td data-label="Size">@item.size</td>
-                            <td data-label="Số lượng">@item.qty</td>
-                            <td data-label="Thành tiền">@item.totalamount</td>
-                            <td data-label="Giá/ngày">@item.priceperday</td>
-                            <td data-label="Tiền cọc">@item.moneycoc</td>
-                            <td data-label="Phát sinh">@item.tienphatsinh</td>
-                            <td data-label="Trạng thái">@item.status</td>
+                            <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
                         </tr>
-                        count++;
                     }
-                }
-                else if (checkNull)
-                {
-                    <tr>
-                        <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
-                    </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="13" style="text-align:center">⏳ Đang tải dữ liệu...</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                    else
+                    {
+                        <tr>
+                            <td colspan="13" style="text-align:center">⏳ Đang tải dữ liệu...</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-    <div class="pagination">
-        <button @onclick="PrevPage" disabled="@(!CanPrev)">
-            <i class="fa-solid fa-arrow-left"></i> Trước
-        </button>
-        <span>Trang @currentPage / @totalPages</span>
-        <button @onclick="NextPage" disabled="@(!CanNext)">
-            Sau <i class="fa-solid fa-arrow-right"></i>
-        </button>
-    </div>
+        <div class="pagination">
+            <button @onclick="PrevPage" disabled="@(!CanPrev)">
+                <i class="fa-solid fa-arrow-left"></i> Trước
+            </button>
+            <span>Trang @currentPage / @totalPages</span>
+            <button @onclick="NextPage" disabled="@(!CanNext)">
+                Sau <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    }
 </div>
 
 <!-- tab2 -->
 <div class="tab-content" id="tab2">
-    <h3>📝 Thuê đồ </h3>
-    <p>Nội dung quản lý log công việc...</p>
+    @if (isLoading)
+    {
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    }
+    else
+    {
+        <div class="form-container">
+            <!-- Left side - Form -->
+            <div class="form-section-left">
+                <!-- sđt, cccd ....  -->
+                <div class="form-group">
+                    <label class="form-label">Sđt/CCCD:</label>
+                    <input type="text" @bind="TextSdtKH" @bind:event="oninput" class="form-input" placeholder="Nhập sdt,CCCD..." />
+                </div>
+
+                <!-- Tên KH -->
+                <div class="form-group">
+                    <label class="form-label">Tên khách:</label>
+                    <input type="text" @bind="TextNameKH" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách..." />
+                </div>
+
+                <!-- Luu y -->
+                <div class="form-group">
+                    <label class="form-label">Lưu ý thêm:</label>
+                    <input type="text" @bind="TextNote" @bind:event="oninput" class="form-input" placeholder="Nhập lưu ý..." />
+                </div>
+
+                <!-- Loại SP -->
+                <div class="form-group">
+                    <label class="form-label">Loại SP:</label>
+                    <select class="form-select" @bind="SelectTypeSP" @bind:event="oninput">
+                        <option value="">Chọn loại sản phẩm</option>
+                        @{
+                            if (this.ListType != null && !isLoading)
+                            {
+                                foreach (var item in this.ListType)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Size -->
+                <div class="form-group">
+                    <label class="form-label">Size SP:</label>
+                    <select class="form-select" @bind="SelectSizeSP" @bind:event="oninput"></select>
+                </div>
+                <!-- tiền cọc -->
+                <div class="form-group">
+                    <label class="form-label">Tiền cọc:</label>
+                    <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
+                        <option value="">Chọn mức giá</option>
+                        @{
+                            for (int i = 0; i <= 10; i++)
+                            {
+                                string item = i.ToString() + "0.000 vnđ";
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Gía thê theo ngày-->
+                <div class="form-group">
+                    <label class="form-label">Giá thuê 1 ngày:</label>
+                    <input type="number" @bind="SelectGiaTheoNgay" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng thuê..." min="1" />
+                </div>
+
+                <!-- Mô tả thêm về SP -->
+                <div class="form-group">
+                    <label class="form-label">Mô tả thêm về SP:</label>
+                    <textarea class="form-input" @bind="TextMota" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                </div>
+
+                <!-- button thuê -->
+                <div class="store-info">
+                    @if (UpdateisLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <button class="button-add" type="button" @* @onclick="UploadSP" *@><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
+                    }
+                </div>
+            </div>
+            <!-- Right side - Image -->
+            <div class="form-section-right">
+                <label class="image-upload-area">
+                    <div class="image-upload-icon">📷</div>
+                    <img style="max-width: 100%; margin-top: 10px;" />
+                </label>
+            </div>
+        </div>
+        <!-- ds list đồ thuê-->
+        <div class="ListThueDo">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>TypeSP</th>
+                        <th>Số lượng</th>
+                        <th>Giá thuê</th>
+                        <th>Tiền cọc</th>
+                        <th>Note</th>
+                        <th>Size</th>
+                        <th>ProductID</th>
+                        <th>Thành tiền</th>
+                        <th>Xóa khỏi list</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = (currentPage - 1) * rowsPerPage + 1;
+                        foreach (var item in ProductList)
+                        {
+                            <tr>
+                                <td data-label="STT">@count</td>
+                                <td data-label="TypeSP">@item.TypeSP</td>
+                                <td data-label="Số lượng">@item.QTYThue</td>
+                                <td data-label="Giá thuê">@item.PricePerDay</td>
+                                <td data-label="Tiền cọc">@item.TienCoc</td>
+                                <td data-label="Note">@item.Notes</td>
+                                <td data-label="Size">@item.Size</td>
+                                <td data-label="ProductID">@item.ProductID</td>
+                                <td data-label="Thành tiền">@item.TongTienThue</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" type="button" @onclick="() => Deletelist(item.ProductID)">🗑️</button>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
 
 <!-- tab3 -->
 <div class="tab-content" id="tab3">
-    <h3>📈 Trả đồ </h3>
-    <p>Nội dung biểu đồ phân tích...</p>
-</div>
+    @if (isLoading)
+    {
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    }
+    else
+    {
+        <div class="form-container">
+            <!-- Left side - Form -->
+            <div class="form-section-left">
+                <!-- sđt, cccd ....  -->
+                <div class="form-group">
+                    <label class="form-label">Sđt/CCCD:</label>
+                    <input type="text" @bind="TextSdtKH" @bind:event="oninput" class="form-input" placeholder="Nhập sdt,CCCD..." />
+                </div>
 
+                <!-- Tên KH -->
+                <div class="form-group">
+                    <label class="form-label">Tên khách:</label>
+                    <input type="text" @bind="TextNameKH" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách..." />
+                </div>
+
+                <!-- Luu y -->
+                <div class="form-group">
+                    <label class="form-label">Lưu ý thêm:</label>
+                    <input type="text" @bind="TextNote" @bind:event="oninput" class="form-input" placeholder="Nhập lưu ý..." />
+                </div>
+
+                <!-- Loại SP -->
+                <div class="form-group">
+                    <label class="form-label">Loại SP:</label>
+                    <select class="form-select" @bind="SelectTypeSP" @bind:event="oninput">
+                        <option value="">Chọn loại sản phẩm</option>
+                        @{
+                            if (this.ListType != null && !isLoading)
+                            {
+                                foreach (var item in this.ListType)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- tiền cọc -->
+                <div class="form-group">
+                    <label class="form-label">Tiền cọc:</label>
+                    <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
+                        <option value="">Chọn mức giá</option>
+                        @{
+                            for (int i = 0; i <= 10; i++)
+                            {
+                                string item = i.ToString() + "0.000 vnđ";
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Gía thê theo ngày-->
+                <div class="form-group">
+                    <label class="form-label">Giá thuê 1 ngày:</label>
+                    <input type="number" @bind="SelectGiaTheoNgay" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng thuê..." min="1" />
+                </div>
+
+                <!-- Mô tả thêm về SP -->
+                <div class="form-group">
+                    <label class="form-label">Mô tả thêm về SP:</label>
+                    <textarea class="form-input" @bind="TextMota" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                </div>
+
+                <!-- button thuê -->
+                <div class="store-info">
+                    @if (UpdateisLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <button class="button-add" type="button" @* @onclick="UploadSP" *@><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
+                    }
+                </div>
+            </div>
+            <!-- Right side - Image -->
+            <div class="form-section-right">
+                <label class="image-upload-area">
+                    <div class="image-upload-icon">📷</div>
+                    <img style="max-width: 100%; margin-top: 10px;" />
+                </label>
+            </div>
+        </div>
+    }
+</div>
 <script>
-      window.screenHelper = {
-        getHeight: function() {
-            return window.innerHeight;
-        },
-        registerResizeHandler: function(dotNetHelper) {
-            window.addEventListener('resize', () => {
-                dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
-            });
-        }
+    window.screenHelper = {
+    getHeight: function() {
+    return window.innerHeight;
+    },
+    registerResizeHandler: function(dotNetHelper) {
+    window.addEventListener('resize', () => {
+    dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
+    });
+    }
     };
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // đổi active trên nút
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
 
-            // đổi nội dung hiển thị
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(this.dataset.tab).classList.add('active');
-        });
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
     });
 </script>
 
 
+
 @code {
+    private string TextSdtKH, TextNameKH, TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP;
     private List<Data.DTOs.InfoThueDoDto> allData = new();
+    private List<Data.DTOs.ProductItem> ProductList = new();
     private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
     private string type = "ALL";
     private int month;
     private int year;
     private bool checkNull = false;
     private DotNetObjectReference<ListOrder> objRef;
+    private bool isLoading = true, UpdateisLoading = false;
 
-    #region phân trang
+    #region tab1
     private int currentPage = 1;
     private int rowsPerPage = 15;
     private bool CanPrev => currentPage > 1;
     private bool CanNext => currentPage < totalPages;
     private int totalPages => (int)Math.Ceiling((decimal)(allData.Count) / rowsPerPage);
-
 
     private void UpdateRowsPerPage(int screenHeight)
     {
@@ -205,12 +442,80 @@
         currentPage = 1; // reset về trang đầu khi resize
         LoadPage();
     }
-    #endregion
 
     protected override async Task OnInitializedAsync()
-    {   
+    {
         this.month = DateTime.Now.Month;
         this.year = DateTime.Now.Year;
+        ProductList = new List<Data.DTOs.ProductItem>
+        {
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại A",
+                TienCoc = "500,000",
+                QTYThue = "2",
+                Notes = "Không trầy xước",
+                PricePerDay = "150,000",
+                Size = "L",
+                ProductID = "SP001",
+                TongTienThue = "800,000"
+            },
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại B",
+                TienCoc = "300,000",
+                QTYThue = "1",
+                Notes = "Màu đen",
+                PricePerDay = "100,000",
+                Size = "M",
+                ProductID = "SP002",
+                TongTienThue = "400,000"
+            },
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại A",
+                TienCoc = "500,000",
+                QTYThue = "2",
+                Notes = "Không trầy xước",
+                PricePerDay = "150,000",
+                Size = "L",
+                ProductID = "SP001",
+                TongTienThue = "800,000"
+            },
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại B",
+                TienCoc = "300,000",
+                QTYThue = "1",
+                Notes = "Màu đen",
+                PricePerDay = "100,000",
+                Size = "M",
+                ProductID = "SP002",
+                TongTienThue = "400,000"
+            },
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại A",
+                TienCoc = "500,000",
+                QTYThue = "2",
+                Notes = "Không trầy xước",
+                PricePerDay = "150,000",
+                Size = "L",
+                ProductID = "SP001",
+                TongTienThue = "800,000"
+            },
+            new Data.DTOs.ProductItem
+            {
+                TypeSP = "Loại B",
+                TienCoc = "300,000",
+                QTYThue = "1",
+                Notes = "Màu đen",
+                PricePerDay = "100,000",
+                Size = "M",
+                ProductID = "SP002",
+                TongTienThue = "400,000"
+            }
+        };
     }
 
     private async Task LoadData()
@@ -243,13 +548,18 @@
         month = int.Parse(e.Value?.ToString() ?? DateTime.Now.Month.ToString());
         await LoadData();
     }
+    #endregion
 
+    #region tab2
+    List<string> ListType;
+    [Inject] private IJSRuntime JSx { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             try
             {
+                isLoading = true;
                 var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
 
                 if (result.Success && result.Value)
@@ -259,6 +569,11 @@
                     objRef = DotNetObjectReference.Create(this);
                     await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
                     await LoadData();
+
+                    List<Data.DTOs.ListParamater> datapara = await GetListParamater.GetParamater();
+                    this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                    isLoading = false;
+                    StateHasChanged();
                 }
                 else
                 {
@@ -270,4 +585,18 @@
             }
         }
     }
+
+    private async void Deletelist(string productId)
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này lỏi list không?");
+        if (confirmed)
+        {
+            var item = ProductList.FirstOrDefault(p => p.ProductID == productId);
+            if (item != null)
+            {
+                ProductList.Remove(item);
+            }
+        }
+    }
+    #endregion
 }

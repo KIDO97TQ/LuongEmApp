@@ -1,7 +1,16 @@
-﻿window.closeSidebar = function () {
-    const sidebar = document.querySelector('.sidebar');
-    console.log("Closing sidebar...", sidebar);
-    if (sidebar) {
-        sidebar.classList.add("collapsed");
+﻿window.inputMaskHelper = {
+    applyCurrencyMask: function (elementId) {
+        var input = document.getElementById(elementId);
+        if (input) {
+            Inputmask({
+                alias: "numeric",
+                groupSeparator: ".",
+                digits: 0,
+                autoGroup: true,
+                suffix: " vnđ",
+                rightAlign: false,
+                removeMaskOnSubmit: true
+            }).mask(input);
+        }
     }
 };

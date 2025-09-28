@@ -31,31 +31,24 @@ function previewImage(input) {
     reader.readAsDataURL(file);
 }
 
-    function toggleOptionMenu(btn) {
-        const menu = btn.parentElement.querySelector('.option-menu');
+function toggleOptionMenu(btn) {
+    const menu = btn.parentElement.querySelector('.option-menu');
     menu.classList.toggle('show');
 
     // Đóng menu nếu click bên ngoài
     document.addEventListener('click', function handler(e) {
-            if (!btn.parentElement.contains(e.target)) {
-        menu.classList.remove('show');
-    document.removeEventListener('click', handler);
-            }
-        });
-    }
-
-    function handleOption(action) {
-        switch (action) {
-            case 'delete':
-    alert("Xóa được chọn");
-    break;
-    case 'add':
-    alert("Thêm được chọn");
-    break;
-    case 'cancel':
-    alert("Hủy thao tác");
-    break;
+        if (!btn.parentElement.contains(e.target)) {
+            menu.classList.remove('show');
+            document.removeEventListener('click', handler);
         }
-    }
+    });
+}
+
+function closeAllOptionMenus() {
+    document.querySelectorAll('.option-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+    });
+}
+
 
 

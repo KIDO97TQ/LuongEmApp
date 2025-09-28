@@ -16,6 +16,7 @@
 @inject IAddParaService AddPara
 @inject IDeleteParaService DeletePara
 @inject IInsertSPService InserSP
+@inject IGetSumWHService GetTotalWH
 @inject HttpClient Http
 
 
@@ -179,33 +180,39 @@
             <h3 class="card-title">
                 📈 Tổng hàng hóa
             </h3>
-            <div class="staff-select">
-                <div class="staff-controls">
-                    <select class="control-select" value="typeSelect" @onchange="TypeChange">
-                        <option value="all">All</option>
-                        @{
-                            if (this.ListType != null && !isLoading)
-                            {
-                                foreach (var item in this.ListType)
+            @if (isLoading)
+            {
+                <div class="spinner" style="margin-top:10px;"></div>
+            }
+            else
+            {
+                <div class="staff-select">
+                    <div class="staff-controls">
+                        <select class="control-select" value="typeSelect" @onchange="TypeSPChange">
+                            <option value="all">All</option>
+                            @{
+                                if (this.ListType != null && !isLoading)
                                 {
-                                    <option value="@item">@item</option>
+                                    foreach (var item in this.ListType)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
                                 }
                             }
-                        }
-                    </select>
+                        </select>
+                    </div>
+                    <div class="staff-controls">
+                        <select class="control-select" value="typeWHSelect" @onchange="TypeWHChange">
+                            <option value="all">Tất cả trong kho hiện có</option>
+                            <option value="NotReturn">Khách cầm chưa trả</option>
+                            <option value="AllEnter">Tổng số đã nhập kho</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="staff-controls">
-                    <select class="control-select" value="typeWHSelect" @onchange="TypeChange">
-                        <option value="">Chọn loại sản phẩm</option>
-                        <option value="all">Tất cả trong kho hiện có</option>
-                        <option value="NotReturn">Khách cầm chưa trả</option>
-                        <option value="AllEnter">Tổng số đã nhập kho</option>
-                    </select>
-                </div>
-            </div>
+            }
         </div>
         <div class="chart-container">
-            <canvas id="Doanhthunam"></canvas>
+            <canvas id="sumMaterialWH"></canvas>
         </div>
     </div>
 </div>
@@ -229,6 +236,7 @@
     private int month;
     private int year;
     private List<Data.DTOs.ListParamater> datapara = new();
+    private List<Data.DTOs.ProductStock> dataWH = new();
     List<string> ListType;
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false;
@@ -253,6 +261,7 @@
             if (result.Success && result.Value)
             {
                 isLoading = true;
+                await GetMaterialInWH(true, false);
                 datapara = await GetListParamater.GetParamater();
                 this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
                 this.ListPrice = datapara.Where(x => x.KeyPara == "price")
@@ -535,9 +544,75 @@
     #endregion
 
     #region Dummary chart
-    private async Task TypeChange()
+    private string typeSP = null;
+    private string typeWH = "all";
+    private async Task TypeSPChange(ChangeEventArgs e)
     {
-       
+        if (e.Value.ToString() != "all")
+        {
+            typeSP = e.Value.ToString();
+        }
+        string type = typeWH;
+        bool all = type == "all" ? true : false;
+        bool NotReturn = type == "NotReturn" ? true : false;
+
+        await GetMaterialInWH(all, NotReturn);
+
     }
+    private async Task TypeWHChange(ChangeEventArgs e)
+    {
+        typeWH = e.Value.ToString();
+
+        bool all = typeWH == "all" ? true : false;
+        bool NotReturn = typeWH == "NotReturn" ? true : false;
+
+        await GetMaterialInWH(all, NotReturn);
+    }
+
+    public async Task GetMaterialInWH(bool all, bool NotReturn)
+    {
+        dataWH = await GetTotalWH.GetTotalWH(all, NotReturn, typeSP);
+
+        var labels = dataWH.Select(x => x.type_production).ToList();
+        var values = dataWH.Select(x => x.total_quantity).ToList();
+
+        var backgroundColors = GetRandomColorList(values.Count);
+
+        var chartData = new
+        {
+            labels = labels,
+            datasets = new[]
+            {
+            new
+            {
+                label = "Số lượng tồn kho",
+                data = values,
+                backgroundColor = backgroundColors,
+                borderColor = "'rgba(79, 195, 247, 0.1)",
+                borderWidth = 1,
+                fill = true,
+                tension = 0.4
+            }
+        }
+        };
+
+        await JS.InvokeVoidAsync("chartWHHelper.renderChart", "sumMaterialWH", chartData, "bar", new
+        {
+            legendPosition = "none",
+            showLabelInTooltip = false
+        });
+    }
+
+    public List<string> GetRandomColorList(int count)
+    {
+        var random = new Random();
+        var colors = new List<string>();
+        for (int i = 0; i < count; i++)
+        {
+            colors.Add($"rgba({random.Next(256)}, {random.Next(256)}, {random.Next(256)}, 0.7)");
+        }
+        return colors;
+    }
+
     #endregion
 }

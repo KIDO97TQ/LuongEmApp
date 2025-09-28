@@ -12,7 +12,7 @@ using System.Text;
 namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService,
-    IDeleteParaService, IInsertSPService
+    IDeleteParaService, IInsertSPService, IGetSumWHService
     {
         private readonly AppDbContext _context;
 
@@ -244,5 +244,50 @@ namespace FistWeb.Data.Services
             };
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
+
+        public async Task<List<ProductStock>> GetTotalWH(bool all, bool rdNotReturn, string? typeSP = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder();
+
+            // Chọn cột cần group
+            string groupByColumn = (typeSP == null) ? "type_production" : "productname";
+            string whereClause = (typeSP == null) ? "" : "WHERE type_production = :type_production";
+
+            if (typeSP != null)
+            {
+                parameters.Add(new NpgsqlParameter("type_production", typeSP));
+            }
+
+            if (all)
+            {
+                sql.Append($@"SELECT {groupByColumn} AS type_production, SUM(saveqty) AS total_quantity
+                              FROM clothings.products
+                              {whereClause}
+                              GROUP BY {groupByColumn}
+                              ORDER BY {groupByColumn}");
+            }
+            else if (rdNotReturn)
+            {
+                sql.Append($@" SELECT {groupByColumn} AS type_production, SUM(stockquantity - saveqty) AS total_quantity
+                                 FROM clothings.products
+                                 {whereClause}
+                                 GROUP BY {groupByColumn}
+                                 ORDER BY {groupByColumn}");
+            }
+            else
+            {
+                sql.Append($@"SELECT {groupByColumn} AS type_production, SUM(stockquantity) AS total_quantity
+                                FROM clothings.products
+                                {whereClause}
+                                GROUP BY {groupByColumn}
+                                ORDER BY {groupByColumn}");
+            }
+
+            return await _context.ProductStock
+                                       .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                                       .ToListAsync();
+        }
+
     }
 }

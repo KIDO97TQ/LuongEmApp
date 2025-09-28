@@ -96,15 +96,13 @@ body {
 /* =================== TAB CONTENT =================== */
 .tab-content[b-auhx5faxoe] {
     display: none;
-    padding: 15px;
-    /*border: 1px solid #ddd;*/
+  /*  padding: 15px;*/
     border-radius: 10px;
     width: 100%;
     height: 100%;
-    /*    display: flex;
-*/ flex-direction: row;
+    flex-direction: row;
     gap: 30px;
-    padding: 30px;
+    /*padding: 30px;*/
     justify-content: space-between;
 }
 
@@ -114,6 +112,7 @@ body {
         flex-direction: column;
         gap: 20px;
     }
+
 .form-section-left[b-auhx5faxoe] {
     flex: 0 0 60%; /* form chiếm 60% */
 }
@@ -148,7 +147,7 @@ body {
 
 .form-label[b-auhx5faxoe] {
     font-weight: 600;
-    color: #2c3e50;
+    color: white;/*#2c3e50;*/
     font-size: 14px;
     font-style: italic;
     text-align: right;
@@ -523,6 +522,7 @@ body {
 }
 
 /*--------biểu đồ---------------*/
+
 .chart-card[b-auhx5faxoe] {
     background: white;
     border-radius: 20px;
@@ -531,8 +531,7 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    height: 100%;
-    margin-bottom: 90px;
+    height: calc(100vh - 100px);
 }
 
     .chart-card[b-auhx5faxoe]::before {
@@ -549,6 +548,12 @@ body {
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
+.chart-card[b-auhx5faxoe] {
+   /* flex: 1 1 50%;*/ /* mỗi card chiếm 50% chiều ngang */
+    min-width: 310px; /* để khi màn hình nhỏ thì xuống hàng */
+}
+
+
 .staff-controls[b-auhx5faxoe] {
     display: flex;
     gap: 10px;
@@ -556,9 +561,8 @@ body {
 .staff-header[b-auhx5faxoe] {
     display: flex;
     justify-content: space-between;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
 }
 @media (max-width: 768px) {
     .staff-controls[b-auhx5faxoe] {
@@ -581,18 +585,9 @@ body {
     gap: 10px;
 }
 
-.card-title[b-auhx5faxoe] {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    display: inline-block;
-    align-items: center;
-    gap: 10px;
-}
 .chart-container[b-auhx5faxoe] {
     position: relative;
-    height:100%; /*calc(100vh / 3);*/
+    height:calc(100vh / 1.4);
     margin-bottom: 20px;
     grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr));
 }
@@ -616,4 +611,5 @@ body {
 #tab3.tab-content[b-auhx5faxoe] {
     height: 100vh;
 }
+
 </style[b-auhx5faxoe] >

@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "PackagePath": "staticwebassets\\FistWeb.n5q1sy3yuc.bundle.scp.css"
+      "PackagePath": "staticwebassets\\FistWeb.1bvvcl19dy.bundle.scp.css"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -11,6 +11,10 @@
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\Loading.css",
+      "PackagePath": "staticwebassets\\css\\Loading.css"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
@@ -23,6 +27,10 @@
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
       "PackagePath": "staticwebassets\\js\\CharSumJs.js"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ChartSumWH.js",
+      "PackagePath": "staticwebassets\\js\\ChartSumWH.js"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\ListThueDo.js",

@@ -120,20 +120,6 @@ body[b-l54ik2cc7b] {
 
     .wrapper button:hover[b-l54ik2cc7b] {
         background: #4CAF50;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
-    }
-
-
-.wrapper button[b-l54ik2cc7b] {
-    background: #fff;
-    color: #262626;
-    font-weight: bold;
-}
-
-    .wrapper button:hover[b-l54ik2cc7b] {
-        background: #4CAF50;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
     }

@@ -55,4 +55,22 @@
         public string keyUsername { get; set; }
         public string keyUserpass { get; set; }
     }
+
+    public class ProductStock
+    {
+        public string type_production { get; set; }
+        public int total_quantity { get; set; }
+    }
+
+    public class ProductItem
+    {
+        public string TypeSP { get; set; }
+        public string TienCoc { get; set; }
+        public string QTYThue { get; set; }
+        public string Notes { get; set; }
+        public string PricePerDay { get; set; }
+        public string Size { get; set; }
+        public string ProductID { get; set; }
+        public string TongTienThue { get; set; }
+    }
 }

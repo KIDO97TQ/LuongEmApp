@@ -20,6 +20,7 @@ builder.Services.AddScoped<IGetParaUserService, CallService>();
 builder.Services.AddScoped<IAddParaService, CallService>();
 builder.Services.AddScoped<IDeleteParaService, CallService>();
 builder.Services.AddScoped<IInsertSPService, CallService>();
+builder.Services.AddScoped<IGetSumWHService, CallService>();
 
 builder.Services.AddScoped<LoginStateService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();

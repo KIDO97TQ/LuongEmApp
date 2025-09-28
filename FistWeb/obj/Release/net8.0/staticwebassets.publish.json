@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iCjlc41fmzhoegquP53bP83r766lcNhv7GtY3pvzyVQ=",
+  "Hash": "P2F36hDpAN1GL+ECD3M1hMBSQclKZHUYXvo+FCFSazA=",
   "Source": "FistWeb",
   "BasePath": "_content/FistWeb",
   "Mode": "Default",
@@ -262,8 +262,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "oxu0twl12b",
-      "Integrity": "ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=",
+      "Fingerprint": "uxyll5kn6h",
+      "Integrity": "3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css"
@@ -283,8 +283,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "oxu0twl12b",
-      "Integrity": "ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=",
+      "Fingerprint": "uxyll5kn6h",
+      "Integrity": "3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css"
@@ -346,8 +346,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "0qli0l1tvq",
-      "Integrity": "iP2vGOca1jCj7gwOKpSmhxAKnfMJuYuytqBt+oB3A/8=",
+      "Fingerprint": "edz9gitfzn",
+      "Integrity": "UkPKxeJJ3IhTOjaahUljLvmR1eTszYvz04JnO5FCC/k=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\app.css"
@@ -388,8 +388,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "4h29l1edar",
-      "Integrity": "OJJS0RKWydrn6UuvfXyl/YspwHAyy9eZTDoOalvHZ6A=",
+      "Fingerprint": "g5hwbhqbh7",
+      "Integrity": "1E3XoIv+EnhCh7RDF5kAH/zbcfT8XwdcyetEQLSqwl0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\app.js"
@@ -451,8 +451,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "1jzzdbspum",
-      "Integrity": "nde7O0Kv9wYvwk8EGHZa2REtab30+Qcj3yv3hJtXShk=",
+      "Fingerprint": "s1ou3zwlu5",
+      "Integrity": "wJsZ0L5F71mQuMA52j1CZwocPqlN96wxSf+9lQln4A0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\Quanlydo.js"
@@ -1031,51 +1031,6 @@
       ]
     },
     {
-      "Route": "css/app.0qli0l1tvq.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "1013"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"iP2vGOca1jCj7gwOKpSmhxAKnfMJuYuytqBt+oB3A/8=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Mon, 22 Sep 2025 00:31:06 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "0qli0l1tvq"
-        },
-        {
-          "Name": "label",
-          "Value": "css/app.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-iP2vGOca1jCj7gwOKpSmhxAKnfMJuYuytqBt+oB3A/8="
-        }
-      ]
-    },
-    {
       "Route": "css/app.css",
       "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
       "Selectors": [],
@@ -1086,7 +1041,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1013"
+          "Value": "1132"
         },
         {
           "Name": "Content-Type",
@@ -1094,11 +1049,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"iP2vGOca1jCj7gwOKpSmhxAKnfMJuYuytqBt+oB3A/8=\""
+          "Value": "\"UkPKxeJJ3IhTOjaahUljLvmR1eTszYvz04JnO5FCC/k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 22 Sep 2025 00:31:06 GMT"
+          "Value": "Fri, 26 Sep 2025 17:01:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1108,7 +1063,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-iP2vGOca1jCj7gwOKpSmhxAKnfMJuYuytqBt+oB3A/8="
+          "Value": "sha256-UkPKxeJJ3IhTOjaahUljLvmR1eTszYvz04JnO5FCC/k="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.edz9gitfzn.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\css\\app.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1132"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"UkPKxeJJ3IhTOjaahUljLvmR1eTszYvz04JnO5FCC/k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 26 Sep 2025 17:01:40 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "edz9gitfzn"
+        },
+        {
+          "Name": "label",
+          "Value": "css/app.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-UkPKxeJJ3IhTOjaahUljLvmR1eTszYvz04JnO5FCC/k="
         }
       ]
     },
@@ -1205,7 +1205,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "31305"
+          "Value": "34746"
         },
         {
           "Name": "Content-Type",
@@ -1213,11 +1213,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=\""
+          "Value": "\"3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 23:35:43 GMT"
+          "Value": "Fri, 26 Sep 2025 18:28:00 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1227,97 +1227,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc="
-        }
-      ]
-    },
-    {
-      "Route": "FistWeb.oxu0twl12b.bundle.scp.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "31305"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 23:35:43 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "oxu0twl12b"
-        },
-        {
-          "Name": "label",
-          "Value": "FistWeb.bundle.scp.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc="
-        }
-      ]
-    },
-    {
-      "Route": "FistWeb.oxu0twl12b.styles.css",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "31305"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 23:35:43 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "oxu0twl12b"
-        },
-        {
-          "Name": "label",
-          "Value": "FistWeb.styles.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc="
+          "Value": "sha256-3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g="
         }
       ]
     },
@@ -1332,7 +1242,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "31305"
+          "Value": "34746"
         },
         {
           "Name": "Content-Type",
@@ -1340,11 +1250,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc=\""
+          "Value": "\"3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 23 Sep 2025 23:35:43 GMT"
+          "Value": "Fri, 26 Sep 2025 18:28:00 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1354,13 +1264,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-ZBYrei+R/MDsaVEqL9ri8692zxT/QdgDc9MFs2GLUlc="
+          "Value": "sha256-3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g="
         }
       ]
     },
     {
-      "Route": "js/app.4h29l1edar.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
+      "Route": "FistWeb.uxyll5kn6h.bundle.scp.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -1369,19 +1279,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "220"
+          "Value": "34746"
         },
         {
           "Name": "Content-Type",
-          "Value": "text/javascript"
+          "Value": "text/css"
         },
         {
           "Name": "ETag",
-          "Value": "\"OJJS0RKWydrn6UuvfXyl/YspwHAyy9eZTDoOalvHZ6A=\""
+          "Value": "\"3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
+          "Value": "Fri, 26 Sep 2025 18:28:00 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1391,7 +1301,97 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "4h29l1edar"
+          "Value": "uxyll5kn6h"
+        },
+        {
+          "Name": "label",
+          "Value": "FistWeb.bundle.scp.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g="
+        }
+      ]
+    },
+    {
+      "Route": "FistWeb.uxyll5kn6h.styles.css",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Release\\net8.0\\scopedcss\\bundle\\FistWeb.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "34746"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 26 Sep 2025 18:28:00 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "uxyll5kn6h"
+        },
+        {
+          "Name": "label",
+          "Value": "FistWeb.styles.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-3vIhl8YqqA6t0MnXLC2BCarZymiwkRgGf8Lq2GoDd/g="
+        }
+      ]
+    },
+    {
+      "Route": "js/app.g5hwbhqbh7.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "478"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"1E3XoIv+EnhCh7RDF5kAH/zbcfT8XwdcyetEQLSqwl0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 26 Sep 2025 13:37:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "g5hwbhqbh7"
         },
         {
           "Name": "label",
@@ -1399,7 +1399,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-OJJS0RKWydrn6UuvfXyl/YspwHAyy9eZTDoOalvHZ6A="
+          "Value": "sha256-1E3XoIv+EnhCh7RDF5kAH/zbcfT8XwdcyetEQLSqwl0="
         }
       ]
     },
@@ -1414,7 +1414,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "220"
+          "Value": "478"
         },
         {
           "Name": "Content-Type",
@@ -1422,11 +1422,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"OJJS0RKWydrn6UuvfXyl/YspwHAyy9eZTDoOalvHZ6A=\""
+          "Value": "\"1E3XoIv+EnhCh7RDF5kAH/zbcfT8XwdcyetEQLSqwl0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 21 Sep 2025 13:12:42 GMT"
+          "Value": "Fri, 26 Sep 2025 13:37:12 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1436,7 +1436,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-OJJS0RKWydrn6UuvfXyl/YspwHAyy9eZTDoOalvHZ6A="
+          "Value": "sha256-1E3XoIv+EnhCh7RDF5kAH/zbcfT8XwdcyetEQLSqwl0="
         }
       ]
     },
@@ -1605,51 +1605,6 @@
       ]
     },
     {
-      "Route": "js/Quanlydo.1jzzdbspum.js",
-      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\Quanlydo.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "1850"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"nde7O0Kv9wYvwk8EGHZa2REtab30+Qcj3yv3hJtXShk=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Mon, 22 Sep 2025 22:30:45 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "1jzzdbspum"
-        },
-        {
-          "Name": "label",
-          "Value": "js/Quanlydo.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-nde7O0Kv9wYvwk8EGHZa2REtab30+Qcj3yv3hJtXShk="
-        }
-      ]
-    },
-    {
       "Route": "js/Quanlydo.js",
       "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\Quanlydo.js",
       "Selectors": [],
@@ -1660,7 +1615,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1850"
+          "Value": "1709"
         },
         {
           "Name": "Content-Type",
@@ -1668,11 +1623,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"nde7O0Kv9wYvwk8EGHZa2REtab30+Qcj3yv3hJtXShk=\""
+          "Value": "\"wJsZ0L5F71mQuMA52j1CZwocPqlN96wxSf+9lQln4A0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 22 Sep 2025 22:30:45 GMT"
+          "Value": "Fri, 26 Sep 2025 13:37:12 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1682,7 +1637,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-nde7O0Kv9wYvwk8EGHZa2REtab30+Qcj3yv3hJtXShk="
+          "Value": "sha256-wJsZ0L5F71mQuMA52j1CZwocPqlN96wxSf+9lQln4A0="
+        }
+      ]
+    },
+    {
+      "Route": "js/Quanlydo.s1ou3zwlu5.js",
+      "AssetFile": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\Quanlydo.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1709"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"wJsZ0L5F71mQuMA52j1CZwocPqlN96wxSf+9lQln4A0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 26 Sep 2025 13:37:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "s1ou3zwlu5"
+        },
+        {
+          "Name": "label",
+          "Value": "js/Quanlydo.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-wJsZ0L5F71mQuMA52j1CZwocPqlN96wxSf+9lQln4A0="
         }
       ]
     }

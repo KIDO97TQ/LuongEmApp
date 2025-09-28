@@ -41,4 +41,9 @@ namespace FistWeb.Data.Services
     {
         Task<int> InserProduct(long productID, string nameSP, string? DescSP, decimal PriceSP, int QtySP, string sizeSP, string typeSP);
     }
+
+    public interface IGetSumWHService
+    {
+        Task<List<ProductStock>> GetTotalWH(bool all, bool rdNotReturn, string? typeSP = null);
+    }
 }
