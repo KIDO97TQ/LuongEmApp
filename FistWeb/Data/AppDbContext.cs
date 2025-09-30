@@ -15,13 +15,17 @@ namespace FistWeb.Data
         public DbSet<users> Users { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Paramater> Paramater { get; set; }
+        public DbSet<Products> Products { get; set; }       
         public DbSet<ListParaUser> ListParaUsers { get; set; }
         public DbSet<ListParaSP> ListParaSP { get; set; }
         public DbSet<ProductStock> ProductStock { get; set; }
+        public DbSet<ProductImageDto> ProductImageDto { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<users>().HasKey(u => u.UserId);
+            modelBuilder.Entity<Products>().HasKey(u => u.productid);
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<users>()
@@ -30,6 +34,10 @@ namespace FistWeb.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Order>()
                 .ToTable("orders", "clothings");
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Products>()
+                .ToTable("products", "clothings");
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Paramater>()
@@ -41,6 +49,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<ListParaUser>().HasNoKey();
             modelBuilder.Entity<ListParaSP>().HasNoKey();
             modelBuilder.Entity<ProductStock>().HasNoKey();
+            modelBuilder.Entity<ProductImageDto>().HasKey(u => u.ProductID);
         }
     }
 }

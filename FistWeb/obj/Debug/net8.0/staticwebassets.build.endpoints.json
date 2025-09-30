@@ -3,7 +3,7 @@
   "ManifestType": "Build",
   "Endpoints": [
     {
-      "Route": "FistWeb.1bvvcl19dy.styles.css",
+      "Route": "FistWeb.9hdzkrcirb.styles.css",
       "AssetFile": "FistWeb.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -17,7 +17,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "38561"
+          "Value": "41065"
         },
         {
           "Name": "Content-Type",
@@ -25,21 +25,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"w/8h4PxnImDv8pvRofWGPZA6NnABlct+Qswm/TOta+w=\""
+          "Value": "\"/U5lsdGoLwJdjpFiIt9HtFZoQxSTSv+BgYzF8LAGjlE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 28 Sep 2025 15:31:25 GMT"
+          "Value": "Tue, 30 Sep 2025 00:09:00 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "1bvvcl19dy"
+          "Value": "9hdzkrcirb"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-w/8h4PxnImDv8pvRofWGPZA6NnABlct+Qswm/TOta+w="
+          "Value": "sha256-/U5lsdGoLwJdjpFiIt9HtFZoQxSTSv+BgYzF8LAGjlE="
         },
         {
           "Name": "label",
@@ -62,7 +62,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "38561"
+          "Value": "41065"
         },
         {
           "Name": "Content-Type",
@@ -70,17 +70,17 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"w/8h4PxnImDv8pvRofWGPZA6NnABlct+Qswm/TOta+w=\""
+          "Value": "\"/U5lsdGoLwJdjpFiIt9HtFZoQxSTSv+BgYzF8LAGjlE=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 28 Sep 2025 15:31:25 GMT"
+          "Value": "Tue, 30 Sep 2025 00:09:00 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-w/8h4PxnImDv8pvRofWGPZA6NnABlct+Qswm/TOta+w="
+          "Value": "sha256-/U5lsdGoLwJdjpFiIt9HtFZoQxSTSv+BgYzF8LAGjlE="
         }
       ]
     },

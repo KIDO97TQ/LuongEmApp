@@ -3,6 +3,10 @@ using System.Data;
 
 namespace FistWeb.Data.Services
 {
+    public interface IGetUserInfoService
+    {
+        Task<List<UserOrderDto>> GetUserInfo();
+    }
     public interface IThongKeService
     {
         Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null);
@@ -46,4 +50,10 @@ namespace FistWeb.Data.Services
     {
         Task<List<ProductStock>> GetTotalWH(bool all, bool rdNotReturn, string? typeSP = null);
     }
+    
+    public interface IGetProductIDService
+    {
+        Task<List<ProductImageDto>> GetProductID(string typeSP);
+    }
+    
 }

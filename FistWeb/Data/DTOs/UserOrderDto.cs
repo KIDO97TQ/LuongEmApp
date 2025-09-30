@@ -4,8 +4,6 @@
     {
         public string Username { get; set; }
         public string phone { get; set; }
-        public long OrderId { get; set; }
-        public decimal TotalAmount { get; set; }
     }
 
     public class DoanhThuThueDoDto
@@ -73,4 +71,16 @@
         public string ProductID { get; set; }
         public string TongTienThue { get; set; }
     }
+
+    public class ProductImageDto
+    {
+        public string ImageUrl { get; set; }
+        public long ProductID { get; set; }
+        public decimal Price { get; set; }
+        public string Size { get; set; }
+        public string Desc { get; set; }
+        public int StockQTY { get; set; }
+        public int SaveQTY { get; set; }
+    }
+
 }

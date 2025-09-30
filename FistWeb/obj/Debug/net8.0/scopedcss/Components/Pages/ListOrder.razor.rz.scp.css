@@ -370,6 +370,118 @@
     background: white;
     border-radius: 12px;
 }
-    
+
+.suggestion-list[b-yie3h92shu] {
+    position: absolute;
+    top: 17%; /* hiện ngay dưới input */
+    left: 24%;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 100;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+    .suggestion-list li[b-yie3h92shu] {
+        padding: 8px 12px;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+        .suggestion-list li:hover[b-yie3h92shu] {
+            background-color: #f0f0f0;
+        }
+
+/*----------------show ảnh-------------*/
+
+.product-gallery[b-yie3h92shu] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.product-card[b-yie3h92shu] {
+    width: 220px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+    .product-card img[b-yie3h92shu] {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
+
+.info p[b-yie3h92shu] {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.no-image[b-yie3h92shu] {
+    width: 100%;
+    height: 150px;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 14px;
+}
+
+/*----------button ok------*/
+.button-add[b-yie3h92shu] {
+    margin-top: 25px;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+    .button-add.active[b-yie3h92shu] {
+        background: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    .button-add[b-yie3h92shu]::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .button-add:hover[b-yie3h92shu] {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        background: green;
+    }
+.bi[b-yie3h92shu] {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    background-size: cover;
+}
+.required-label[b-yie3h92shu]::before {
+    content: "* ";
+    color: red;
+    font-weight: bold;
+}
+
+
 </style[b-yie3h92shu]>

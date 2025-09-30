@@ -32,8 +32,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Pages/ImageGalleryModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbWFnZUdhbGxlcnlNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/Shared/EmptyLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcRW1wdHlMYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/Web/FistWeb/Components/_Imports.razor]

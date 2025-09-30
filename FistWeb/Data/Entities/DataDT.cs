@@ -68,4 +68,27 @@ namespace FistWeb.Data.Entities
         [Column("item_key4")]
         public string item_key4 { get; set; }
     }
+
+    [Table("products", Schema = "clothings")]
+    public class Products
+    {
+        [Column("productid")]
+        public long productid { get; set; }
+        [Column("productname")]
+        public string productname { get; set; }
+        [Column("description")]
+        public string description { get; set; }
+        [Column("priceperday")]
+        public decimal priceperday { get; set; }
+        [Column("stockquantity")]
+        public int stockquantity { get; set; }
+        [Column("createday")]
+        public DateTime createday { get; set; }
+        [Column("size")]
+        public string size { get; set; }
+        [Column("type_production")]
+        public string type_production { get; set; }
+        [Column("saveqty")]
+        public int saveqty { get; set; }
+    }
 }

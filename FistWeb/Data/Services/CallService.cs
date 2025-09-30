@@ -1,5 +1,6 @@
 ﻿using FistWeb.Data;
 using FistWeb.Data.DTOs;
+using FistWeb.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,13 +13,26 @@ using System.Text;
 namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService,
-    IDeleteParaService, IInsertSPService, IGetSumWHService
+    IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService
     {
         private readonly AppDbContext _context;
 
         public CallService(AppDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<UserOrderDto>> GetUserInfo()
+        {
+            var users = await _context.Users
+                .Select(user => new UserOrderDto
+                {
+                    Username = user.Username,
+                    phone = user.Phone
+                })
+                .ToListAsync();
+
+            return users;
         }
 
         public async Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null)
@@ -288,6 +302,25 @@ namespace FistWeb.Data.Services
                                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
                                        .ToListAsync();
         }
+
+        public async Task<List<ProductImageDto>> GetProductID(string typeProduction)
+        {
+            var products = await _context.Products
+                .Where(p => p.type_production == typeProduction)
+                .Select(p => new ProductImageDto
+                {
+                    ProductID = p.productid,
+                    Price = p.priceperday,
+                    Size = p.size,
+                    Desc = p.description,
+                    StockQTY = p.stockquantity,
+                    SaveQTY = p.saveqty,
+                    ImageUrl = p.productid + ".jpg"
+                })
+                .ToListAsync();
+            return products;
+        }
+
 
     }
 }
