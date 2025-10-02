@@ -174,7 +174,7 @@ body {
     }
 
 .btn {
-    padding: 8px 16px;
+    padding: 15px 25px;
     border: none;
     border-radius: 6px;
     font-size: 13px;
@@ -184,6 +184,7 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+    margin-right: 15px;
 }
 
 .btn-option {
@@ -506,6 +507,7 @@ body {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto;
+    margin-right: 15px;
 }
 
 @keyframes spin {

@@ -8,16 +8,23 @@
 @rendermode InteractiveServer
 @inject IJSRuntime JS
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using System.Globalization
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
 @inject IGetParamaterService GetListParamater
 @inject IGetUserInfoService GetUserInfo
 @inject IGetProductIDService GetImageByProID
+@inject IStockQTYService GetStockQTY
+@inject IInserUserService InsertUser
+@inject IInsertOrdersService InsertOrder
+@inject IGetUserIDService GetuserID
+@inject IUpdateReturnOderService UpdateStatusOrder
+@implements IDisposable
 
 <div class="tabs">
-    <button class="tab-btn active" data-tab="tab1">📝 Danh sách Mượn - Trả đồ</button>
-    <button class="tab-btn" data-tab="tab2">Mượn đồ</button>
-    <button class="tab-btn" data-tab="tab3">Trả đồ</button>
+    <button class="tab-btn active" data-tab="tab1" @onclick="HandleTabClick">📝 Danh sách Thuê - Trả đồ</button>
+    <button class="tab-btn" data-tab="tab2">Thuê đồ</button>
+    @* <button class="tab-btn" data-tab="tab3">Trả đồ</button> *@@* nếu muốn làm thêm *@
 </div>
 
 <!-- Page control -->
@@ -63,6 +70,9 @@
                         <th>Tiền cọc</th>
                         <th>Phát sinh</th>
                         <th>Trạng thái</th>
+                        <th style="display: none;">Order</th>
+                        <th style="display: none;">productid</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,11 +90,41 @@
                                 <td data-label="Loại sản phẩm">@item.type_production</td>
                                 <td data-label="Size">@item.size</td>
                                 <td data-label="Số lượng">@item.qty</td>
-                                <td data-label="Thành tiền">@item.totalamount</td>
-                                <td data-label="Giá/ngày">@item.priceperday</td>
-                                <td data-label="Tiền cọc">@item.moneycoc</td>
-                                <td data-label="Phát sinh">@item.tienphatsinh</td>
+                                <td data-label="Thành tiền">@item.totalamount.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                @{
+                                    string examp = item.priceperday.ToString().Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim(); ;
+                                    bool parseOk = decimal.TryParse(examp, out decimal pricePerDay);
+                                    item.priceperday = pricePerDay;
+                                    <td data-label="Giá/ngày">@item.priceperday.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                }
+                                <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Trạng thái">@item.status</td>
+                                <td style="display: none;" data-label="Order">@item.orderid</td>
+                                <td style="display: none;" data-label="productid">@item.productid</td>
+                                @if (item.status == "BORROW")
+                                {
+                                    @if (isLoadingOption)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <td data-label="Hành động">
+                                            <div class="option-wrapper">
+                                                <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                                                <div class="option-menu">
+                                                    <div class="New-price">
+                                                        <button class="option-itemAdd" type="button" @onclick="() => ReturnOrder(item)">♻️ Trả đồ</button>
+                                                    </div>
+                                                    <div class="New-price">
+                                                        <button class="option-itemAdd" type="button" @onclick="() => DeleteOrder(item)">🗑️ Xóa đơn</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                }
                             </tr>
                             count++;
                         }
@@ -185,6 +225,13 @@
                     <input type="text" value="@SelectGiaTheoNgay" class="form-input" readonly />
                 </div>
 
+                <!-- Số lượng -->
+                <div class="form-group">
+                    <label class="form-label required-label">Số lượng:</label>
+                    <input type="number" @bind="TextQTY" @oninput="OnQtyInput" class="form-input" placeholder="Nhập số lượng..." min="1" />
+                    <label class="form-label-TonKho">Số lượng hiện còn lại: @Tonkho</label>
+                </div>
+
                 <!-- tiền cọc -->
                 <div class="form-group">
                     <label class="form-label">Tiền cọc:</label>
@@ -202,20 +249,34 @@
                 <!-- Mô tả thêm về SP -->
                 <div class="form-group">
                     <label class="form-label">Mô tả thêm về SP:</label>
-                    <textarea class="form-input" @bind="TextMota" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
+                    <input class="form-input" value="@MotaSP" readonly />
                 </div>
 
                 <!-- button giỏ hàng -->
                 <div class="store-info">
-                    @if (UpdateisLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <button class="button-add" type="button" @* @onclick="UploadSP" *@><i class="bi bi-cart4"></i>Thêm vào kho</button>
-                    }
+                    <div class="store-header">
+                        @if (UpdateisLoading)
+                        {
+                            <div class="spinner" style="margin-top:10px;"></div>
+                        }
+                        else
+                        {
+                            <button class="button-add" type="button" @onclick="AddStore">
+                                <i class="bi bi-cart4"></i> Thêm vào kho
+                            </button>
+                        }
+
+                        @if (TotalAmount > 0)
+                        {
+                            <div class="qr-payment-section">
+                                <h4 style="color: white;" class="total-text">Tổng tiền cần thanh toán: @TotalAmount.ToString("N0", new CultureInfo("vi-VN")) vnđ</h4>
+                                <img src="@GetVietQrUrl()" alt="QR Code chuyển khoản" class="qr-img" />
+                                <p style="color: white;" class="qr-desc">Quét mã QR để thanh toán đến tài khoản <strong>@accountNumber</strong> (@accountName)</p>
+                            </div>
+                        }
+                    </div>
                 </div>
+
             </div>
             <!-- Right side - Image -->
             <div class="form-section-right">
@@ -223,55 +284,59 @@
                     @{
                         if (!string.IsNullOrEmpty(@resutlsImage))
                         {
-                            <img src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@resutlsImage" alt="Image" style="max-width: 100%; margin-top: 10px;" />
+                            <img src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@resutlsImage" alt="Image" style="max-width: 100%; border: 1px solid white; margin-top: 10px;" />
                         }
                     }
                 </label>
             </div>
         </div>
         <!-- ds list đồ thuê-->
-        <div class="ListThueDo">
-            <table class="table-custom">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>TypeSP</th>
-                        <th>Số lượng</th>
-                        <th>Giá thuê</th>
-                        <th>Tiền cọc</th>
-                        <th>Note</th>
-                        <th>Size</th>
-                        <th>ProductID</th>
-                        <th>Thành tiền</th>
-                        <th>Xóa khỏi list</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int count = (currentPage - 1) * rowsPerPage + 1;
-                        foreach (var item in ProductList)
-                        {
-                            <tr>
-                                <td data-label="STT">@count</td>
-                                <td data-label="TypeSP">@item.TypeSP</td>
-                                <td data-label="Số lượng">@item.QTYThue</td>
-                                <td data-label="Giá thuê">@item.PricePerDay</td>
-                                <td data-label="Tiền cọc">@item.TienCoc</td>
-                                <td data-label="Note">@item.Notes</td>
-                                <td data-label="Size">@item.Size</td>
-                                <td data-label="ProductID">@item.ProductID</td>
-                                <td data-label="Thành tiền">@item.TongTienThue</td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger" type="button" @onclick="() => Deletelist(item.ProductID)">🗑️</button>
-                                </td>
-                            </tr>
-                            count++;
+        if (ProductList.Count > 0)
+        {
+            <div class="ListThueDo">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>TypeSP</th>
+                            <th>Số lượng</th>
+                            <th>Giá thuê</th>
+                            <th>Tiền cọc</th>
+                            <th>Note</th>
+                            <th>Size</th>
+                            <th>ProductID</th>
+                            <th>Thành tiền</th>
+                            <th style="display: none;">last money</th>
+                            <th>Xóa khỏi list</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int count = (currentPage - 1) * rowsPerPage + 1;
+                            foreach (var item in ProductList)
+                            {
+                                <tr>
+                                    <td data-label="STT">@count</td>
+                                    <td data-label="TypeSP">@item.TypeSP</td>
+                                    <td data-label="Số lượng">@item.QTYThue</td>
+                                    <td data-label="Giá thuê">@item.PricePerDay.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    <td data-label="Tiền cọc">@item.TienCoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    <td data-label="Note">@item.Notes</td>
+                                    <td data-label="Size">@item.Size</td>
+                                    <td data-label="ProductID">@item.ProductID</td>
+                                    <td data-label="Thành tiền">@item.TongTienThue.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    <td style="display: none;" data-label="last money">@item.TongTienThueNonCoc</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-danger" type="button" @onclick="() => Deletelist(item.ProductID.ToString())">🗑️</button>
+                                    </td>
+                                </tr>
+                                count++;
+                            }
                         }
-                    }
-                </tbody>
-            </table>
-        </div>
-
+                    </tbody>
+                </table>
+            </div>
+        }
         <!-- button thuê -->
         <div class="store-info">
             @if (UpdateisLoading)
@@ -280,7 +345,7 @@
             }
             else
             {
-                <button class="button-add" type="button" @* @onclick="UploadSP" *@><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
+                <button class="button-add" type="button" @onclick="UpdateThueDo"><i class="bi bi-check2-circle"></i>Thuê</button>
             }
         </div>
 
@@ -293,98 +358,7 @@
 
 <!-- tab3 -->
 <div class="tab-content" id="tab3">
-    @if (isLoading)
-    {
-        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-    }
-    else
-    {
-        <div class="form-container">
-            <!-- Left side - Form -->
-            <div class="form-section-left">
-                <!-- sđt, cccd ....  -->
-                <div class="form-group">
-                    <label class="form-label">Sđt/CCCD:</label>
-                    <input type="text" @bind="TextSdtKH" @bind:event="oninput" class="form-input" placeholder="Nhập sdt,CCCD..." />
-                </div>
-
-                <!-- Tên KH -->
-                <div class="form-group">
-                    <label class="form-label">Tên khách:</label>
-                    <input type="text" @bind="TextNameKH" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách..." />
-                </div>
-
-                <!-- Luu y -->
-                <div class="form-group">
-                    <label class="form-label">Lưu ý thêm:</label>
-                    <input type="text" @bind="TextNote" @bind:event="oninput" class="form-input" placeholder="Nhập lưu ý..." />
-                </div>
-
-                <!-- Loại SP -->
-                <div class="form-group">
-                    <label class="form-label">Loại SP:</label>
-                    <select class="form-select" @bind="SelectTypeSP" @bind:event="oninput">
-                        <option value="">Chọn loại sản phẩm</option>
-                        @{
-                            if (this.ListType != null && !isLoading)
-                            {
-                                foreach (var item in this.ListType)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            }
-                        }
-                    </select>
-                </div>
-
-                <!-- tiền cọc -->
-                <div class="form-group">
-                    <label class="form-label">Tiền cọc:</label>
-                    <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
-                        <option value="">Chọn mức giá</option>
-                        @{
-                            for (int i = 0; i <= 10; i++)
-                            {
-                                string item = i.ToString() + "0.000 vnđ";
-                                <option value="@item">@item</option>
-                            }
-                        }
-                    </select>
-                </div>
-
-                <!-- Gía thê theo ngày-->
-                <div class="form-group">
-                    <label class="form-label">Giá thuê 1 ngày:</label>
-                    <input type="number" @bind="SelectGiaTheoNgay" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng thuê..." min="1" />
-                </div>
-
-                <!-- Mô tả thêm về SP -->
-                <div class="form-group">
-                    <label class="form-label">Mô tả thêm về SP:</label>
-                    <textarea class="form-input" @bind="TextMota" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
-                </div>
-
-                <!-- button thuê -->
-                <div class="store-info">
-                    @if (UpdateisLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <button class="button-add" type="button" @* @onclick="UploadSP" *@><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
-                    }
-                </div>
-            </div>
-            <!-- Right side - Image -->
-            <div class="form-section-right">
-                <label class="image-upload-area">
-                    <div class="image-upload-icon">📷</div>
-                    <img style="max-width: 100%; margin-top: 10px;" />
-                </label>
-            </div>
-        </div>
-    }
+    @* nếu muốn làm thêm *@
 </div>
 <script>
     window.screenHelper = {
@@ -413,7 +387,7 @@
 
 
 @code {
-    private string TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP;
+    private string TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, TextQTY, MotaSP, productid, typeSP;
     private List<Data.DTOs.InfoThueDoDto> allData = new();
     private List<Data.DTOs.ProductItem> ProductList = new();
     private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
@@ -421,11 +395,18 @@
 
     private string type = "ALL";
     private int month;
-    private int year;
-    private bool checkNull = false;
+    private int year, Tonkho;
+    private bool checkNull = false, isLoadingOption = false;
     private DotNetObjectReference<ListOrder> objRef;
     private bool isLoading = true, UpdateisLoading = false;
-
+    private bool _disposed = false;
+    private CancellationTokenSource cts = new();
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
     #region tab1
     private int currentPage = 1;
     private int rowsPerPage = 15;
@@ -482,31 +463,6 @@
     {
         this.month = DateTime.Now.Month;
         this.year = DateTime.Now.Year;
-        ProductList = new List<Data.DTOs.ProductItem>
-        {
-            new Data.DTOs.ProductItem
-            {
-                TypeSP = "Loại A",
-                TienCoc = "500,000",
-                QTYThue = "2",
-                Notes = "Không trầy xước",
-                PricePerDay = "150,000",
-                Size = "L",
-                ProductID = "SP001",
-                TongTienThue = "800,000"
-            },
-            new Data.DTOs.ProductItem
-            {
-                TypeSP = "Loại B",
-                TienCoc = "300,000",
-                QTYThue = "1",
-                Notes = "Màu đen",
-                PricePerDay = "100,000",
-                Size = "M",
-                ProductID = "SP002",
-                TongTienThue = "400,000"
-            }
-        };
     }
 
     private async Task LoadData()
@@ -539,6 +495,63 @@
         month = int.Parse(e.Value?.ToString() ?? DateTime.Now.Month.ToString());
         await LoadData();
     }
+
+    private async void HandleTabClick()
+    {
+        isLoading = true;
+        await LoadData();
+        isLoading = false;
+        StateHasChanged();
+    }
+
+
+    private async Task DeleteOrder(Data.DTOs.InfoThueDoDto itemSelect)
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn xóa đơn của bạn {itemSelect.fullname} không?");
+
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateStatusOrder.UpdateReturnOrder(itemSelect.orderid,itemSelect.totalamount,itemSelect.productid, itemSelect.qty, "CANCEL" );
+            if (checkupdate > 0)
+            {
+                await LoadData();
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Xóa đơn của bạn {itemSelect.fullname} thành công!");             
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Xóa đơn của bạn {itemSelect.fullname} không thành công!");
+            }
+        }
+    }
+    private async Task ReturnOrder(Data.DTOs.InfoThueDoDto itemSelect)
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn trả đơn của bạn {itemSelect.fullname} không?");
+
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateStatusOrder.UpdateReturnOrder(itemSelect.orderid, itemSelect.totalamount, itemSelect.productid, itemSelect.qty, "RETURN");
+            if (checkupdate > 0)
+            {
+                await LoadData();
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Trả đơn của bạn {itemSelect.fullname} thành công!");
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Trả đơn của bạn {itemSelect.fullname} không thành công!");
+            }
+        }
+    }
+
     #endregion
 
     #region tab2
@@ -565,7 +578,11 @@
                     List<Data.DTOs.ListParamater> datapara = await GetListParamater.GetParamater();
                     this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
                     isLoading = false;
-                    StateHasChanged();
+
+                    if (!_disposed)
+                    {
+                        StateHasChanged(); // chỉ gọi nếu component còn sống
+                    }
                 }
                 else
                 {
@@ -630,11 +647,12 @@
         bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này lỏi list không?");
         if (confirmed)
         {
-            var item = ProductList.FirstOrDefault(p => p.ProductID == productId);
+            var item = ProductList.FirstOrDefault(p => p.ProductID.ToString() == productId);
             if (item != null)
             {
                 ProductList.Remove(item);
             }
+            StateHasChanged();
         }
     }
 
@@ -642,7 +660,7 @@
 
     private async void GetImageByProductID(ChangeEventArgs e)
     {
-        string typeSP = e.Value?.ToString() ?? "";
+        typeSP = e.Value?.ToString() ?? "";
         if (string.IsNullOrEmpty(typeSP))
             return;
 
@@ -654,13 +672,17 @@
 
     private string resutlsImage = null;
     private Data.DTOs.ProductImageDto results = new();
-    private void HandleImageSelected(Data.DTOs.ProductImageDto selectedImage)
+    private async void HandleImageSelected(Data.DTOs.ProductImageDto selectedImage)
     {
         results = selectedImage;
         resutlsImage = results.ImageUrl;
         SelectSizeSP = results.Size;
         SelectGiaTheoNgay = results.Price.ToString() + " vnđ";
         SelectTienCoc = "0.000 vnđ";
+        MotaSP = results.Desc;
+        productid = results.ProductID.ToString();
+        Tonkho = await GetStockQTY.GetStockQTY(results.ProductID);
+        StateHasChanged();
         showGalleryModal = false;
     }
 
@@ -672,23 +694,166 @@
             SelectSizeSP = null;
             SelectGiaTheoNgay = null;
             SelectTienCoc = null;
+            MotaSP = null;
+            Tonkho = 0;
         }
         showGalleryModal = false;
         results = new();
         StateHasChanged();
     }
 
-    public class DriveFile
+    private void AddStore()
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        string sdtKH = TextSdtKH;
+        string nameKH = TextNameKH;
+        string note = TextNote;
+        string giaTheoNgay = SelectGiaTheoNgay;
+        string tienCoc = SelectTienCoc;
+        string qtythue = TextQTY;
+        string size = SelectSizeSP;
+
+        // TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP;
+        if (string.IsNullOrEmpty(typeSP) || string.IsNullOrEmpty(sdtKH) || string.IsNullOrEmpty(nameKH) || string.IsNullOrEmpty(productid) || string.IsNullOrEmpty(qtythue))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng điền đầy đủ thông tin sản phẩm.");
+            return;
+        }
+        string cleanedGiaTheoNgay = giaTheoNgay.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
+        string cleanedTienCoc = tienCoc.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
+
+        bool parseGiaOk = decimal.TryParse(cleanedGiaTheoNgay, out decimal gia);
+        bool parseCocOk = decimal.TryParse(cleanedTienCoc, out decimal coc);
+        bool parseQtyOk = int.TryParse(TextQTY, out int qty);
+
+        decimal total = 0;
+        decimal totalnoncoc = 0;
+
+        if (parseGiaOk && parseCocOk && parseQtyOk)
+        {
+            total = (gia * qty) + coc;
+            totalnoncoc = gia * qty;
+        }
+
+        ProductList.Add(new Data.DTOs.ProductItem
+            {
+                TypeSP = typeSP,
+                TienCoc = coc,
+                QTYThue = int.Parse(qtythue),
+                Notes = note,
+                PricePerDay = gia,
+                Size = size,
+                ProductID = long.Parse(productid),
+                TongTienThue = total,
+                TongTienThueNonCoc = totalnoncoc
+            });
+
+        resutlsImage = null;
+        SelectSizeSP = null;
+        SelectGiaTheoNgay = null;
+        SelectTienCoc = null;
+        MotaSP = null;
+        productid = null;
+        typeSP = null;
+        TextQTY = null;
+        Tonkho = 0;
+        results = new();
+        StateHasChanged();
     }
 
-    public class DriveApiResponse
+    private async Task UpdateThueDo()
     {
-        public List<DriveFile> Files { get; set; }
+        int checkupdate = 0;
+        if (ProductList.Count == 0)
+        {
+            JSx.InvokeVoidAsync("alert", "❗ Không có đơn nào cần thuê");
+            return;
+        }
+
+        UpdateisLoading = true;
+        var random = new Random();
+        long Usserid = 0;
+
+        if (!Khachquen)
+        {
+            Usserid = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99));
+            checkupdate = await InsertUser.InsertUser(Usserid, TextNameKH, TextSdtKH);
+        }
+        else
+        {
+            Usserid = await GetuserID.GetUserID(TextSdtKH);
+            if (Usserid != 0)
+                checkupdate = 1;
+            else
+            {
+                JSx.InvokeVoidAsync("alert", "Lấy thông tin khách hàng thất bại");
+                UpdateisLoading = false;
+                return;
+            }
+        }
+
+        if (Usserid != 0 && checkupdate > 0)
+        {
+            foreach (var item in ProductList)
+            {
+                checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
+                if (checkupdate > 0)
+                {
+                    //ok
+                    Khachquen = false;
+                    ProductList = new();
+                    TextNameKH = "";
+                    TextSdtKH = "";
+                    TextNote = "";
+                    JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
+                }
+            }
+        }
+        else
+        {
+            JSx.InvokeVoidAsync("alert", "❌ Thêm khách hàng thất bại");
+            UpdateisLoading = false;
+        }
+
+        UpdateisLoading = false;
+        StateHasChanged();
     }
 
+    private void OnQtyInput(ChangeEventArgs e)
+    {
+        TextQTY = e.Value?.ToString();
+        bool parseOk = int.TryParse(TextQTY, out int qty);
 
+        if (!parseOk || qty < 1)
+        {
+            return;
+        }
+
+        if (qty <= Tonkho || qty == 0)
+        {
+            //ok
+        }
+        else
+        {
+            TextQTY = "";
+            JSx.InvokeVoidAsync("alert", $"❌ Không đủ hàng.Chỉ còn {Tonkho} cái");
+            StateHasChanged();
+        }
+    }
+
+    #region thanhtoan
+    private decimal TotalAmount => ProductList.Sum(item => item.TongTienThue);
+    private string bankCode = "MB";
+    private string accountNumber = "0002308199999";
+    private string accountName = "BANG THI LUONG";
+
+    private string GetVietQrUrl()
+    {
+
+        string total = TotalAmount.ToString().Replace(".", "");
+        string message = $"THUE-{TextSdtKH}";
+        return $"https://img.vietqr.io/image/{bankCode}-{accountNumber}-compact2.png?amount={total}&addInfo={message}&accountName={accountName}";
+    }
+
+    #endregion
     #endregion
 }

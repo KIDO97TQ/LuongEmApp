@@ -26,7 +26,7 @@
     width: 100%;
     border-collapse: collapse;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -42,9 +42,10 @@
 
     .table-custom th[b-yie3h92shu],
     .table-custom td[b-yie3h92shu] {
-        padding: 12px 19px;
+        padding: 12px 15px;
         text-align: left;
         white-space: nowrap;
+        font-size: 14px;
     }
 
     .table-custom tbody tr:nth-child(even)[b-yie3h92shu] {
@@ -250,6 +251,19 @@
     text-align: right;
     padding-right: 10px;
 }
+.form-label-TonKho[b-yie3h92shu] {
+    font-weight: 600;
+    color: white; /*#2c3e50;*/
+    font-size: 20px;
+    font-style: italic;
+    padding-right: 100px;
+}
+.form-label-TonKho[b-yie3h92shu] {
+    text-align: left;
+    margin-bottom: 5px;
+    padding: 0px 30px;
+    text-align: left;
+}
 .form-input[b-yie3h92shu],
 .form-select[b-yie3h92shu] {
     padding: 12px 16px;
@@ -273,7 +287,7 @@
     flex: 0 0 40%; /* ảnh chiếm 40% */
 }
 .image-upload-area[b-yie3h92shu] {
-    width: 100%;
+    /*width: 100%;
     height: 100%;
     background: rgba(255, 193, 7, 0.1);
     border: 2px dashed #ffc107;
@@ -285,7 +299,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: hidden;*/
 }
 
     .image-upload-area:hover[b-yie3h92shu] {
@@ -437,6 +451,22 @@
     font-size: 14px;
 }
 
+/*---------------------loading---------------*/
+.spinner[b-yie3h92shu] {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin-b-yie3h92shu 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin-b-yie3h92shu {
+    to {
+        transform: rotate(360deg);
+    }
+}
 /*----------button ok------*/
 .button-add[b-yie3h92shu] {
     margin-top: 25px;
@@ -482,6 +512,154 @@
     color: red;
     font-weight: bold;
 }
+/*------------QR CODE--------------*/
+.qr-payment-section[b-yie3h92shu] {
+    margin-top: 30px;
+    text-align: center;
+}
 
+    .qr-payment-section h4[b-yie3h92shu] {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .qr-payment-section img[b-yie3h92shu] {
+        border: 2px solid #ddd;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: white;
+    }
+
+    .qr-payment-section p[b-yie3h92shu] {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #555;
+    }
+
+.store-info[b-yie3h92shu] {
+    margin-top: 2px;
+}
+
+.store-header[b-yie3h92shu] {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap; /* Cho phép xuống dòng khi thiếu không gian */
+    gap: 20px;
+}
+
+
+
+.qr-payment-section[b-yie3h92shu] {
+    border: 1px solid white;
+    padding: 15px;
+    border-radius: 8px;
+    /*max-width: 300px;*/
+    text-align: center;
+}
+
+.total-text[b-yie3h92shu] {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+
+.qr-img[b-yie3h92shu] {
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 10px;
+}
+
+.qr-desc[b-yie3h92shu] {
+    color: white;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Responsive: cho màn nhỏ hơn 768px */
+@media (max-width: 768px) {
+    .store-header[b-yie3h92shu] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-add[b-yie3h92shu] {
+        width: 100%;
+    }
+
+    .qr-payment-section[b-yie3h92shu] {
+        width: 100%;
+        max-width: none;
+    }
+}
+/*-----------------------css option--------------------*/
+.option-wrapper[b-yie3h92shu] {
+    position: relative;
+    display: inline-block;
+}
+
+.option-menu[b-yie3h92shu] {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 10;
+    min-width: 20px;
+    animation: fadeIn-b-yie3h92shu 0.2s ease-in-out;
+}
+
+.option-item[b-yie3h92shu] {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+.option-itemAdd[b-yie3h92shu] {
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+    padding: 10px;
+}
+    .option-itemAdd:hover[b-yie3h92shu] {
+        background: green;
+    }
+    .option-item:hover[b-yie3h92shu] {
+        background: #FFE4E1;
+    }
+
+.option-menu.show[b-yie3h92shu] {
+    display: block;
+}
+.option-itemAdd[b-yie3h92shu],
+.option-itemAdd:focus[b-yie3h92shu],
+.option-itemAdd:active[b-yie3h92shu] {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.New-price[b-yie3h92shu] {
+    display: flex;
+    padding: 10px;
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    border-radius: 5px;
+}
+@keyframes fadeIn-b-yie3h92shu {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 </style[b-yie3h92shu]>

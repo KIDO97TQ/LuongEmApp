@@ -20,7 +20,8 @@
 @inject IGetSumWHService GetTotalWH
 @inject HttpClient Http
 @using System.Net;
-
+@inject IGetParaUserService GetUserInfo
+@implements IDisposable
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">Thêm - Sửa - Xóa đồ</button>
@@ -79,9 +80,9 @@
                                 @* <div class="option-item" @onclick="EnableEditing">➕ Thêm</div> *@
                                 <div class="New-price">
                                     <input id="priceInput" type="text"
-                                           @bind="newValueSP"
-                                           @bind:event="oninput"
-                                           placeholder="Thêm mới loại sp..." />
+                                    @bind="newValueSP"
+                                    @bind:event="oninput"
+                                    placeholder="Thêm mới loại sp..." />
 
                                     <button class="option-itemAdd" type="button" @onclick="addSpClick">
                                         <i class="bi-option bi-plus-circle-fill"></i>
@@ -131,10 +132,10 @@
                             <div class="option-menu">
                                 <div class="New-price">
                                     <input id="priceInput" type="text"
-                                           @bind="newValuePrice"
-                                           placeholder="Thêm mới mức giá..."
-                                           @oninput="OnPriceInput"
-                                           autofocus />
+                                    @bind="newValuePrice"
+                                    placeholder="Thêm mới mức giá..."
+                                    @oninput="OnPriceInput"
+                                    autofocus />
                                     <button class="option-itemAdd" type="button" @onclick="addPriceClick">
                                         <i class="bi-option bi-plus-circle-fill"></i>
                                     </button>
@@ -245,7 +246,14 @@
     private string newValueSP, newValuePrice, SelectValueSP, SelectValuePrice, TextValueNameSP, TextValueSizeSP, TextValueQTY, TextValueDesc;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
-
+    private bool _disposed = false;
+    private CancellationTokenSource cts = new();
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
     #region add SP
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
@@ -276,7 +284,10 @@
                                      .Select(x => x.keyData)
                                      .ToList();
                 isLoading = false;
-                StateHasChanged();
+                if (!_disposed)
+                {
+                    StateHasChanged();
+                }
             }
             else
             {
@@ -543,22 +554,23 @@
 
     private async Task<bool> UploadToGitHubAsync(string base64Content, string fileName)
     {
-        string token = "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";
+        List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+        string tokennnn = datapara[0].keyUsername;
         string owner = "kido1997";
         string repo = "ImageLuongEm";
         string pathInRepo = $"ImageLuongEm/{fileName}";
         string commitMessage = $"Upload {fileName}";
 
-        var result = await UploadImageToGitHubAsync(token, owner, repo, pathInRepo, base64Content, commitMessage);
+        var result = await UploadImageToGitHubAsync(tokennnn, owner, repo, pathInRepo, base64Content, commitMessage);
         return result;
     }
 
-    private async Task<bool> UploadImageToGitHubAsync(string token, string owner, string repo, string pathInRepo, string base64Content, string commitMessage)
+    private async Task<bool> UploadImageToGitHubAsync(string tokennnn, string owner, string repo, string pathInRepo, string base64Content, string commitMessage)
     {
         using var http = new HttpClient();
 
         http.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("token", token);
+            new System.Net.Http.Headers.AuthenticationHeaderValue("token", tokennnn);
 
         http.DefaultRequestHeaders.UserAgent.ParseAdd("BlazorUploader");
         string putUrl = $"https://api.github.com/repos/{owner}/{repo}/contents/{pathInRepo}";

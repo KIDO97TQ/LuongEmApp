@@ -55,5 +55,29 @@ namespace FistWeb.Data.Services
     {
         Task<List<ProductImageDto>> GetProductID(string typeSP);
     }
+
+    public interface IStockQTYService
+    {
+        Task<int> GetStockQTY(long productID);
+    }
+
+    public interface IInserUserService
+    {
+        Task<int> InsertUser(long id, string NameKach, string SdtKhach);
+    }
+
+    public interface IInsertOrdersService
+    {
+        Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes);
+    }
+    public interface IGetUserIDService
+    {
+        Task<long> GetUserID(string ContactKH);
+    }
     
+    public interface IUpdateReturnOderService
+    {
+        Task<int> UpdateReturnOrder(long orderId, decimal? lastmoney, long productid, int QTYThue, string status);
+    }
+
 }

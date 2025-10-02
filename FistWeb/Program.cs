@@ -11,8 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("PostgresConnec
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-//var tester = new ConnectionTester(connectionString);
-//await tester.TestAsync();
+#region khai bao services
 builder.Services.AddScoped<IThongKeService, CallService>();
 builder.Services.AddScoped<GetListThueDo, CallService>();
 builder.Services.AddScoped<IGetParamaterService, CallService>();
@@ -23,7 +22,12 @@ builder.Services.AddScoped<IInsertSPService, CallService>();
 builder.Services.AddScoped<IGetSumWHService, CallService>(); 
 builder.Services.AddScoped<IGetUserInfoService, CallService>(); 
 builder.Services.AddScoped<IGetProductIDService, CallService>(); 
-
+builder.Services.AddScoped<IStockQTYService, CallService>();
+builder.Services.AddScoped<IInsertOrdersService, CallService>();
+builder.Services.AddScoped<IInserUserService, CallService>();
+builder.Services.AddScoped<IGetUserIDService, CallService>();
+builder.Services.AddScoped<IUpdateReturnOderService, CallService>();
+#endregion
 
 builder.Services.AddScoped<LoginStateService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();

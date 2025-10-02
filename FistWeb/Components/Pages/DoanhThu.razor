@@ -10,6 +10,7 @@
 @inject IThongKeService ThongKeService
 @inject LoginStateService LoginState
 @inject NavigationManager Navigation
+@implements IDisposable
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -68,15 +69,22 @@
 
 @code {
     private DateTime selectedDate = DateTime.Today;
-
     private List<Data.DTOs.DoanhThuThueDoDto> Doanhthuthang;
     private List<Data.DTOs.DoanhThuThueDoDto> Doanhthunam;
+    private bool _disposed = false;
 
     private string month;
     private string year, yearFix0, yearFix1, yearFix2;
     private double tongdoanhthuthang;
     private double tongDoanhThuNam;
 
+    private CancellationTokenSource cts = new();
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
 
     private async Task OnYearChanged(ChangeEventArgs e)
     {
@@ -114,7 +122,10 @@
             await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
             await JS.InvokeVoidAsync("chartHelper.renderChart", "DoanhthunamtheoSP", dataDoanhthunamtheoSP, "bar");
 
-            StateHasChanged();
+            if (!_disposed)
+            {
+                StateHasChanged();
+            }
         }
         catch (Exception ex)
         {

@@ -9,3 +9,22 @@
         document.getElementById(this.dataset.tab).classList.add('active');
     });
 });
+
+function toggleOptionMenu(btn) {
+    const menu = btn.parentElement.querySelector('.option-menu');
+    menu.classList.toggle('show');
+
+    // Đóng menu nếu click bên ngoài
+    document.addEventListener('click', function handler(e) {
+        if (!btn.parentElement.contains(e.target)) {
+            menu.classList.remove('show');
+            document.removeEventListener('click', handler);
+        }
+    });
+}
+
+function closeAllOptionMenus() {
+    document.querySelectorAll('.option-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+    });
+}

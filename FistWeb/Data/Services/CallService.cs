@@ -12,8 +12,9 @@ using System.Text;
 
 namespace FistWeb.Data.Services
 {
-    public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService,
-    IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService
+    public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
+    IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
+    IUpdateReturnOderService
     {
         private readonly AppDbContext _context;
 
@@ -33,6 +34,15 @@ namespace FistWeb.Data.Services
                 .ToListAsync();
 
             return users;
+        }
+
+        public async Task<long> GetUserID(string ContactKH)
+        {
+            long userID = await _context.Users
+                .Where(u => u.Phone == ContactKH)
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+            return userID;
         }
 
         public async Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null)
@@ -133,7 +143,7 @@ namespace FistWeb.Data.Services
                                                     priceperday,
                                                     moneycoc,
                                                     tienphatsinh,
-                                                    status
+                                                    status, orderid, b.productid
                                              FROM clothings.orders b
                                              JOIN clothings.products p ON b.productid = p.productid
                                              JOIN clothings.users u ON u.userid = b.userid
@@ -184,6 +194,9 @@ namespace FistWeb.Data.Services
             {
                 sql.Append(" and UPPER(b.item_key1)=@taikhoan ");
                 parameters.Add(new NpgsqlParameter("taikhoan", user));
+            }
+            else if (fun == "tocken")
+            {
             }
             else
             {
@@ -321,6 +334,88 @@ namespace FistWeb.Data.Services
             return products;
         }
 
+        public async Task<int> GetStockQTY(long idproduct)
+        {
+            int stock = await _context.Products
+                .Where(p => p.productid == idproduct)
+                .Select(p => p.saveqty)
+                .FirstOrDefaultAsync();
 
+            return stock;
+        }
+
+        public async Task<int> InsertUser(long id, string NameKach, string SdtKhach)
+        {
+            var sql = new StringBuilder(@"INSERT INTO clothings.users (userid, fullname, facebookphone) VALUES (@userid, @fullname, @facebookphone)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("userid", id),
+                new NpgsqlParameter("fullname", NameKach),
+                new NpgsqlParameter("facebookphone", SdtKhach)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            string sql = @"
+                            INSERT INTO clothings.orders 
+                                (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+                            VALUES 
+                                (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+
+                            UPDATE clothings.products 
+                            SET saveqty = saveqty - @qty 
+                            WHERE productid = @productid; ";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@orderid", orderId),
+                 new NpgsqlParameter("@userid", userID),
+                 new NpgsqlParameter("@totalamount", TotalPrice),
+                 new NpgsqlParameter("@moneycoc", Tiencoc),
+                 new NpgsqlParameter("@productid", productID),
+                 new NpgsqlParameter("@qty", QTYThue),
+                 new NpgsqlParameter("@notes", notes),
+                 new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
+                 new NpgsqlParameter("@borrowdate", gioVN)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateReturnOrder(long orderId, decimal? lastmoney, long productid, int QTYThue, string status)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            string sql = "";
+
+            if (status == "RETURN")
+                sql = @"UPDATE clothings.orders SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                         WHERE orderid=@idorder;
+
+                        UPDATE clothings.products SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+            else
+                sql = @"UPDATE clothings.orders SET status='CANCEL', returndate=@timereturn, lastmoney = totalamount 
+                             WHERE orderid=@idorder;
+
+                            UPDATE clothings.products SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@idorder", orderId),
+                 new NpgsqlParameter("@lastmoney", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = lastmoney ?? 0m },
+                 new NpgsqlParameter("@timereturn", gioVN),
+                 new NpgsqlParameter("@bookingid", productid),
+                 new NpgsqlParameter("@sl", QTYThue)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
     }
 }

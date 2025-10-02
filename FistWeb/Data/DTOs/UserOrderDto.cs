@@ -28,12 +28,14 @@
         public DateTime? returndate { get; set; }      //returndate as Ngày_Trả,
         public string? type_production { get; set; }   //type_production as Loại_Đồ,
         public string? size { get; set; }                 //size,
-        public int? qty { get; set; }                  //qty as Số_Lượng,
-        public decimal? totalamount { get; set; }      //totalamount as Tổng_Tiền,
-        public decimal? priceperday { get; set; }      //priceperday as Giá_Thuê_1Ngày,
-        public decimal? moneycoc { get; set; }         //moneycoc as Tiền_Cọc,
-        public decimal? tienphatsinh { get; set; }     //tienphatsinh as Tiền_Phát_Sinh,
+        public int qty { get; set; }                  //qty as Số_Lượng,
+        public decimal totalamount { get; set; }      //totalamount as Tổng_Tiền,
+        public decimal priceperday { get; set; }      //priceperday as Giá_Thuê_1Ngày,
+        public decimal moneycoc { get; set; }         //moneycoc as Tiền_Cọc,
+        public decimal tienphatsinh { get; set; }     //tienphatsinh as Tiền_Phát_Sinh,
         public string? status { get; set; }            //status as Trạng_Thái
+        public long orderid { get; set; }          //orderid as Mã_Đơn_Hàng
+        public long productid { get; set; }     
     }
 
     public class ListParamater
@@ -63,13 +65,14 @@
     public class ProductItem
     {
         public string TypeSP { get; set; }
-        public string TienCoc { get; set; }
-        public string QTYThue { get; set; }
+        public decimal TienCoc { get; set; }
+        public int QTYThue { get; set; }
         public string Notes { get; set; }
-        public string PricePerDay { get; set; }
+        public decimal PricePerDay { get; set; }
         public string Size { get; set; }
-        public string ProductID { get; set; }
-        public string TongTienThue { get; set; }
+        public long ProductID { get; set; }
+        public decimal TongTienThue { get; set; }
+        public decimal TongTienThueNonCoc { get; set; }       
     }
 
     public class ProductImageDto
