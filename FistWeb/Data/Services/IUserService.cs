@@ -79,8 +79,19 @@ namespace FistWeb.Data.Services
     {
         Task<int> UpdateReturnOrder(long orderId, decimal? lastmoney, long productid, int QTYThue, string status);
     }
+
     public interface IUpdatePWService
     {
-        Task<bool> UpdatePasswordAsync(string pw);
+        Task<bool> UpdatePasswordAsync(string pw); 
+    }
+
+    public interface IDeleteProductService
+    {
+        Task<int> DeleteProductById(long productID); 
+    }
+
+    public interface IUpdateProductByIdService
+    {
+        Task<int> UpdateProductById(ProductImageDto updatedProduct);
     }
 }

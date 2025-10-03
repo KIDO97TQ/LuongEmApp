@@ -78,10 +78,12 @@
     public class ProductImageDto
     {
         public string ImageUrl { get; set; }
+        public string TypeSP { get; set; }
+        public string NameSP { get; set; }
         public long ProductID { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
-        public string Desc { get; set; }
+        public string? Desc { get; set; }
         public int StockQTY { get; set; }
         public int SaveQTY { get; set; }
     }

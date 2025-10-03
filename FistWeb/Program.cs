@@ -18,19 +18,22 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IThongKeService, CallService>();
 builder.Services.AddScoped<GetListThueDo, CallService>();
 builder.Services.AddScoped<IGetParamaterService, CallService>();
-builder.Services.AddScoped<IGetParaUserService, CallService>(); 
+builder.Services.AddScoped<IGetParaUserService, CallService>();
 builder.Services.AddScoped<IAddParaService, CallService>();
 builder.Services.AddScoped<IDeleteParaService, CallService>();
 builder.Services.AddScoped<IInsertSPService, CallService>();
-builder.Services.AddScoped<IGetSumWHService, CallService>(); 
-builder.Services.AddScoped<IGetUserInfoService, CallService>(); 
-builder.Services.AddScoped<IGetProductIDService, CallService>(); 
+builder.Services.AddScoped<IGetSumWHService, CallService>();
+builder.Services.AddScoped<IGetUserInfoService, CallService>();
+builder.Services.AddScoped<IGetProductIDService, CallService>();
 builder.Services.AddScoped<IStockQTYService, CallService>();
 builder.Services.AddScoped<IInsertOrdersService, CallService>();
 builder.Services.AddScoped<IInserUserService, CallService>();
 builder.Services.AddScoped<IGetUserIDService, CallService>();
 builder.Services.AddScoped<IUpdateReturnOderService, CallService>();
 builder.Services.AddScoped<IUpdatePWService, CallService>();
+builder.Services.AddScoped<IDeleteProductService, CallService>();
+builder.Services.AddScoped<IUpdateProductByIdService, CallService>();
+
 #endregion
 
 builder.Services.AddScoped<ProtectedSessionStorage>();

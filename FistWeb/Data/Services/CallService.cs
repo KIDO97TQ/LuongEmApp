@@ -14,7 +14,7 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService
     {
         private readonly AppDbContext _context;
 
@@ -224,7 +224,7 @@ namespace FistWeb.Data.Services
             {
                 new NpgsqlParameter("function_name", fun),
                 new NpgsqlParameter("item_key1", key1),
-                new NpgsqlParameter("item_key2", (object?)key2 ?? DBNull.Value)
+                new NpgsqlParameter("item_key2", (object?)key2 ?? "")
             };
 
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
@@ -261,7 +261,7 @@ namespace FistWeb.Data.Services
             {
                 new NpgsqlParameter("productID", productID),
                 new NpgsqlParameter("productName", nameSP),
-                new NpgsqlParameter("description", (object?)DescSP ?? DBNull.Value),
+                new NpgsqlParameter("description", (object?)DescSP ?? ""),
                 new NpgsqlParameter("priceperday", PriceSP),
                 new NpgsqlParameter("stockquantity", QtySP),
                 new NpgsqlParameter("size", sizeSP),
@@ -325,10 +325,12 @@ namespace FistWeb.Data.Services
                     ProductID = p.productid,
                     Price = p.priceperday,
                     Size = p.size,
-                    Desc = p.description,
+                    Desc = p.description ?? "",
                     StockQTY = p.stockquantity,
                     SaveQTY = p.saveqty,
-                    ImageUrl = p.productid + ".jpg"
+                    ImageUrl = p.productid + ".jpg",
+                    TypeSP = p.type_production,
+                    NameSP = p.productname
                 })
                 .ToListAsync();
             return products;
@@ -436,5 +438,36 @@ namespace FistWeb.Data.Services
             return true;
         }
 
+        public async Task<int> DeleteProductById(long productId)
+        {
+            string sql = @"DELETE from clothings.products WHERE productID=@productId";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@productId", productId)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+       
+        public async Task<int> UpdateProductById(ProductImageDto updatedProduct)
+        {
+            string sql = @"update clothings.products set  productId=@productId, productname=@productname, description=@description, priceperday=@priceperday,
+                            stockquantity=@stockquantity, size=@size, type_production=@type_production, saveqty=@saveqty
+                            WHERE productID=@productId";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@productId", updatedProduct.ProductID),
+                 new NpgsqlParameter("@productname", updatedProduct.NameSP),
+                 new NpgsqlParameter("@description", updatedProduct.Desc),
+                 new NpgsqlParameter("@priceperday", updatedProduct.Price),
+                 new NpgsqlParameter("@stockquantity",  updatedProduct.StockQTY),
+                 new NpgsqlParameter("@size", updatedProduct.Size),
+                 new NpgsqlParameter("@type_production", updatedProduct.TypeSP),
+                 new NpgsqlParameter("@saveqty",  updatedProduct.StockQTY)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
     }
 }

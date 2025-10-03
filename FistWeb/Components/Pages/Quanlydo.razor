@@ -22,6 +22,9 @@
 @using System.Net;
 @inject IGetParaUserService GetUserInfo
 @implements IDisposable
+@inject IGetProductIDService GetImageByProID
+@inject IDeleteProductService DeleteSPByID
+@inject IUpdateProductByIdService UpdateSPByID
 
 
 <div class="tabs">
@@ -31,12 +34,12 @@
     </button>
     <button class="tab-btn" data-tab="tab2">
         <img src="edit.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Tổng hợp đồ
+        Sửa thông tin đồ
     </button>
     <button class="tab-btn" data-tab="tab3">
         <img src="statistics.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Tổng hợp đồ
-    </button>    
+    </button>
 </div>
 
 @* tab1 *@
@@ -57,185 +60,6 @@
             </div>
             <!-- Left side - Form -->
             <div class="form-section-left">
-                <!-- Tên SP -->
-                <div class="form-group">
-                    <label class="form-label required-label">Tên SP:</label>
-                    <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên sản phẩm..." />
-                    <div></div>
-                </div>
-
-                <!-- Loại SP -->
-                <div class="form-group">
-                    <label class="form-label required-label">Loại SP:</label>
-                    <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
-                        <option value="">Chọn loại sản phẩm</option>
-                        @{
-                            if (this.ListType != null && !isLoading)
-                            {
-                                foreach (var item in this.ListType)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            }
-                        }
-                    </select>
-                    @if (isLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <div class="option-wrapper">
-                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
-                            <div class="option-menu">
-                                @* <div class="option-item" @onclick="EnableEditing">➕ Thêm</div> *@
-                                <div class="New-price">
-                                    <input id="priceInput" type="text"
-                                    @bind="newValueSP"
-                                    @bind:event="oninput"
-                                    placeholder="Thêm mới loại sp..." />
-
-                                    <button class="option-itemAdd" type="button" @onclick="addSpClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
-                                </div>
-                                <div class="option-item" @onclick="XoaSpClick">🗑️ Xóa loại sp đang chọn</div>
-
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Size SP -->
-                <div class="form-group">
-                    <label class="form-label required-label">Size SP:</label>
-                    <input type="text" @bind="TextValueSizeSP" @bind:event="oninput" class="form-input" placeholder="S, M, L, XL..." />
-                    <div></div>
-                </div>
-
-                <!-- Giá thuê theo ngày -->
-                <div class="form-group">
-                    <label class="form-label required-label">Giá thuê theo ngày:</label>
-                    <select class="form-select" @bind="SelectValuePrice" @bind:event="oninput">
-                        <option value="">Chọn mức giá</option>
-                        @{
-                            if (this.ListPrice != null && !isLoading)
-                            {
-                                @foreach (var item in this.ListPrice)
-                                {
-                                    if (decimal.TryParse(item, NumberStyles.Number, new CultureInfo("vi-VN"), out var parsedValue))
-                                    {
-                                        <option value="@item">@parsedValue.ToString("N0", new CultureInfo("vi-VN")) Vnđ</option>
-                                    }
-                                }
-                            }
-                        }
-                    </select>
-                    @if (isLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <div class="option-wrapper">
-                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
-
-                            <div class="option-menu">
-                                <div class="New-price">
-                                    <input id="priceInput" type="text"
-                                    @bind="newValuePrice"
-                                    placeholder="Thêm mới mức giá..."
-                                    @oninput="OnPriceInput"
-                                    autofocus />
-                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
-                                </div>
-                                <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá sp đang chọn</div>
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Số lượng -->
-                <div class="form-group">
-                    <label class="form-label required-label">Số lượng:</label>
-                    <input type="number" @bind="TextValueQTY" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng..." min="1" />
-                    <div></div>
-                </div>
-
-                <!-- Mô tả thêm về SP -->
-                <div class="form-group">
-                    <label class="form-label">Mô tả thêm về SP:</label>
-                    <textarea class="form-input" @bind="TextValueDesc" @bind:event="oninput" rows="4" placeholder="Mô tả chi tiết về sản phẩm..."></textarea>
-                    <div></div>
-                </div>
-
-                <!-- store info -->
-                <div class="store-info">
-                    @if (UpdateisLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <button class="button-add" type="button" @onclick="UploadSP"><i class="bi bi-check2-circle"></i>Thêm vào kho</button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* tab2 *@
-<div class="tab-content" id="tab2">
-    <div class="form-container">
-        <div class="form-content">
-            <!-- Left side - Form -->
-            <div class="form-section-left">
-
-                <!-- Loại SP cần sửa-->
-                <div class="form-group">
-                    <label class="form-label">Tìm SP cần sửa:</label>
-                    <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
-                        <option value="">Chọn loại sản phẩm</option>
-                        @{
-                            if (this.ListType != null && !isLoading)
-                            {
-                                foreach (var item in this.ListType)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            }
-                        }
-                    </select>
-                    @if (isLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <div class="option-wrapper">
-                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
-                            <div class="option-menu">
-                                @* <div class="option-item" @onclick="EnableEditing">➕ Thêm</div> *@
-                                <div class="New-price">
-                                    <input id="priceInput" type="text"
-                                           @bind="newValueSP"
-                                           @bind:event="oninput"
-                                           placeholder="Thêm mới loại sp..." />
-
-                                    <button class="option-itemAdd" type="button" @onclick="addSpClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
-                                </div>
-                                <div class="option-item" @onclick="XoaSpClick">🗑️ Xóa loại sp đang chọn</div>
-
-                            </div>
-                        </div>
-                    }
-                </div>
-
                 <!-- Tên SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Tên SP:</label>
@@ -366,13 +190,143 @@
     </div>
 </div>
 
+@* tab2 *@
+<div class="tab-content" id="tab2">
+    <div class="form-container">
+        <div class="form-content">
+            <!-- Left side - Form -->
+            <div class="form-section-left">
+
+                <!-- Loại SP cần sửa-->
+                <div class="form-group">
+                    <label class="form-label">Tìm SP cần sửa:</label>
+                    <select class="form-select" value="SelectTypeSPtab2" @onchange="GetImageByProductID">
+                        <option value="">Chọn loại sản phẩm cần sửa thông tin</option>
+                        @{
+                            if (this.ListType != null && !isLoading)
+                            {
+                                foreach (var item in this.ListType)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Tên SP -->
+                <div class="form-group">
+                    <label class="form-label required-label">Tên SP:</label>
+                    <input type="text" @bind="TextValueNameSPtab2" @bind:event="oninput" class="form-input" />
+                    <div></div>
+                </div>
+
+                <!-- Loại SP -->
+                <div class="form-group">
+                    <label class="form-label required-label">Loại SP:</label>
+                    <input class="form-select" value="@TextloaiSPtab2" readonly />
+
+                    <div class="option-wrappertab2">
+                        @* <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button> *@
+                        <select class="option-menutab2" @onchange="SelectChanSP">
+                            @{
+                                if (this.ListType != null)
+                                {
+                                    foreach (var item in this.ListType)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Size SP -->
+                <div class="form-group">
+                    <label class="form-label required-label">Size SP:</label>
+                    <input type="text" @bind="TextValueSizeSPtab2" @bind:event="oninput" class="form-input" />
+                    <div></div>
+                </div>
+
+                <!-- Giá thuê theo ngày -->
+                <div class="form-group">
+                    <label class="form-label required-label">Giá thuê theo ngày:</label>
+                    <input class="form-select" @bind="SelectValuePricetab2" @bind:event="oninput" readonly></input>
+
+                    <div class="option-wrappertab2">
+                        <select class="option-menutab2" @onchange="PriceChange">
+                            @{
+                                if (this.ListPrice != null)
+                                {
+                                    @foreach (var item in this.ListPrice)
+                                    {
+                                        if (decimal.TryParse(item, NumberStyles.Number, new CultureInfo("vi-VN"), out var parsedValue))
+                                        {
+                                            <option value="@item">@parsedValue.ToString("N0", new CultureInfo("vi-VN")) Vnđ</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Số lượng -->
+                <div class="form-group">
+                    <label class="form-label required-label">Số lượng:</label>
+                    <input type="number" @bind="TextValueQTYtab2" @bind:event="oninput" class="form-input" min="1" />
+                    <div></div>
+                </div>
+
+                <!-- Mô tả thêm về SP -->
+                <div class="form-group">
+                    <label class="form-label">Mô tả thêm về SP:</label>
+                    <textarea class="form-input" @bind="TextValueDesctab2" @bind:event="oninput" rows="4"></textarea>
+                    <div></div>
+                </div>
+
+                <!-- store info -->
+                <div class="store-info">
+                    @if (UpdateisLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <button class="button-add2" type="button" @onclick="UpdateModifySP"><i class="bi bi-check2-circle"></i>Cập nhật sản phẩm</button>
+                        <button class="button-add2 detete2" type="button" @onclick="DeleteSP"><i class="bi bi-trash"></i>Xóa sản phẩm</button>
+                    }
+                </div>
+            </div>
+
+            <!-- Right side - Image -->
+            <div class="form-section-right">
+                <label class="image-upload-area">
+                    @{
+                        if (!string.IsNullOrEmpty(@resutlsImage))
+                        {
+                            <img src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@resutlsImage" alt="Image" style="max-width: 100%; border: 1px solid white; margin-top: 10px;" />
+                        }
+                    }
+                </label>
+            </div>
+        </div>
+    </div>
+    @if (showGalleryModal)
+    {
+        <ImageGalleryModal ProductInfo="ProductInfo" OnClose="CloseGalleryModal" OnImageSelected="HandleImageSelected" />
+    }
+</div>
+
 @* tab3 *@
 <div class="tab-content" id="tab3">
     <div class="chart-card">
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                 Tổng hàng hóa
+                Tổng hàng hóa
             </h3>
             @if (isLoading)
             {
@@ -449,7 +403,7 @@
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
         this.month = int.Parse(DateTime.Now.Month.ToString());
-        this.year = int.Parse(DateTime.Now.Year.ToString());   
+        this.year = int.Parse(DateTime.Now.Year.ToString());
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
@@ -460,39 +414,40 @@
             try
             {
 
-           
+
                 //var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
                 bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
                 //if (result.Success && result.Value)
                 if (isLoggedIn)
-            {
-                isLoading = true;
-                await GetMaterialInWH(true, false);
-                datapara = await GetListParamater.GetParamater();
-                this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
-                this.ListPrice = datapara.Where(x => x.KeyPara == "price")
-                                     .OrderBy(x =>
-                                     {
-                                         if (decimal.TryParse(x.keyData, out var number))
-                                             return number;
-                                         return decimal.MaxValue;
-                                     })
-                                     .Select(x => x.keyData)
-                                     .ToList();
-                isLoading = false;
-                if (!_disposed)
                 {
-                    StateHasChanged();
+                    isLoading = true;
+                    await GetMaterialInWH(true, false);
+                    datapara = await GetListParamater.GetParamater();
+                    this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                    this.ListPrice = datapara.Where(x => x.KeyPara == "price")
+                                         .OrderBy(x =>
+                                         {
+                                             if (decimal.TryParse(x.keyData, out var number))
+                                                 return number;
+                                             return decimal.MaxValue;
+                                         })
+                                         .Select(x => x.keyData)
+                                         .ToList();
+                    isLoading = false;
+                    if (!_disposed)
+                    {
+                        StateHasChanged();
+                    }
+                }
+                else
+                {
+                    Navigation.NavigateTo("/", true);
+
                 }
             }
-            else
-            {
-                Navigation.NavigateTo("/", true);
-
-            } }
             catch (Exception)
             {
-                
+
                 throw;
             }
         }
@@ -874,6 +829,208 @@
             colors.Add($"rgba({random.Next(256)}, {random.Next(256)}, {random.Next(256)}, 0.7)");
         }
         return colors;
+    }
+
+    #endregion
+
+    #region Edit SP
+    private List<Data.DTOs.ProductImageDto> ProductInfo = new();
+    private bool showGalleryModal = false;
+    private string resutlsImage = null, SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2;
+
+    private async void GetImageByProductID(ChangeEventArgs e)
+    {
+        typeSP = e.Value?.ToString() ?? "";
+        if (string.IsNullOrEmpty(typeSP))
+            return;
+
+        ProductInfo = await GetImageByProID.GetProductID(typeSP);
+
+        showGalleryModal = true;
+        StateHasChanged();
+    }
+
+    private void CloseGalleryModal()
+    {
+        if (string.IsNullOrEmpty(resutlsImage))
+        {
+            ClearModifySP();
+        }
+        showGalleryModal = false;
+        StateHasChanged();
+    }
+
+    private long ProductID = 0;
+    private async void HandleImageSelected(Data.DTOs.ProductImageDto selectedImage)
+    {
+        //SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2
+        string gia = selectedImage.Price.ToString().Replace(".", "");
+        bool parseGiaOk = decimal.TryParse(gia, out decimal gialate);
+
+        resutlsImage = selectedImage.ImageUrl;
+        TextloaiSPtab2 = selectedImage.TypeSP;
+        TextValueNameSPtab2 = selectedImage.NameSP;
+        TextValueSizeSPtab2 = selectedImage.Size;
+        SelectValuePricetab2 = $"{gialate.ToString("N0", new CultureInfo("vi-VN"))} vnđ";
+        TextValueQTYtab2 = selectedImage.StockQTY.ToString();
+        TextValueDesctab2 = selectedImage.Desc;
+        ProductID = selectedImage.ProductID;
+        StateHasChanged();
+        showGalleryModal = false;
+    }
+    private void ClearModifySP()
+    {
+        resutlsImage = null;
+        ProductID = 0;
+        TextloaiSPtab2 = null;
+        TextValueNameSPtab2 = null;
+        TextValueSizeSPtab2 = null;
+        SelectValuePricetab2 = null;
+        TextValueQTYtab2 = null;
+        TextValueDesctab2 = null;
+        StateHasChanged();
+    }
+
+    private async void UpdateModifySP()
+    {
+        //SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
+        if (confirmed)
+        {
+            UpdateisLoading = true;
+            // List<Data.DTOs.ProductStock> dataWH = await GetTotalWH.GetTotalWH(all, NotReturn, typeSP);
+            // var values = dataWH.Select(x => x.total_quantity).ToList();
+            bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace("Vnđ", ""), out decimal Price1);
+
+            FistWeb.Data.DTOs.ProductImageDto ProductImageDto = new FistWeb.Data.DTOs.ProductImageDto
+            {
+                TypeSP = TextloaiSPtab2,
+                NameSP = TextValueNameSPtab2,
+                ProductID = ProductID,
+                Price = Price1,
+                Size = TextValueSizeSPtab2,
+                Desc = TextValueDesctab2,
+                StockQTY = int.Parse(TextValueQTYtab2),
+                SaveQTY = int.Parse(TextValueQTYtab2)
+            };
+
+            int checkupdate = await UpdateSPByID.UpdateProductById(ProductImageDto);
+            if (checkupdate > 0)
+            {
+                await JS.InvokeVoidAsync("alert", "Sửa Sp thành công!");
+            }
+            else
+            {
+                UpdateisLoading = false;
+                await JS.InvokeVoidAsync("alert", "sửa Sp lỗi!");
+                return;
+            }
+            UpdateisLoading = false;
+            ClearModifySP();
+            
+        }
+    }
+    private async void DeleteSP()
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
+        if (confirmed)
+        {
+            UpdateisLoading = true;
+            var fileName = ProductID.ToString() + ".jpg";
+            List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+            string tokennnn = datapara[0].keyUsername;
+            string owner = "kido1997";
+            string repo = "ImageLuongEm";
+            string pathInRepo = $"ImageLuongEm/{fileName}";
+            string commitMessage = $"Upload {fileName}";
+
+            var result = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
+            if (result)
+            {
+                int checkDelete = await DeleteSPByID.DeleteProductById(ProductID);
+                if (checkDelete > 0)
+                {
+                    await JS.InvokeVoidAsync("alert", "Xóa Sp thành công!");
+                }
+                else
+                {
+                    UpdateisLoading = false;
+                    await JS.InvokeVoidAsync("alert", "Xóa Sp lỗi!");
+                    return;
+                }
+            }
+            else
+            {
+                UpdateisLoading = false;
+                await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp lỗi!");
+                return;
+            }
+            ClearModifySP();
+            UpdateisLoading = false;
+            
+        }
+    }
+
+    private async void SelectChanSP(ChangeEventArgs e)
+    {
+        TextloaiSPtab2 = e.Value?.ToString();
+        await JS.InvokeVoidAsync("closeAllOptionMenus");
+        StateHasChanged();
+    }
+    private async void PriceChange(ChangeEventArgs e)
+    {
+        SelectValuePricetab2 = e.Value?.ToString();
+        await JS.InvokeVoidAsync("closeAllOptionMenus");
+        StateHasChanged();
+    }
+
+    private async Task<bool> DeleteImageFromGitHubAsync(string tokennnn, string owner, string repo, string pathInRepo, string commitMessage)
+    {
+        using var http = new HttpClient();
+
+        http.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("token", tokennnn);
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("BlazorUploader");
+
+        // 📌 1. Lấy file info để lấy SHA
+        string getUrl = $"https://api.github.com/repos/{owner}/{repo}/contents/{pathInRepo}";
+        var getResp = await http.GetAsync(getUrl);
+
+        if (!getResp.IsSuccessStatusCode)
+        {
+            var err = await getResp.Content.ReadAsStringAsync();
+            await JS.InvokeVoidAsync("alert", $"❌ Không tìm thấy file để xóa: {err}");
+            return false;
+        }
+
+        var contentJson = await getResp.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(contentJson);
+        string sha = doc.RootElement.GetProperty("sha").GetString();
+
+        // 📌 2. Gửi DELETE request để xóa file
+        var payload = new
+        {
+            message = commitMessage,
+            sha = sha,
+            branch = "main"
+        };
+
+        string json = JsonSerializer.Serialize(payload);
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, getUrl)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+        var deleteResp = await http.SendAsync(request);
+        if (!deleteResp.IsSuccessStatusCode)
+        {
+            var error = await deleteResp.Content.ReadAsStringAsync();
+            await JS.InvokeVoidAsync("alert", $"❌ Lỗi xóa ảnh GitHub: {error}");
+            return false;
+        }
+
+        return true;
     }
 
     #endregion

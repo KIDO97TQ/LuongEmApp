@@ -24,10 +24,12 @@
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1" @onclick="HandleTabClick">
         <img src="list.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Danh sách Thuê - Trả đồ</button>
+        Danh sách Thuê - Trả đồ
+    </button>
     <button class="tab-btn" data-tab="tab2">
         <img src="shopper.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Thuê đồ</button>
+        Thuê đồ
+    </button>
     @* <button class="tab-btn" data-tab="tab3">Trả đồ</button> *@@* nếu muốn làm thêm *@
 </div>
 
@@ -205,6 +207,7 @@
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
                     <select class="form-select" value="SelectTypeSP" @onchange="GetImageByProductID">
+                        <option value="">Chọn loại sản phẩm.....</option>
                         @{
                             if (this.ListType != null && !isLoading)
                             {
@@ -232,8 +235,16 @@
                 <!-- Số lượng -->
                 <div class="form-group">
                     <label class="form-label required-label">Số lượng:</label>
-                    <input type="number" @bind="TextQTY" @oninput="OnQtyInput" class="form-input" placeholder="Nhập số lượng..." min="1" />
+                    @* <input type="number" value="@TextQTY" @oninput="OnQtyInput" class="form-input" placeholder="Nhập số lượng..." min="1" /> *@
+                    <input type="number" @bind="TextQTY" @bind:event="oninput" class="form-input" placeholder="Nhập số lượng..." min="1" />
                     <label class="form-label-TonKho">Số lượng hiện còn lại: @Tonkho</label>
+                </div>
+                <div class="form-group">
+                    <div></div>
+                    @if (!string.IsNullOrWhiteSpace(QtyErrorMessage))
+                    {
+                        <div class="text-danger">@QtyErrorMessage</div>
+                    }
                 </div>
 
                 <!-- tiền cọc -->
@@ -266,7 +277,7 @@
                         else
                         {
                             <button class="button-add" type="button" @onclick="AddStore">
-                                <i class="bi bi-cart4"></i> Thêm vào kho
+                                <i class="bi bi-cart4"></i> Thêm vào giỏ hàng
                             </button>
                         }
 
@@ -391,7 +402,7 @@
 
 
 @code {
-    private string TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, TextQTY, MotaSP, productid, typeSP;
+    private string TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, MotaSP, productid, typeSP;
     private List<Data.DTOs.InfoThueDoDto> allData = new();
     private List<Data.DTOs.ProductItem> ProductList = new();
     private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
@@ -507,7 +518,6 @@
         isLoading = false;
         StateHasChanged();
     }
-
 
     private async Task DeleteOrder(Data.DTOs.InfoThueDoDto itemSelect)
     {
@@ -841,25 +851,33 @@
         StateHasChanged();
     }
 
-    private void OnQtyInput(ChangeEventArgs e)
+    private string QtyErrorMessage = string.Empty;
+    private string _textQTY;
+    public string TextQTY
     {
-        TextQTY = e.Value?.ToString();
-        bool parseOk = int.TryParse(TextQTY, out int qty);
-
-        if (!parseOk || qty < 1)
+        get => _textQTY;
+        set
         {
+            _textQTY = value;
+            ValidateQty(value);
+        }
+    }
+
+    private void ValidateQty(string value)
+    {
+        QtyErrorMessage = "";
+
+        if (!int.TryParse(value, out int qty) || qty < 1)
+        {
+            QtyErrorMessage = "❌ Vui lòng nhập số hợp lệ lớn hơn 0.";
+            _textQTY = "";
             return;
         }
 
-        if (qty <= Tonkho || qty == 0)
+        if (qty > Tonkho)
         {
-            //ok
-        }
-        else
-        {
-            TextQTY = "";
-            JSx.InvokeVoidAsync("alert", $"❌ Không đủ hàng.Chỉ còn {Tonkho} cái");
-            StateHasChanged();
+            QtyErrorMessage = $"❌ Không đủ hàng. Chỉ còn {Tonkho} cái";
+            _textQTY = "";
         }
     }
 
