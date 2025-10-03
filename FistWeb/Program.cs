@@ -1,10 +1,13 @@
-﻿using FistWeb.Components;
+﻿using Blazored.LocalStorage;
+using Blazored.SessionStorage;
+using FistWeb.Components;
 using FistWeb.Data;
 using FistWeb.Data.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
@@ -27,11 +30,16 @@ builder.Services.AddScoped<IInsertOrdersService, CallService>();
 builder.Services.AddScoped<IInserUserService, CallService>();
 builder.Services.AddScoped<IGetUserIDService, CallService>();
 builder.Services.AddScoped<IUpdateReturnOderService, CallService>();
+builder.Services.AddScoped<IUpdatePWService, CallService>();
 #endregion
 
-builder.Services.AddScoped<LoginStateService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddHttpClient();
+
+builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<AuthenticationService>();
+
 
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 //builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
@@ -52,6 +60,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.MapGet("/ping", () => Results.Ok("pong"));
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

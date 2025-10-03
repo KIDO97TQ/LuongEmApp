@@ -8,7 +8,7 @@
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
 @inject IThongKeService ThongKeService
-@inject LoginStateService LoginState
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @implements IDisposable
 
@@ -16,7 +16,8 @@
     <div class="chart-card">
         <div class="staff-header">
             <h3 class="card-title">
-                📈 Tổng doanh thu tháng @month
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                 Tổng doanh thu tháng @month
             </h3>
             <div class="staff-controls">
                 <select class="control-select" value="Month" @onchange="OnMonthChanged">
@@ -37,7 +38,8 @@
     <div class="chart-card">
         <div class="staff-header">
             <h3 class="card-title">
-                📈 Tổng doanh thu năm @year
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                 Tổng doanh thu năm @year
             </h3>
             <div class="staff-controls">
                 <select class="control-select" value="year" @onchange="OnYearChanged">
@@ -58,7 +60,8 @@
     <div class="chart-card">
         <div class="staff-header">
             <h3 class="card-title">
-                📈 Tổng doanh thu theo sản phẩm trong năm @year
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                 Tổng doanh thu theo sản phẩm trong năm @year
             </h3>
         </div>
         <div class="staff-chart">
@@ -267,9 +270,10 @@
     {
         if (firstRender)
         {
-            var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
-
-            if (result.Success && result.Value)
+            //var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
+            bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+            //if (result.Success && result.Value)
+            if (isLoggedIn)
             {
                 await TimKiem();
             }

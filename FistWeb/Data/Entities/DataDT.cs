@@ -63,10 +63,10 @@ namespace FistWeb.Data.Entities
         public string item_key2 { get; set; }
 
         [Column("item_key3")]
-        public string item_key3 { get; set; }
+        public string? item_key3 { get; set; }
 
         [Column("item_key4")]
-        public string item_key4 { get; set; }
+        public string? item_key4 { get; set; }
     }
 
     [Table("products", Schema = "clothings")]

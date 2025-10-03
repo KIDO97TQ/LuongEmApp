@@ -2,7 +2,11 @@
   "Files": [
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FistWeb.bundle.scp.css",
-      "PackagePath": "staticwebassets\\FistWeb.f8i9k2l200.bundle.scp.css"
+      "PackagePath": "staticwebassets\\FistWeb.f8mx8a6lth.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\add-product.png",
+      "PackagePath": "staticwebassets\\add-product.png"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\bootstrap\\bootstrap.min.css",
@@ -21,8 +25,16 @@
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\favicon.png",
-      "PackagePath": "staticwebassets\\favicon.png"
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\edit.png",
+      "PackagePath": "staticwebassets\\edit.png"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\fashion-blogger.png",
+      "PackagePath": "staticwebassets\\fashion-blogger.png"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\girl.png",
+      "PackagePath": "staticwebassets\\girl.png"
     },
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\CharSumJs.js",
@@ -43,6 +55,18 @@
     {
       "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\js\\app.js",
       "PackagePath": "staticwebassets\\js\\app.js"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\list.png",
+      "PackagePath": "staticwebassets\\list.png"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\shopper.png",
+      "PackagePath": "staticwebassets\\shopper.png"
+    },
+    {
+      "Id": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\wwwroot\\statistics.png",
+      "PackagePath": "staticwebassets\\statistics.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.FistWeb.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

@@ -1,14 +1,13 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@inject LoginStateService LoginState
 @inject NavigationManager Navigation
 @using FistWeb.Data.Services
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-@inject ProtectedSessionStorage sessionStorage
-@inject NavigationManager Navigation
 @inject GetListThueDo GetListThueDo
 @inject IGetParaUserService GetLoginUser
+@inject IUpdatePWService UpdatePW
+@inject IJSRuntime JS
 @implements IDisposable
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Home</PageTitle>
 
@@ -16,38 +15,86 @@
 {
     <p>🔄 Đang kiểm tra trạng thái đăng nhập...</p>
 }
-else if (!LoginState.IsLoggedIn)
+else if (!isLoggedIn)
 {
     <div class="full-screen-center">
         <div class="form-area">
             <div class="wrapper">
-                <h2>Admin Login</h2>
-
-                <form @onsubmit:preventDefault="true">
-                    <div class="box">
-                        <input type="text" @bind="username" placeholder="Nhập tên đăng nhập..." />
-                        <i class="fa fa-user"></i>
-                    </div>
-                    <div class="box">
-                        <input type="password" @bind="pass" placeholder="Nhập mật khẩu..." />
-                        <i class="fa fa-lock"></i>
-                    </div>
-                    <div class="options">
-                        <label><input type="checkbox" /> Remember Me</label>
-                        <a href="#">Forgot Password?</a>
-                    </div>
-
-                    @if (isLoading)
+                @{
+                    if (CheckforgotPW)
                     {
-                        <div class="spinner" style="margin-top:10px;"></div>
+                        <h2>Confirm Password</h2>
+                        <form @onsubmit:preventDefault="true">
+                            <div class="box">
+                                <input type="text" @bind="pass1" placeholder="Nhập mật khẩu mới..." />
+                                <i class="fa fa-lock"></i>
+                            </div>
+                            <div class="box">
+                                <input type="text" @bind="pass2" placeholder="Nhập lại mật khẩu..." />
+                                <i class="fa fa-lock"></i>
+                            </div>
+                            @if (isLoading)
+                            {
+                                <div class="spinner" style="margin-top:10px;"></div>
+                            }
+                            else
+                            {
+                                <button type="button" @onclick="ChangePASS">Submit</button>
+                            }
+                        </form>
+                    }
+                    if (forgotPW)
+                    {
+                        <h2>Forgot Password?</h2>
+                        <form @onsubmit:preventDefault="true">
+                            <div class="box">
+                                <input type="text" @bind="FGusername" placeholder="Nhập tên đăng nhập..." />
+                                <i class="fa fa-user"></i>
+                            </div>
+                            @if (isLoading)
+                            {
+                                <div class="spinner" style="margin-top:10px;"></div>
+                            }
+                            else
+                            {
+                                <button type="button" @onclick="GetNewPW">Submit</button>
+                            }
+                        </form>
+                        <p><a href="#" @onclick="BackLogin">Back to Login</a></p>
                     }
                     else
                     {
-                        <button type="button" @onclick="LoginDB">Submit</button>
-                    }
-                </form>
+                        if (!CheckforgotPW){
+                            <h2>Admin Login</h2>
+                            <form @onsubmit:preventDefault="true">
+                                <div class="box">
+                                    <input type="text" @bind="username" placeholder="Nhập tên đăng nhập..." />
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <div class="box">
+                                    <input type="password" @bind="pass" placeholder="Nhập mật khẩu..." />
+                                    <i class="fa fa-lock"></i>
+                                </div>
+                                <div class="options">
+                                    <label>
+                                        <input type="checkbox" @bind="rememberMe" /> Ghi nhớ đăng nhập
+                                    </label>
+                                    <a href="#" @onclick="ForgotPW">Forgot Password?</a>
+                                </div>
 
-                <p>Don't have an account? <a href="#">Register</a></p>
+                                @if (isLoading)
+                                {
+                                    <div class="spinner" style="margin-top:10px;"></div>
+                                }
+                                else
+                                {
+                                    <button type="button" @onclick="LoginDB">Submit</button>
+                                }
+                            </form>
+
+                            <p>Don't have an account? <a href="#">Register</a></p>
+                        }}
+                }
             </div>
         </div>
     </div>
@@ -57,12 +104,13 @@ else
     <div class="full-screen-center">
         <div class="form-area">
             <div class="wrapper">
-                <h2>Welcome!</h2>
+                <h2>Welcome @savedUsername!</h2>
                 <button @onclick="Logout">Logout</button>
             </div>
         </div>
     </div>
 }
+
 @if (showLoginError)
 {
     <div class="popup-bubble">
@@ -71,20 +119,85 @@ else
 }
 
 @code {
-    private string username;
-    private string pass;
+    private string username, FGusername;
+    private string pass, pass1, pass2;
+    private bool rememberMe = true;
+
+    private bool forgotPW = false, CheckforgotPW = false;
     private bool isLoginPending = false;
-    private bool isRestoring = false;
-    private List<Data.DTOs.ListParaUser> datapara;
-    private string loginErrorMessage = "";
+    private bool isRestoring = true;
     private bool isLoading = false;
     private bool showLoginError = false;
+    private string loginErrorMessage = "";
+    private string savedUsername;
+    private bool isLoggedIn = false;
+
     private bool _disposed = false;
     private CancellationTokenSource cts = new();
+
     public void Dispose()
     {
         cts.Cancel();
         cts.Dispose();
+    }
+
+    private async Task ForgotPW()
+    {
+        forgotPW = true;
+        StateHasChanged();
+    }
+
+    private async Task ChangePASS()
+    {
+        if (pass1 != pass2)
+        {
+            await ShowErrorAsync("Mật khẩu không khớp!");
+            return;
+        }
+        if (string.IsNullOrEmpty(pass1) || string.IsNullOrEmpty(pass2))
+        {
+            await ShowErrorAsync("Vui lòng nhập mật khẩu mới!");
+            return;
+        }
+        isLoading = true;
+        bool res = await UpdatePW.UpdatePasswordAsync(pass1);
+        if (res)
+        {
+            await ShowErrorAsync("Đổi mật khẩu thành công!");          
+            forgotPW = false;
+            CheckforgotPW = false;
+            pass1 = "";
+            pass2 = "";
+            FGusername = "";
+        }
+        else
+        {
+            await ShowErrorAsync("Đổi mật khẩu thất bại!");
+        }
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task GetNewPW()
+    {
+        isLoading = true;
+        List<Data.DTOs.ListParaUser> datapara = await GetLoginUser.GetLoginUser("admin", FGusername, null);
+        if (datapara != null && datapara.Any())
+        {
+            FGusername = datapara[0].keyUsername;
+            CheckforgotPW = true;
+            forgotPW = false;         
+        }
+        else
+        {
+            await ShowErrorAsync("Tài khoản không tồn tại!");
+        }
+        isLoading = false; 
+        StateHasChanged();
+    }
+    private async Task BackLogin()
+    {
+        forgotPW = false;
     }
     private async Task LoginDB()
     {
@@ -93,10 +206,10 @@ else
         isLoading = true;
         StateHasChanged();
 
-        string username = this.username?.Trim();
-        string password = this.pass?.Trim();
+        string u = username?.Trim();
+        string p = pass?.Trim();
 
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(u) || string.IsNullOrEmpty(p))
         {
             await ShowErrorAsync("Vui lòng nhập tài khoản và mật khẩu");
             isLoading = false;
@@ -105,24 +218,23 @@ else
         }
 
         try
-        {       
-            // datapara = await GetLoginUser.GetLoginUser("admin", username, pass);
-            // if (datapara != null && datapara.Any())
-            if(username == "a" && password == "a")
+        {
+            List<Data.DTOs.ListParaUser> datapara = await GetLoginUser.GetLoginUser("admin", username, pass);
+            if (datapara != null && datapara.Any())
             {
-                LoginState.Login(username);
-                await sessionStorage.SetAsync("isLoggedIn", true);
-                await sessionStorage.SetAsync("username", username);               
-                StateHasChanged();
+                isLoggedIn = true;
+                savedUsername = u;
+
+                if (rememberMe)
+                {
+                    await localStorage.SetItemAsync("isLoggedIn", true);
+                    await localStorage.SetItemAsync("username", u);
+                }
             }
             else
             {
                 await ShowErrorAsync("Tài khoản hoặc mật khẩu không đúng");
             }
-        }
-        catch (Exception ex)
-        {
-            string message = "Lỗi đăng nhập: " + ex.Message;
         }
         finally
         {
@@ -150,19 +262,15 @@ else
         {
             try
             {
-                var loginResult = await sessionStorage.GetAsync<bool>("isLoggedIn");
-                if (loginResult.Success && loginResult.Value)
+                var loginResult = await JS.InvokeAsync<string>("localStorage.getItem", "isLoggedIn");
+                if (loginResult == "true")
                 {
-                    var usernameResult = await sessionStorage.GetAsync<string>("username");
-                    if (!LoginState.IsLoggedIn)
-                    {
-                        LoginState.Login(usernameResult.Value);
-                    }
+                    var user = await JS.InvokeAsync<string>("localStorage.getItem", "username");
+                    isLoggedIn = true;
+                    savedUsername = user.Trim('\"');
                 }
             }
-            catch
-            {
-            }
+            catch { }
 
             isRestoring = false;
             if (!_disposed)
@@ -174,11 +282,13 @@ else
 
     private async Task Logout()
     {
-        await sessionStorage.DeleteAsync("isLoggedIn");
-        await sessionStorage.DeleteAsync("username");
-        LoginState.Logout();
+        await localStorage.RemoveItemAsync("isLoggedIn");
+        await localStorage.RemoveItemAsync("username");
+
+        isLoggedIn = false;
         username = string.Empty;
         pass = string.Empty;
+        savedUsername = string.Empty;
         StateHasChanged();
     }
 }

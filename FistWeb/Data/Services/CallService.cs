@@ -14,7 +14,7 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService
+    IUpdateReturnOderService, IUpdatePWService
     {
         private readonly AppDbContext _context;
 
@@ -417,5 +417,24 @@ namespace FistWeb.Data.Services
 
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
+
+        public async Task<bool> UpdatePasswordAsync(string newPassword)
+        {
+            try
+            {
+                var user = await _context.Paramater
+                                .FirstOrDefaultAsync(u => u.FunctionName == "admin");
+
+                user.item_key2 = newPassword;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

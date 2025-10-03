@@ -10,7 +10,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @using System.Globalization
 @inject NavigationManager Navigation
-@inject ProtectedSessionStorage sessionStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject IGetParamaterService GetListParamater
 @inject IGetUserInfoService GetUserInfo
 @inject IGetProductIDService GetImageByProID
@@ -22,8 +22,12 @@
 @implements IDisposable
 
 <div class="tabs">
-    <button class="tab-btn active" data-tab="tab1" @onclick="HandleTabClick">📝 Danh sách Thuê - Trả đồ</button>
-    <button class="tab-btn" data-tab="tab2">Thuê đồ</button>
+    <button class="tab-btn active" data-tab="tab1" @onclick="HandleTabClick">
+        <img src="list.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Danh sách Thuê - Trả đồ</button>
+    <button class="tab-btn" data-tab="tab2">
+        <img src="shopper.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Thuê đồ</button>
     @* <button class="tab-btn" data-tab="tab3">Trả đồ</button> *@@* nếu muốn làm thêm *@
 </div>
 
@@ -512,13 +516,13 @@
         if (confirmed)
         {
             isLoadingOption = true;
-            int checkupdate = await UpdateStatusOrder.UpdateReturnOrder(itemSelect.orderid,itemSelect.totalamount,itemSelect.productid, itemSelect.qty, "CANCEL" );
+            int checkupdate = await UpdateStatusOrder.UpdateReturnOrder(itemSelect.orderid, itemSelect.totalamount, itemSelect.productid, itemSelect.qty, "CANCEL");
             if (checkupdate > 0)
             {
                 await LoadData();
                 isLoadingOption = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Xóa đơn của bạn {itemSelect.fullname} thành công!");             
+                await JS.InvokeVoidAsync("alert", $"Xóa đơn của bạn {itemSelect.fullname} thành công!");
                 StateHasChanged();
             }
             else
@@ -564,9 +568,8 @@
             try
             {
                 isLoading = true;
-                var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
-
-                if (result.Success && result.Value)
+                bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+                if (isLoggedIn)
                 {
                     int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
                     UpdateRowsPerPage(height);
@@ -581,7 +584,7 @@
 
                     if (!_disposed)
                     {
-                        StateHasChanged(); // chỉ gọi nếu component còn sống
+                        StateHasChanged();
                     }
                 }
                 else
@@ -712,12 +715,32 @@
         string qtythue = TextQTY;
         string size = SelectSizeSP;
 
-        // TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP;
-        if (string.IsNullOrEmpty(typeSP) || string.IsNullOrEmpty(sdtKH) || string.IsNullOrEmpty(nameKH) || string.IsNullOrEmpty(productid) || string.IsNullOrEmpty(qtythue))
+        if (string.IsNullOrEmpty(sdtKH))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng điền sdt khách");
+            return;
+        }
+        if (string.IsNullOrEmpty(nameKH))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng điền tên khách");
+            return;
+        }
+        if (string.IsNullOrEmpty(typeSP))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng chọn kiểu sản phẩm.");
+            return;
+        }
+        if (string.IsNullOrEmpty(productid))
         {
             JSx.InvokeVoidAsync("alert", "Vui lòng điền đầy đủ thông tin sản phẩm.");
             return;
         }
+        if (string.IsNullOrEmpty(qtythue))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng điền số lượng thuê");
+            return;
+        }
+
         string cleanedGiaTheoNgay = giaTheoNgay.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
         string cleanedTienCoc = tienCoc.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
 
