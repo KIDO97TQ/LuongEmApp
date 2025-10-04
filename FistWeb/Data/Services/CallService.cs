@@ -383,7 +383,7 @@ namespace FistWeb.Data.Services
                  new NpgsqlParameter("@moneycoc", Tiencoc),
                  new NpgsqlParameter("@productid", productID),
                  new NpgsqlParameter("@qty", QTYThue),
-                 new NpgsqlParameter("@notes", notes),
+                 new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)notes ?? "" },
                  new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
                  new NpgsqlParameter("@borrowdate", gioVN)
             };

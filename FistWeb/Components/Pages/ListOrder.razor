@@ -206,8 +206,7 @@
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
-                    <select class="form-select" value="SelectTypeSP" @onchange="GetImageByProductID">
-                        <option value="">Chọn loại sản phẩm.....</option>
+                    <select class="form-select" value="SelectTypeSP" @onchange="GetImageByProductID" placeholder="Chọn loại sản phẩm.....">
                         @{
                             if (this.ListType != null && !isLoading)
                             {

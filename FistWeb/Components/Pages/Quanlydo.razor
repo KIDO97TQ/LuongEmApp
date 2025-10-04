@@ -871,7 +871,7 @@
         TextloaiSPtab2 = selectedImage.TypeSP;
         TextValueNameSPtab2 = selectedImage.NameSP;
         TextValueSizeSPtab2 = selectedImage.Size;
-        SelectValuePricetab2 = $"{gialate.ToString("N0", new CultureInfo("vi-VN"))} vnđ";
+        SelectValuePricetab2 = $"{gialate.ToString("N0", new CultureInfo("vi-VN"))} Vnđ";
         TextValueQTYtab2 = selectedImage.StockQTY.ToString();
         TextValueDesctab2 = selectedImage.Desc;
         ProductID = selectedImage.ProductID;
@@ -900,7 +900,7 @@
             
             // List<Data.DTOs.ProductStock> dataWH = await GetTotalWH.GetTotalWH(all, NotReturn, typeSP);
             // var values = dataWH.Select(x => x.total_quantity).ToList();
-            bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace("Vnđ", ""), out decimal Price1);
+            bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace(".","").Replace("Vnđ", "").Trim(), out decimal Price1);
 
             FistWeb.Data.DTOs.ProductImageDto ProductImageDto = new FistWeb.Data.DTOs.ProductImageDto
             {
@@ -930,6 +930,7 @@
             
         }
         UpdateisLoading2 = false;
+        StateHasChanged();
     }
     private async void DeleteSP()
     {
@@ -966,8 +967,8 @@
                 await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp lỗi!");
                 return;
             }
-            ClearModifySP();
             UpdateisLoading2 = false;
+            ClearModifySP();           
             
         }
     }
@@ -980,7 +981,7 @@
     }
     private async void PriceChange(ChangeEventArgs e)
     {
-        SelectValuePricetab2 = e.Value?.ToString();
+        SelectValuePricetab2 = e.Value?.ToString() + " Vnđ";
         await JS.InvokeVoidAsync("closeAllOptionMenus");
         StateHasChanged();
     }
