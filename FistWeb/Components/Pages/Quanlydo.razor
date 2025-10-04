@@ -224,7 +224,7 @@
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
-                    <input class="form-select" value="@TextloaiSPtab2" readonly />
+                    <input class="form-select readonly-input" value="@TextloaiSPtab2" readonly />
 
                     <div class="option-wrappertab2">
                         @* <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button> *@
@@ -252,7 +252,7 @@
                 <!-- Giá thuê theo ngày -->
                 <div class="form-group">
                     <label class="form-label required-label">Giá thuê theo ngày:</label>
-                    <input class="form-select" @bind="SelectValuePricetab2" @bind:event="oninput" readonly></input>
+                    <input class="form-select readonly-input" @bind="SelectValuePricetab2" @bind:event="oninput" readonly></input>
 
                     <div class="option-wrappertab2">
                         <select class="option-menutab2" @onchange="PriceChange">
@@ -289,7 +289,7 @@
 
                 <!-- store info -->
                 <div class="store-info">
-                    @if (UpdateisLoading)
+                    @if (UpdateisLoading2)
                     {
                         <div class="spinner" style="margin-top:10px;"></div>
                     }
@@ -387,7 +387,7 @@
     private List<Data.DTOs.ProductStock> dataWH = new();
     List<string> ListType;
     List<string> ListPrice;
-    private bool isLoading = true, UpdateisLoading = false;
+    private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
     private string newValueSP, newValuePrice, SelectValueSP, SelectValuePrice, TextValueNameSP, TextValueSizeSP, TextValueQTY, TextValueDesc;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
@@ -893,11 +893,11 @@
 
     private async void UpdateModifySP()
     {
-        //SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2
+        UpdateisLoading2 = true;
         bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
         if (confirmed)
         {
-            UpdateisLoading = true;
+            
             // List<Data.DTOs.ProductStock> dataWH = await GetTotalWH.GetTotalWH(all, NotReturn, typeSP);
             // var values = dataWH.Select(x => x.total_quantity).ToList();
             bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace("Vnđ", ""), out decimal Price1);
@@ -921,21 +921,22 @@
             }
             else
             {
-                UpdateisLoading = false;
+                UpdateisLoading2 = false;
                 await JS.InvokeVoidAsync("alert", "sửa Sp lỗi!");
                 return;
             }
-            UpdateisLoading = false;
+            UpdateisLoading2 = false;
             ClearModifySP();
             
         }
+        UpdateisLoading2 = false;
     }
     private async void DeleteSP()
     {
         bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
         if (confirmed)
         {
-            UpdateisLoading = true;
+            UpdateisLoading2 = true;
             var fileName = ProductID.ToString() + ".jpg";
             List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
             string tokennnn = datapara[0].keyUsername;
@@ -954,19 +955,19 @@
                 }
                 else
                 {
-                    UpdateisLoading = false;
+                    UpdateisLoading2 = false;
                     await JS.InvokeVoidAsync("alert", "Xóa Sp lỗi!");
                     return;
                 }
             }
             else
             {
-                UpdateisLoading = false;
+                UpdateisLoading2 = false;
                 await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp lỗi!");
                 return;
             }
             ClearModifySP();
-            UpdateisLoading = false;
+            UpdateisLoading2 = false;
             
         }
     }

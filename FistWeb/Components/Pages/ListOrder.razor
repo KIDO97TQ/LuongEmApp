@@ -223,13 +223,13 @@
                 <!-- Size -->
                 <div class="form-group">
                     <label class="form-label">Size SP:</label>
-                    <input class="form-input" value="@SelectSizeSP" readonly />
+                    <input class="form-input readonly-input" value="@SelectSizeSP" readonly />
                 </div>
 
                 <!-- Gía thê theo ngày-->
                 <div class="form-group">
                     <label class="form-label required-label">Giá thuê 1 ngày:</label>
-                    <input type="text" value="@SelectGiaTheoNgay" class="form-input" readonly />
+                    <input type="text" value="@SelectGiaTheoNgay" class="form-input readonly-input" readonly />
                 </div>
 
                 <!-- Số lượng -->
@@ -243,7 +243,7 @@
                     <div></div>
                     @if (!string.IsNullOrWhiteSpace(QtyErrorMessage))
                     {
-                        <div class="text-danger">@QtyErrorMessage</div>
+                        <div class="textdanger">@QtyErrorMessage</div>
                     }
                 </div>
 
@@ -264,7 +264,7 @@
                 <!-- Mô tả thêm về SP -->
                 <div class="form-group">
                     <label class="form-label">Mô tả thêm về SP:</label>
-                    <input class="form-input" value="@MotaSP" readonly />
+                    <input class="form-input readonly-input" value="@MotaSP" readonly />
                 </div>
 
                 <!-- button giỏ hàng -->

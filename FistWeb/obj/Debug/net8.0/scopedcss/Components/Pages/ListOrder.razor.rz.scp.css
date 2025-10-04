@@ -514,10 +514,11 @@
 }
 
 /*---------error message qty------*/
-.text-danger[b-yie3h92shu] {
-    color: red;
+.textdanger[b-yie3h92shu] {
+    
     margin-top: 0px;
     font-size: 0.9em;
+    color: white;
 }
 
 /*------------QR CODE--------------*/
@@ -668,4 +669,12 @@
     }
 }
 
+/*-------------readonly-------*/
+.readonly-input[b-yie3h92shu] {
+    background-color: #dcdcdc; /* xám tối hơn */
+    color: #555; /* chữ xám đậm hơn */
+    border: 1px solid #bbb; /* viền nhẹ */
+    cursor: not-allowed; /* con trỏ không cho nhập */
+    opacity: 0.95;
+}
 </style[b-yie3h92shu]>

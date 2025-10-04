@@ -1148,10 +1148,11 @@ body[b-l54ik2cc7b] {
 }
 
 /*---------error message qty------*/
-.text-danger[b-yie3h92shu] {
-    color: red;
+.textdanger[b-yie3h92shu] {
+    
     margin-top: 0px;
     font-size: 0.9em;
+    color: white;
 }
 
 /*------------QR CODE--------------*/
@@ -1302,6 +1303,14 @@ body[b-l54ik2cc7b] {
     }
 }
 
+/*-------------readonly-------*/
+.readonly-input[b-yie3h92shu] {
+    background-color: #dcdcdc; /* xám tối hơn */
+    color: #555; /* chữ xám đậm hơn */
+    border: 1px solid #bbb; /* viền nhẹ */
+    cursor: not-allowed; /* con trỏ không cho nhập */
+    opacity: 0.95;
+}
 </style[b-yie3h92shu]>
 /* _content/FistWeb/Components/Pages/Quanlydo.razor.rz.scp.css */
 <style >
@@ -1993,6 +2002,15 @@ body {
 
 .option-wrappertab2[b-auhx5faxoe] {
     padding: 10px 15px;
+}
+
+/*-------------readonly-------*/
+.readonly-input[b-auhx5faxoe] {
+    background-color: #dcdcdc; /* xám tối hơn */
+    color: #555; /* chữ xám đậm hơn */
+    border: 1px solid #bbb; /* viền nhẹ */
+    cursor: not-allowed; /* con trỏ không cho nhập */
+    opacity: 0.95;
 }
 
 </style[b-auhx5faxoe] >

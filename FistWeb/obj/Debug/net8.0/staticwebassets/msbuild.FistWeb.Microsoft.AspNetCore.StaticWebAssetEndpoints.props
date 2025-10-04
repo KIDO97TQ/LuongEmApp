@@ -84,17 +84,17 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-gpYwhrqe98yW\u002B8ELH8toa7kSIBn2awDgn5ZvWeKEq9w="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"45808"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022gpYwhrqe98yW\u002B8ELH8toa7kSIBn2awDgn5ZvWeKEq9w=\u0022"},{"Name":"Last-Modified","Value":"Thu, 02 Oct 2025 22:27:26 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/FistWeb/FistWeb.bundle.scp.css">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FistWeb.dx76zko7r9.bundle.scp.css'))</AssetFile>
+    <StaticWebAssetEndpoint Include="_content/FistWeb/FistWeb.6d9gxrbk9d.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FistWeb.6d9gxrbk9d.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"46787"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc=\u0022"},{"Name":"Last-Modified","Value":"Fri, 03 Oct 2025 17:48:04 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"6d9gxrbk9d"},{"Name":"integrity","Value":"sha256-lq/3PF8XOeL2\u002B2YTHtXjirAF/bMK7KlGiwJrlE41mLQ="},{"Name":"label","Value":"_content/FistWeb/FistWeb.bundle.scp.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"47394"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022lq/3PF8XOeL2\u002B2YTHtXjirAF/bMK7KlGiwJrlE41mLQ=\u0022"},{"Name":"Last-Modified","Value":"Fri, 03 Oct 2025 23:34:13 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/FistWeb/FistWeb.dx76zko7r9.bundle.scp.css">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FistWeb.dx76zko7r9.bundle.scp.css'))</AssetFile>
+    <StaticWebAssetEndpoint Include="_content/FistWeb/FistWeb.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FistWeb.6d9gxrbk9d.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"dx76zko7r9"},{"Name":"integrity","Value":"sha256-oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc="},{"Name":"label","Value":"_content/FistWeb/FistWeb.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"46787"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc=\u0022"},{"Name":"Last-Modified","Value":"Fri, 03 Oct 2025 17:48:04 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-lq/3PF8XOeL2\u002B2YTHtXjirAF/bMK7KlGiwJrlE41mLQ="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"47394"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022lq/3PF8XOeL2\u002B2YTHtXjirAF/bMK7KlGiwJrlE41mLQ=\u0022"},{"Name":"Last-Modified","Value":"Fri, 03 Oct 2025 23:34:13 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/FistWeb/girl.png">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\girl.png'))</AssetFile>

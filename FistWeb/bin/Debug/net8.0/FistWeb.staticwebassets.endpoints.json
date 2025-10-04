@@ -3,7 +3,7 @@
   "ManifestType": "Build",
   "Endpoints": [
     {
-      "Route": "FistWeb.dx76zko7r9.styles.css",
+      "Route": "FistWeb.6d9gxrbk9d.styles.css",
       "AssetFile": "FistWeb.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -17,7 +17,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "46787"
+          "Value": "47394"
         },
         {
           "Name": "Content-Type",
@@ -25,21 +25,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc=\""
+          "Value": "\"lq/3PF8XOeL2+2YTHtXjirAF/bMK7KlGiwJrlE41mLQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Oct 2025 17:48:04 GMT"
+          "Value": "Fri, 03 Oct 2025 23:34:13 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "dx76zko7r9"
+          "Value": "6d9gxrbk9d"
         },
         {
           "Name": "integrity",
-          "Value": "sha256-oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc="
+          "Value": "sha256-lq/3PF8XOeL2+2YTHtXjirAF/bMK7KlGiwJrlE41mLQ="
         },
         {
           "Name": "label",
@@ -62,7 +62,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "46787"
+          "Value": "47394"
         },
         {
           "Name": "Content-Type",
@@ -70,17 +70,17 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc=\""
+          "Value": "\"lq/3PF8XOeL2+2YTHtXjirAF/bMK7KlGiwJrlE41mLQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Oct 2025 17:48:04 GMT"
+          "Value": "Fri, 03 Oct 2025 23:34:13 GMT"
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-oYAWWiJSSg0GfQ0NpscRKPC3iFZSGhEqFJmRfS4pbBc="
+          "Value": "sha256-lq/3PF8XOeL2+2YTHtXjirAF/bMK7KlGiwJrlE41mLQ="
         }
       ]
     },

@@ -689,4 +689,13 @@ body {
     padding: 10px 15px;
 }
 
+/*-------------readonly-------*/
+.readonly-input[b-auhx5faxoe] {
+    background-color: #dcdcdc; /* xám tối hơn */
+    color: #555; /* chữ xám đậm hơn */
+    border: 1px solid #bbb; /* viền nhẹ */
+    cursor: not-allowed; /* con trỏ không cho nhập */
+    opacity: 0.95;
+}
+
 </style[b-auhx5faxoe] >
