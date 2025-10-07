@@ -44,8 +44,8 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationService>();
 
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+//builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -63,6 +63,8 @@ if (app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
 }
+
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

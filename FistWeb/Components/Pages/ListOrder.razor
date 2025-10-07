@@ -377,25 +377,25 @@
 
 <script>
     window.screenHelper = {
-        getHeight: function() {
-            return window.innerHeight;
-        },
-        registerResizeHandler: function(dotNetHelper) {
-            window.addEventListener('resize', () => {
-                dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
-            });
-        }
+    getHeight: function() {
+    return window.innerHeight;
+    },
+    registerResizeHandler: function(dotNetHelper) {
+    window.addEventListener('resize', () => {
+    dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
+    });
+    }
     };
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // đổi active trên nút
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
 
-            // đổi nội dung hiển thị
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(this.dataset.tab).classList.add('active');
-        });
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
     });
 </script>
 
@@ -806,32 +806,34 @@
         var random = new Random();
         long Usserid = 0;
 
-        if (!Khachquen)
+        try
         {
-            Usserid = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99));
-            checkupdate = await InsertUser.InsertUser(Usserid, TextNameKH, TextSdtKH);
-        }
-        else
-        {
-            Usserid = await GetuserID.GetUserID(TextSdtKH);
-            if (Usserid != 0)
-                checkupdate = 1;
+            if (!Khachquen)
+            {
+                Usserid = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99));
+                checkupdate = await InsertUser.InsertUser(Usserid, TextNameKH, TextSdtKH);
+            }
             else
             {
-                JSx.InvokeVoidAsync("alert", "Lấy thông tin khách hàng thất bại");
-                UpdateisLoading = false;
-                return;
+                Usserid = await GetuserID.GetUserID(TextSdtKH);
+                if (Usserid != 0)
+                    checkupdate = 1;
+                else
+                {
+                    JSx.InvokeVoidAsync("alert", "Lấy thông tin khách hàng thất bại");
+                    UpdateisLoading = false;
+                    return;
+                }
             }
-        }
 
-        if (Usserid != 0 && checkupdate > 0)
-        {
-            foreach (var item in ProductList)
+            if (Usserid != 0 && checkupdate > 0)
             {
-                checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
+                foreach (var item in ProductList)
+                {
+                    checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
+                }
                 if (checkupdate > 0)
                 {
-                    //ok
                     UserInfo = new();
                     UserInfo = await GetUserInfo.GetUserInfo();
                     Khachquen = false;
@@ -842,10 +844,16 @@
                     JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
                 }
             }
+            else
+            {
+                JSx.InvokeVoidAsync("alert", "❌ Thêm khách hàng thất bại");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            JSx.InvokeVoidAsync("alert", "❌ Thêm khách hàng thất bại");
+            JSx.InvokeVoidAsync("alert", "❌ Thêm đơn thất bại");
+            UpdateisLoading = false;
+            StateHasChanged();
         }
 
         UpdateisLoading = false;
