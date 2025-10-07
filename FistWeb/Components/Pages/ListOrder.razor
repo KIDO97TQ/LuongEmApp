@@ -374,27 +374,28 @@
 <div class="tab-content" id="tab3">
     @* nếu muốn làm thêm *@
 </div>
+
 <script>
     window.screenHelper = {
-    getHeight: function() {
-    return window.innerHeight;
-    },
-    registerResizeHandler: function(dotNetHelper) {
-    window.addEventListener('resize', () => {
-    dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
-    });
-    }
+        getHeight: function() {
+            return window.innerHeight;
+        },
+        registerResizeHandler: function(dotNetHelper) {
+            window.addEventListener('resize', () => {
+                dotNetHelper.invokeMethodAsync('OnResize', window.innerHeight);
+            });
+        }
     };
     document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-    // đổi active trên nút
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
+        btn.addEventListener('click', function() {
+            // đổi active trên nút
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
 
-    // đổi nội dung hiển thị
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(this.dataset.tab).classList.add('active');
-    });
+            // đổi nội dung hiển thị
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(this.dataset.tab).classList.add('active');
+        });
     });
 </script>
 
@@ -831,6 +832,8 @@
                 if (checkupdate > 0)
                 {
                     //ok
+                    UserInfo = new();
+                    UserInfo = await GetUserInfo.GetUserInfo();
                     Khachquen = false;
                     ProductList = new();
                     TextNameKH = "";
@@ -843,7 +846,6 @@
         else
         {
             JSx.InvokeVoidAsync("alert", "❌ Thêm khách hàng thất bại");
-            UpdateisLoading = false;
         }
 
         UpdateisLoading = false;
