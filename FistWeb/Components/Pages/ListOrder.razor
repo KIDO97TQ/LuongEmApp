@@ -831,6 +831,7 @@
                 foreach (var item in ProductList)
                 {
                     checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
+                    await Task.Delay(500);               
                 }
                 if (checkupdate > 0)
                 {
