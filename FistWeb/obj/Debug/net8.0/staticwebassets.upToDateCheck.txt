@@ -11,6 +11,7 @@ wwwroot\js\CharSumJs.js
 wwwroot\js\ChartSumWH.js
 wwwroot\js\ListThueDo.js
 wwwroot\js\Quanlydo.js
+wwwroot\js\site.js
 wwwroot\list.png
 wwwroot\shopper.png
 wwwroot\statistics.png

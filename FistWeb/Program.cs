@@ -36,6 +36,8 @@ builder.Services.AddScoped<IUpdateProductByIdService, CallService>();
 
 #endregion
 
+builder.Services.AddSingleton<LoadingService>();
+
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddHttpClient();
 

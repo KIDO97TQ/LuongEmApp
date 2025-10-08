@@ -20,17 +20,23 @@
 @inject IGetUserIDService GetuserID
 @inject IUpdateReturnOderService UpdateStatusOrder
 @implements IDisposable
+@inject LoadingService LoadingService
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1" @onclick="HandleTabClick">
         <img src="list.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Danh sách Thuê - Trả đồ
     </button>
+
+    @if (isLoadingListOrder)
+    {
+        <div class="spinner" style="margin-top:10px;"></div>
+    }
     <button class="tab-btn" data-tab="tab2">
         <img src="shopper.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Thuê đồ
     </button>
-    @* <button class="tab-btn" data-tab="tab3">Trả đồ</button> *@@* nếu muốn làm thêm *@
+    
 </div>
 
 <!-- Page control -->
@@ -413,7 +419,8 @@
     private int year, Tonkho;
     private bool checkNull = false, isLoadingOption = false;
     private DotNetObjectReference<ListOrder> objRef;
-    private bool isLoading = true, UpdateisLoading = false;
+    private bool isLoading = true, UpdateisLoading = false, isLoadingListOrder = false;
+    private bool isLoadingService = true;
     private bool _disposed = false;
     private CancellationTokenSource cts = new();
     public void Dispose()
@@ -513,10 +520,14 @@
 
     private async void HandleTabClick()
     {
+        isLoadingListOrder = true;
         isLoading = true;
-        await LoadData();
+        allData = await GetListThueDo.GetListThueDo("BORROW", year, month);
+        checkNull = !(allData != null && allData.Any());
+        currentPage = 1;
         isLoading = false;
-        StateHasChanged();
+        isLoadingListOrder = false;
+        LoadPage();
     }
 
     private async Task DeleteOrder(Data.DTOs.InfoThueDoDto itemSelect)
@@ -577,6 +588,7 @@
         {
             try
             {
+                LoadingService.Begin();
                 isLoading = true;
                 bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
                 if (isLoggedIn)
@@ -596,14 +608,20 @@
                     {
                         StateHasChanged();
                     }
+                    LoadingService.End();
+                    isLoadingService = false;
                 }
                 else
                 {
+                    LoadingService.End();
+                    isLoadingService = false;
                     Navigation.NavigateTo("/", true);
                 }
             }
             catch (Exception ex)
             {
+                LoadingService.End();
+                isLoadingService = false;
             }
         }
     }

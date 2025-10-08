@@ -11,6 +11,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @implements IDisposable
+@inject LoadingService LoadingService
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -80,6 +81,7 @@
     private string year, yearFix0, yearFix1, yearFix2;
     private double tongdoanhthuthang;
     private double tongDoanhThuNam;
+    private bool isLoadingService = true;
 
     private CancellationTokenSource cts = new();
     public void Dispose()
@@ -270,15 +272,18 @@
     {
         if (firstRender)
         {
-            //var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
+            LoadingService.Begin();
             bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
-            //if (result.Success && result.Value)
             if (isLoggedIn)
             {
                 await TimKiem();
+                LoadingService.End();
+                isLoadingService = false;
             }
             else
             {
+                LoadingService.End();
+                isLoadingService = false;
                 Navigation.NavigateTo("/", true);
             }
         }

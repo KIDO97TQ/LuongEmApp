@@ -25,7 +25,10 @@
 @inject IGetProductIDService GetImageByProID
 @inject IDeleteProductService DeleteSPByID
 @inject IUpdateProductByIdService UpdateSPByID
+@inject LoadingService LoadingService
 
+@* <Microsoft.AspNetCore.Components.Routing.NavigationLock OnBeforeInternalNavigationAsync="OnBeforeNavigation"
+                                                        ConfirmExternalNavigation="true" /> *@
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">
@@ -391,6 +394,7 @@
     private string newValueSP, newValuePrice, SelectValueSP, SelectValuePrice, TextValueNameSP, TextValueSizeSP, TextValueQTY, TextValueDesc;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
+    private bool isLoadingService = true;
     private bool _disposed = false;
     private CancellationTokenSource cts = new();
     public void Dispose()
@@ -400,6 +404,16 @@
         cts.Dispose();
     }
     #region add SP
+    
+    private ValueTask OnBeforeNavigation(LocationChangingContext context)
+    {
+        if (isLoadingService)
+        {
+            context.PreventNavigation();
+        }
+        return ValueTask.CompletedTask;
+    }
+
     protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
     {
         this.month = int.Parse(DateTime.Now.Month.ToString());
@@ -414,10 +428,8 @@
             try
             {
 
-
-                //var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
+                LoadingService.Begin();
                 bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
-                //if (result.Success && result.Value)
                 if (isLoggedIn)
                 {
                     isLoading = true;
@@ -438,16 +450,21 @@
                     {
                         StateHasChanged();
                     }
+                    LoadingService.End();
+                    isLoadingService = false;
                 }
                 else
                 {
+                    LoadingService.End();
+                    isLoadingService = false;
                     Navigation.NavigateTo("/", true);
 
                 }
             }
             catch (Exception)
             {
-
+                LoadingService.End();
+                isLoadingService = false;
                 throw;
             }
         }

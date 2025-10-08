@@ -53,4 +53,10 @@
     line-height: 1; /* bỏ khoảng dư trên/dưới */
     vertical-align: middle; /* đảm bảo icon căn giữa dòng */
 }
+
+.disabled-menu {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 </style >
