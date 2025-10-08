@@ -36,7 +36,7 @@
         <img src="shopper.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Thuê đồ
     </button>
-    
+
 </div>
 
 <!-- Page control -->
@@ -212,7 +212,8 @@
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
-                    <select class="form-select" value="SelectTypeSP" @onchange="GetImageByProductID" placeholder="Chọn loại sản phẩm.....">
+                    <select class="form-select" value="@SelectTypeSP" @onchange="GetImageByProductID">
+                        <option value="">Chọn loại sản phẩm</option>
                         @{
                             if (this.ListType != null && !isLoading)
                             {
@@ -408,7 +409,7 @@
 
 
 @code {
-    private string TextNote, SelectTypeSP, SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, MotaSP, productid, typeSP;
+    private string TextNote, SelectTypeSP="", SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, MotaSP, productid, typeSP;
     private List<Data.DTOs.InfoThueDoDto> allData = new();
     private List<Data.DTOs.ProductItem> ProductList = new();
     private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
@@ -580,7 +581,7 @@
     #endregion
 
     #region tab2
-    List<string> ListType;
+    List<string> ListType, listTypeBak;
     [Inject] private IJSRuntime JSx { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -602,6 +603,7 @@
                     UserInfo = await GetUserInfo.GetUserInfo();
                     List<Data.DTOs.ListParamater> datapara = await GetListParamater.GetParamater();
                     this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
+                    this.listTypeBak = this.ListType;
                     isLoading = false;
 
                     if (!_disposed)
@@ -695,8 +697,7 @@
         if (string.IsNullOrEmpty(typeSP))
             return;
 
-        ProductInfo = await GetImageByProID.GetProductID(typeSP);
-
+        ProductInfo = await GetImageByProID.GetProductID(typeSP);       
         showGalleryModal = true;
         StateHasChanged();
     }
@@ -713,8 +714,11 @@
         MotaSP = results.Desc;
         productid = results.ProductID.ToString();
         Tonkho = await GetStockQTY.GetStockQTY(results.ProductID);
+        ListType = null;
         StateHasChanged();
         showGalleryModal = false;
+        ListType = listTypeBak;
+        StateHasChanged();
     }
 
     private void CloseGalleryModal()
@@ -727,9 +731,13 @@
             SelectTienCoc = null;
             MotaSP = null;
             Tonkho = 0;
+            SelectTypeSP = "";
         }
         showGalleryModal = false;
         results = new();
+        ListType = null;
+        StateHasChanged();
+        ListType = listTypeBak;
         StateHasChanged();
     }
 
@@ -808,6 +816,10 @@
         TextQTY = null;
         Tonkho = 0;
         results = new();
+        SelectTypeSP = "";
+        ListType = null;
+        StateHasChanged();
+        ListType = listTypeBak;
         StateHasChanged();
     }
 
@@ -859,6 +871,7 @@
                     TextNameKH = "";
                     TextSdtKH = "";
                     TextNote = "";
+                    SelectTypeSP = "";
                     JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
                 }
             }
