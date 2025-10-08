@@ -828,11 +828,10 @@
 
             if (Usserid != 0 && checkupdate > 0)
             {
-                foreach (var item in ProductList)
-                {
-                    checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
-                    await Task.Delay(500);               
-                }
+
+                //checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
+
+                checkupdate = await InsertOrder.InsertOrder(Usserid, ProductList);
                 if (checkupdate > 0)
                 {
                     UserInfo = new();

@@ -68,7 +68,7 @@ namespace FistWeb.Data.Services
 
     public interface IInsertOrdersService
     {
-        Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes);
+        Task<int> InsertOrder(long userID, List<Data.DTOs.ProductItem> ProductList);
     }
     public interface IGetUserIDService
     {

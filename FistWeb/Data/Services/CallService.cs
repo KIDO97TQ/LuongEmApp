@@ -162,7 +162,7 @@ namespace FistWeb.Data.Services
                 sql.Append(" AND b.status = @status ");
                 parameters.Add(new NpgsqlParameter("status", status));
             }
-
+            sql.Append(" order by borrowdate desc ");
             return await _context.Set<InfoThueDoDto>()
                     .FromSqlRaw(sql.ToString(), parameters.ToArray())
                     .ToListAsync();
@@ -359,36 +359,85 @@ namespace FistWeb.Data.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
-        public async Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes)
+        //public async Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes)
+        //{
+        //    TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        //    DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+        //    long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+        //    string sql = @"
+        //                    INSERT INTO clothings.orders 
+        //                        (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+        //                    VALUES 
+        //                        (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+
+        //                    UPDATE clothings.products 
+        //                    SET saveqty = saveqty - @qty 
+        //                    WHERE productid = @productid; ";
+
+        //    var parameters = new[]
+        //    {
+        //         new NpgsqlParameter("@orderid", orderId),
+        //         new NpgsqlParameter("@userid", userID),
+        //         new NpgsqlParameter("@totalamount", TotalPrice),
+        //         new NpgsqlParameter("@moneycoc", Tiencoc),
+        //         new NpgsqlParameter("@productid", productID),
+        //         new NpgsqlParameter("@qty", QTYThue),
+        //         new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)notes ?? "" },
+        //         new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
+        //         new NpgsqlParameter("@borrowdate", gioVN)
+        //    };
+
+        //    return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        //}
+
+        public async Task<int> InsertOrder(long UserID, List<Data.DTOs.ProductItem> products)
         {
-            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
-            long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-
-            string sql = @"
-                            INSERT INTO clothings.orders 
-                                (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
-                            VALUES 
-                                (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
-
-                            UPDATE clothings.products 
-                            SET saveqty = saveqty - @qty 
-                            WHERE productid = @productid; ";
-
-            var parameters = new[]
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                 new NpgsqlParameter("@orderid", orderId),
-                 new NpgsqlParameter("@userid", userID),
-                 new NpgsqlParameter("@totalamount", TotalPrice),
-                 new NpgsqlParameter("@moneycoc", Tiencoc),
-                 new NpgsqlParameter("@productid", productID),
-                 new NpgsqlParameter("@qty", QTYThue),
-                 new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)notes ?? "" },
-                 new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
-                 new NpgsqlParameter("@borrowdate", gioVN)
-            };
+                int totalInserted = 0;
 
-            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = @"INSERT INTO clothings.orders 
+                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+                               VALUES 
+                                   (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+
+                               UPDATE clothings.products 
+                               SET saveqty = saveqty - @qty 
+                               WHERE productid = @productid;";
+
+                foreach (var order in products)
+                {
+                    long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+
+                    var parameters = new[]
+                    {
+                        new NpgsqlParameter("@orderid", orderId),
+                        new NpgsqlParameter("@userid", UserID),
+                        new NpgsqlParameter("@totalamount", order.TongTienThueNonCoc),
+                        new NpgsqlParameter("@moneycoc", order.TienCoc),
+                        new NpgsqlParameter("@productid", order.ProductID),
+                        new NpgsqlParameter("@qty", order.QTYThue),
+                        new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)order.Notes ?? "" },
+                        new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
+                        new NpgsqlParameter("@borrowdate", gioVN)
+                    };
+
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<int> UpdateReturnOrder(long orderId, decimal? lastmoney, long productid, int QTYThue, string status)
@@ -449,7 +498,7 @@ namespace FistWeb.Data.Services
 
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
-       
+
         public async Task<int> UpdateProductById(ProductImageDto updatedProduct)
         {
             string sql = @"update clothings.products set  productId=@productId, productname=@productname, description=@description, priceperday=@priceperday,
