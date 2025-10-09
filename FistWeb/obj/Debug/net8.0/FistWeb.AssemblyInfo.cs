@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FistWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc78a3b636b21e08ef392cf190afa51ddbb83b16")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51986fa504c2abc12bb579cbf230dc848f104473")]
 [assembly: System.Reflection.AssemblyProductAttribute("FistWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FistWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

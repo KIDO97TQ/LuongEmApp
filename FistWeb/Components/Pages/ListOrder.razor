@@ -212,7 +212,8 @@
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
-                    <select class="form-select" value="@SelectTypeSP" @onchange="GetImageByProductID">
+                   @*  <select class="form-select" value="@SelectTypeSP" @onchange="GetImageByProductID"> *@
+                    <select class="form-select" @bind="SelectTypeSP" @bind:after="GetImageByProductID">
                         <option value="">Chọn loại sản phẩm</option>
                         @{
                             if (this.ListType != null && !isLoading)
@@ -581,7 +582,7 @@
     #endregion
 
     #region tab2
-    List<string> ListType, listTypeBak;
+    List<string> ListType;
     [Inject] private IJSRuntime JSx { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -603,7 +604,6 @@
                     UserInfo = await GetUserInfo.GetUserInfo();
                     List<Data.DTOs.ListParamater> datapara = await GetListParamater.GetParamater();
                     this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
-                    this.listTypeBak = this.ListType;
                     isLoading = false;
 
                     if (!_disposed)
@@ -691,13 +691,13 @@
 
     private bool showGalleryModal = false;
 
-    private async void GetImageByProductID(ChangeEventArgs e)
+    private async void GetImageByProductID()
     {
-        typeSP = e.Value?.ToString() ?? "";
+        typeSP = SelectTypeSP;
         if (string.IsNullOrEmpty(typeSP))
             return;
 
-        ProductInfo = await GetImageByProID.GetProductID(typeSP);       
+        ProductInfo = await GetImageByProID.GetProductID(typeSP);
         showGalleryModal = true;
         StateHasChanged();
     }
@@ -714,10 +714,7 @@
         MotaSP = results.Desc;
         productid = results.ProductID.ToString();
         Tonkho = await GetStockQTY.GetStockQTY(results.ProductID);
-        ListType = null;
-        StateHasChanged();
         showGalleryModal = false;
-        ListType = listTypeBak;
         StateHasChanged();
     }
 
@@ -735,9 +732,6 @@
         }
         showGalleryModal = false;
         results = new();
-        ListType = null;
-        StateHasChanged();
-        ListType = listTypeBak;
         StateHasChanged();
     }
 
@@ -817,9 +811,6 @@
         Tonkho = 0;
         results = new();
         SelectTypeSP = "";
-        ListType = null;
-        StateHasChanged();
-        ListType = listTypeBak;
         StateHasChanged();
     }
 
@@ -858,9 +849,6 @@
 
             if (Usserid != 0 && checkupdate > 0)
             {
-
-                //checkupdate = await InsertOrder.InsertOrder(Usserid, item.TongTienThueNonCoc, item.TienCoc, item.ProductID, item.QTYThue, item.Notes);
-
                 checkupdate = await InsertOrder.InsertOrder(Usserid, ProductList);
                 if (checkupdate > 0)
                 {

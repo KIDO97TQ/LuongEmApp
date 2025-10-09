@@ -15,10 +15,6 @@
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\doanhthu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -38,7 +34,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "App.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\App.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\App.razor",
@@ -50,7 +46,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "NavMenu.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Layout\\NavMenu.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Layout\\NavMenu.razor",
@@ -70,8 +66,7 @@
               "RelativeToolTip": "FistWeb\\Components\\Pages\\DoanhThu.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgBAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-08T02:56:03.941Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-08T02:56:03.941Z"
             },
             {
               "$type": "Document",
@@ -81,7 +76,7 @@
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Quanlydo.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Pages\\Quanlydo.razor",
               "RelativeToolTip": "FistWeb\\Components\\Pages\\Quanlydo.razor",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAAAEwAAABEAAAAAAAAAA==",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAAwJcAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-02T00:13:03.961Z",
               "EditorCaption": ""
@@ -94,22 +89,10 @@
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\ListOrder.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Pages\\ListOrder.razor",
               "RelativeToolTip": "FistWeb\\Components\\Pages\\ListOrder.razor",
-              "ViewState": "AgIAABIDAAAAAAAAAAAowCwDAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAMwLUAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-27T16:52:02.086Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Home.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Pages\\Home.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Home.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Pages\\Home.razor",
-              "RelativeToolTip": "FistWeb\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAAL8AAAAAAAAAAAAMwAwBAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-02T00:12:05.067Z"
             }
           ]
         }
