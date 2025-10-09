@@ -19,6 +19,7 @@
 @inject IInsertOrdersService InsertOrder
 @inject IGetUserIDService GetuserID
 @inject IUpdateReturnOderService UpdateStatusOrder
+@inject IUpdateReturnAllOrderService UpdateReturnAllOrder
 @implements IDisposable
 @inject LoadingService LoadingService
 
@@ -128,9 +129,11 @@
                                                 <div class="option-menu">
                                                     <div class="New-price">
                                                         <button class="option-itemAdd" type="button" @onclick="() => ReturnOrder(item)">♻️ Trả đồ</button>
+                                                        <button class="option-itemAdd" type="button" @onclick="() => ReturnAllOrder(item)">♻️ Trả all đồ</button>
                                                     </div>
                                                     <div class="New-price">
                                                         <button class="option-itemAdd" type="button" @onclick="() => DeleteOrder(item)">🗑️ Xóa đơn</button>
+                                                        <button class="option-itemAdd" type="button" @onclick="() => CancelAllOrder(item)">🗑️ Xóa all đơn</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -578,7 +581,52 @@
             }
         }
     }
+    private async Task ReturnAllOrder(Data.DTOs.InfoThueDoDto itemSelect)
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn trả tất cả đơn của bạn {itemSelect.fullname} không?");
 
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateReturnAllOrder.UpdateReturnAllOrder(itemSelect.facebookphone, "RETURN");
+            if (checkupdate > 0)
+            {
+                await LoadData();
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Trả đơn của bạn {itemSelect.fullname} thành công!");
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Trả đơn của bạn {itemSelect.fullname} không thành công!");
+            }
+        }
+    }
+    private async Task CancelAllOrder(Data.DTOs.InfoThueDoDto itemSelect)
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn hủy tất cả đơn của bạn {itemSelect.fullname} không?");
+
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateReturnAllOrder.UpdateReturnAllOrder(itemSelect.facebookphone, "CANCEL");
+            if (checkupdate > 0)
+            {
+                await LoadData();
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Hủy đơn của bạn {itemSelect.fullname} thành công!");
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Hủy đơn của bạn {itemSelect.fullname} không thành công!");
+            }
+        }
+    }
     #endregion
 
     #region tab2

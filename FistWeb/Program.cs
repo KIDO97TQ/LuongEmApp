@@ -32,8 +32,8 @@ builder.Services.AddScoped<IGetUserIDService, CallService>();
 builder.Services.AddScoped<IUpdateReturnOderService, CallService>();
 builder.Services.AddScoped<IUpdatePWService, CallService>();
 builder.Services.AddScoped<IDeleteProductService, CallService>();
-builder.Services.AddScoped<IUpdateProductByIdService, CallService>();
-
+builder.Services.AddScoped<IUpdateProductByIdService, CallService>(); 
+builder.Services.AddScoped<IUpdateReturnAllOrderService, CallService>(); 
 #endregion
 
 builder.Services.AddSingleton<LoadingService>();

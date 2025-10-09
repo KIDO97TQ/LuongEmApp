@@ -1,6 +1,7 @@
 ﻿using FistWeb.Data;
 using FistWeb.Data.DTOs;
 using FistWeb.Data.Entities;
+using Google.Apis.Drive.v3.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -14,7 +15,7 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService
     {
         private readonly AppDbContext _context;
 
@@ -359,38 +360,6 @@ namespace FistWeb.Data.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
-        //public async Task<int> InsertOrder(long userID, decimal TotalPrice, decimal Tiencoc, long productID, int QTYThue, string notes)
-        //{
-        //    TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        //    DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
-        //    long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-
-        //    string sql = @"
-        //                    INSERT INTO clothings.orders 
-        //                        (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
-        //                    VALUES 
-        //                        (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
-
-        //                    UPDATE clothings.products 
-        //                    SET saveqty = saveqty - @qty 
-        //                    WHERE productid = @productid; ";
-
-        //    var parameters = new[]
-        //    {
-        //         new NpgsqlParameter("@orderid", orderId),
-        //         new NpgsqlParameter("@userid", userID),
-        //         new NpgsqlParameter("@totalamount", TotalPrice),
-        //         new NpgsqlParameter("@moneycoc", Tiencoc),
-        //         new NpgsqlParameter("@productid", productID),
-        //         new NpgsqlParameter("@qty", QTYThue),
-        //         new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)notes ?? "" },
-        //         new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
-        //         new NpgsqlParameter("@borrowdate", gioVN)
-        //    };
-
-        //    return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-        //}
-
         public async Task<int> InsertOrder(long UserID, List<Data.DTOs.ProductItem> products)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -467,6 +436,64 @@ namespace FistWeb.Data.Services
             };
 
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateReturnAllOrder(string sdt, string status)
+        {
+
+            var products = await (from o in _context.Order
+                                  join u in _context.Users on o.UserId equals u.UserId
+                                  where u.Phone == sdt && o.Status == "BORROW"
+                                  select new Data.DTOs.OrderDetailDto
+                                  {
+                                      idorder = o.OrderId,
+                                      QTYThue = o.Qty,
+                                      bookingid = o.ProductId,
+                                      lastmoney = o.TotalAmount
+                                  }).ToListAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                int totalInserted = 0;
+
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = "";
+                if (status == "RETURN")
+                    sql = @"UPDATE clothings.orders SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+ 
+                            UPDATE clothings.products SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+                else
+                    sql = @"UPDATE clothings.orders SET status='CANCEL', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+
+                            UPDATE clothings.products SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+                foreach (var order in products)
+                {
+                    var parameters = new[]
+                    {
+                       new NpgsqlParameter("@idorder", order.idorder),
+                       new NpgsqlParameter("@lastmoney", order.lastmoney),
+                       new NpgsqlParameter("@timereturn", gioVN),
+                       new NpgsqlParameter("@bookingid", order.bookingid),
+                       new NpgsqlParameter("@sl", order.QTYThue)
+                    };
+                    
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<bool> UpdatePasswordAsync(string newPassword)

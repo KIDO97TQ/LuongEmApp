@@ -20,6 +20,7 @@ namespace FistWeb.Data
         public DbSet<ListParaSP> ListParaSP { get; set; }
         public DbSet<ProductStock> ProductStock { get; set; }
         public DbSet<ProductImageDto> ProductImageDto { get; set; }
+        public DbSet<OrderDetailDto> OrderDetailDto { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,6 +51,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<ListParaSP>().HasNoKey();
             modelBuilder.Entity<ProductStock>().HasNoKey();
             modelBuilder.Entity<ProductImageDto>().HasKey(u => u.ProductID);
+            modelBuilder.Entity<OrderDetailDto>().HasNoKey();
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace FistWeb.Data.DTOs
+﻿using FistWeb.Data.Entities;
+using Newtonsoft.Json.Linq;
+
+namespace FistWeb.Data.DTOs
 {
     public class UserOrderDto
     {
@@ -35,7 +38,7 @@
         public decimal tienphatsinh { get; set; }     //tienphatsinh as Tiền_Phát_Sinh,
         public string? status { get; set; }            //status as Trạng_Thái
         public long orderid { get; set; }          //orderid as Mã_Đơn_Hàng
-        public long productid { get; set; }     
+        public long productid { get; set; }
     }
 
     public class ListParamater
@@ -72,7 +75,7 @@
         public string Size { get; set; }
         public long ProductID { get; set; }
         public decimal TongTienThue { get; set; }
-        public decimal TongTienThueNonCoc { get; set; }       
+        public decimal TongTienThueNonCoc { get; set; }
     }
 
     public class ProductImageDto
@@ -88,4 +91,11 @@
         public int SaveQTY { get; set; }
     }
 
+    public class OrderDetailDto
+    {
+        public long idorder { get; set; }
+        public long bookingid { get; set; }
+        public decimal lastmoney { get; set; }
+        public int QTYThue { get; set; }
+    }
 }

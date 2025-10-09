@@ -50,7 +50,7 @@ namespace FistWeb.Data.Services
     {
         Task<List<ProductStock>> GetTotalWH(bool all, bool rdNotReturn, string? typeSP = null);
     }
-    
+
     public interface IGetProductIDService
     {
         Task<List<ProductImageDto>> GetProductID(string typeSP);
@@ -74,7 +74,7 @@ namespace FistWeb.Data.Services
     {
         Task<long> GetUserID(string ContactKH);
     }
-    
+
     public interface IUpdateReturnOderService
     {
         Task<int> UpdateReturnOrder(long orderId, decimal? lastmoney, long productid, int QTYThue, string status);
@@ -82,16 +82,22 @@ namespace FistWeb.Data.Services
 
     public interface IUpdatePWService
     {
-        Task<bool> UpdatePasswordAsync(string pw); 
+        Task<bool> UpdatePasswordAsync(string pw);
     }
 
     public interface IDeleteProductService
     {
-        Task<int> DeleteProductById(long productID); 
+        Task<int> DeleteProductById(long productID);
     }
 
     public interface IUpdateProductByIdService
     {
         Task<int> UpdateProductById(ProductImageDto updatedProduct);
     }
+
+    public interface IUpdateReturnAllOrderService
+    {
+        Task<int> UpdateReturnAllOrder(string SDTuser, string status);
+    }
+
 }
