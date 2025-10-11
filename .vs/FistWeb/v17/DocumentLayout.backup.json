@@ -50,8 +50,7 @@
               "RelativeToolTip": "FistWeb\\Data\\Services\\IUserService.cs",
               "ViewState": "AgIAAEUAAAAAAAAAAAAAAF0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-09T03:20:44.766Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-09T03:20:44.766Z"
             },
             {
               "$type": "Document",
@@ -63,8 +62,7 @@
               "RelativeToolTip": "FistWeb\\Data\\Services\\CallService.cs",
               "ViewState": "AgIAALYBAAAAAAAAAAAAAMMBAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-09T02:38:46.093Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-09T02:38:46.093Z"
             },
             {
               "$type": "Document",
@@ -112,8 +110,7 @@
               "RelativeToolTip": "FistWeb\\Components\\Pages\\Quanlydo.razor",
               "ViewState": "AgIAAH8AAAAAAAAAAAAAwJcAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-02T00:13:03.961Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-02T00:13:03.961Z"
             },
             {
               "$type": "Document",
@@ -123,7 +120,7 @@
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\ListOrder.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\Web\\FistWeb\\Components\\Pages\\ListOrder.razor",
               "RelativeToolTip": "FistWeb\\Components\\Pages\\ListOrder.razor",
-              "ViewState": "AgIAAGoAAAAAAAAAAAAcwIQAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIQAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-27T16:52:02.086Z",
               "EditorCaption": ""
