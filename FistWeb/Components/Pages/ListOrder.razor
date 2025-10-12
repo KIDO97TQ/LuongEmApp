@@ -20,6 +20,8 @@
 @inject IGetUserIDService GetuserID
 @inject IUpdateReturnOderService UpdateStatusOrder
 @inject IUpdateReturnAllOrderService UpdateReturnAllOrder
+@inject IGetUserInfo1Service GetUserInfo1
+@inject IUpdateUserService UpdateUserInfo
 @implements IDisposable
 @inject LoadingService LoadingService
 
@@ -186,18 +188,23 @@
                 <!-- sđt, cccd ....  -->
                 <div class="form-group">
                     <label class="form-label required-label">Sđt/CCCD:</label>
-                    <input type="text" @bind="TextSdtKH" @bind:event="oninput" class="form-input" placeholder="Nhập sdt,CCCD..." />
-                    @if (ShowSuggestions && Suggestions.Any())
-                    {
-                        <ul class="suggestion-list">
-                            @foreach (var user in Suggestions)
-                            {
-                                <li @onclick="() => SelectSuggestion(user)">
-                                    📞 @user.phone - 👤 @user.Username
-                                </li>
-                            }
-                        </ul>
-                    }
+                    <div class="DouleButton">
+                        <input type="text" @bind="TextSdtKH" @bind:event="oninput" class="form-input" placeholder="Nhập sdt,CCCD..." />
+                        <button class="UserModify" type="button" @onclick="UserModify">
+                            <img src="edit-account.png" alt="icon" style="width: 35px; height: 35px;">
+                        </button>
+                        @if (ShowSuggestions && Suggestions.Any())
+                        {
+                            <ul class="suggestion-list">
+                                @foreach (var user in Suggestions)
+                                {
+                                    <li @onclick="() => SelectSuggestion(user)">
+                                        📞 @user.phone - 👤 @user.Username
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
                 </div>
 
                 <!-- Tên KH -->
@@ -215,7 +222,7 @@
                 <!-- Loại SP -->
                 <div class="form-group">
                     <label class="form-label required-label">Loại SP:</label>
-                   @*  <select class="form-select" value="@SelectTypeSP" @onchange="GetImageByProductID"> *@
+                    @*  <select class="form-select" value="@SelectTypeSP" @onchange="GetImageByProductID"> *@
                     <select class="form-select" @bind="SelectTypeSP" @bind:after="GetImageByProductID">
                         <option value="">Chọn loại sản phẩm</option>
                         @{
@@ -413,7 +420,7 @@
 
 
 @code {
-    private string TextNote, SelectTypeSP="", SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, MotaSP, productid, typeSP;
+    private string TextNote, SelectTypeSP = "", SelectTienCoc, SelectGiaTheoNgay, TextMota, SelectSizeSP, MotaSP, productid, typeSP;
     private List<Data.DTOs.InfoThueDoDto> allData = new();
     private List<Data.DTOs.ProductItem> ProductList = new();
     private List<Data.DTOs.InfoThueDoDto> currentPageData = new();
@@ -737,8 +744,43 @@
         }
     }
 
-    private bool showGalleryModal = false;
+    private async void UserModify()
+    {
+        string sdt = TextSdtKH;
+        string NewNameKH = TextNameKH;
+        if (string.IsNullOrEmpty(NewNameKH))
+        {
+            await JSx.InvokeVoidAsync("alert", $"Vui lòng nhập tên khách để cập nhật");
+            return;
+        }
 
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có muốn cập nhật khách hàng {sdt} với tên mới là {NewNameKH} không?");
+        if (confirmed)
+        {
+            List<Data.DTOs.UserOrderDto> userInfo = await GetUserInfo1.GetUserInfo1(sdt);
+            if (userInfo != null && userInfo.Count > 0)
+            {
+                string currentName = userInfo[0].Username;
+                int checkUpdate = await UpdateUserInfo.UpdateUser(userInfo, NewNameKH);
+                if (checkUpdate > 0)
+                {
+                    await JSx.InvokeVoidAsync("alert", $"Cập nhật tên khách hàng từ {currentName} thành {NewNameKH} thành công.");
+                    UserInfo = await GetUserInfo.GetUserInfo();
+                    StateHasChanged();
+                }
+                else
+                {
+                    await JSx.InvokeVoidAsync("alert", $"Cập nhật tên khách hàng không thành công.");
+                }
+            }
+            else
+            {
+                await JSx.InvokeVoidAsync("alert", $"Không tìm thấy khách hàng với SĐT/CCCD {sdt}");
+            }
+        }     
+    }
+
+    private bool showGalleryModal = false;
     private async void GetImageByProductID()
     {
         typeSP = SelectTypeSP;

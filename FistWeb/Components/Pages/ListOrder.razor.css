@@ -677,4 +677,31 @@
     cursor: not-allowed; /* con trỏ không cho nhập */
     opacity: 0.95;
 }
-</style>
+
+/*------------------*/
+.DouleButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    .DouleButton input {
+        flex: 1;
+        min-width: 0;
+    }
+.UserModify {
+    margin-top: 0px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+    .UserModify:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        background: green;
+    }
+</style >

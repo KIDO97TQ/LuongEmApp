@@ -411,17 +411,16 @@
         return ValueTask.CompletedTask;
     }
 
-    protected override async Task OnInitializedAsync() //Được gọi khi component khởi tạo lần đầu tiên
+    protected override async Task OnInitializedAsync()
     {
         this.month = int.Parse(DateTime.Now.Month.ToString());
         this.year = int.Parse(DateTime.Now.Year.ToString());
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)//Sau khi UI render xong
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // var result = await sessionStorage.GetAsync<bool>("isLoggedIn");
             try
             {
 
@@ -877,7 +876,6 @@
     private long ProductID = 0;
     private async void HandleImageSelected(Data.DTOs.ProductImageDto selectedImage)
     {
-        //SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2
         string gia = selectedImage.Price.ToString().Replace(".", "");
         bool parseGiaOk = decimal.TryParse(gia, out decimal gialate);
 
@@ -910,12 +908,8 @@
         UpdateisLoading2 = true;
         bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
         if (confirmed)
-        {
-            
-            // List<Data.DTOs.ProductStock> dataWH = await GetTotalWH.GetTotalWH(all, NotReturn, typeSP);
-            // var values = dataWH.Select(x => x.total_quantity).ToList();
+        {         
             bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace(".","").Replace("Vnđ", "").Trim(), out decimal Price1);
-
             FistWeb.Data.DTOs.ProductImageDto ProductImageDto = new FistWeb.Data.DTOs.ProductImageDto
             {
                 TypeSP = TextloaiSPtab2,
@@ -1008,7 +1002,6 @@
             new System.Net.Http.Headers.AuthenticationHeaderValue("token", tokennnn);
         http.DefaultRequestHeaders.UserAgent.ParseAdd("BlazorUploader");
 
-        // 📌 1. Lấy file info để lấy SHA
         string getUrl = $"https://api.github.com/repos/{owner}/{repo}/contents/{pathInRepo}";
         var getResp = await http.GetAsync(getUrl);
 
@@ -1023,7 +1016,6 @@
         using var doc = JsonDocument.Parse(contentJson);
         string sha = doc.RootElement.GetProperty("sha").GetString();
 
-        // 📌 2. Gửi DELETE request để xóa file
         var payload = new
         {
             message = commitMessage,

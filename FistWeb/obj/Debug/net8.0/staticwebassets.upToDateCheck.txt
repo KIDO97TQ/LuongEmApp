@@ -4,14 +4,12 @@ wwwroot\bootstrap\bootstrap.min.css.map
 wwwroot\css\app.css
 wwwroot\css\Loading.css
 wwwroot\edit.png
+wwwroot\edit-account.png
 wwwroot\fashion-blogger.png
-wwwroot\girl.png
-wwwroot\js\app.js
 wwwroot\js\CharSumJs.js
 wwwroot\js\ChartSumWH.js
 wwwroot\js\ListThueDo.js
 wwwroot\js\Quanlydo.js
-wwwroot\js\site.js
 wwwroot\list.png
 wwwroot\shopper.png
 wwwroot\statistics.png

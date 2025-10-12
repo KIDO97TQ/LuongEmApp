@@ -33,7 +33,9 @@ builder.Services.AddScoped<IUpdateReturnOderService, CallService>();
 builder.Services.AddScoped<IUpdatePWService, CallService>();
 builder.Services.AddScoped<IDeleteProductService, CallService>();
 builder.Services.AddScoped<IUpdateProductByIdService, CallService>(); 
-builder.Services.AddScoped<IUpdateReturnAllOrderService, CallService>(); 
+builder.Services.AddScoped<IUpdateReturnAllOrderService, CallService>();
+builder.Services.AddScoped<IGetUserInfo1Service, CallService>();
+builder.Services.AddScoped<IUpdateUserService, CallService>();
 #endregion
 
 builder.Services.AddSingleton<LoadingService>();
@@ -65,8 +67,6 @@ if (app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
 }
-
-//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

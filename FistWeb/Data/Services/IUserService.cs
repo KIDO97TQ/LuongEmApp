@@ -100,4 +100,12 @@ namespace FistWeb.Data.Services
         Task<int> UpdateReturnAllOrder(string SDTuser, string status);
     }
 
+    public interface IGetUserInfo1Service
+    {
+        Task<List<UserOrderDto>> GetUserInfo1(string SDTuser);
+    }
+    public interface IUpdateUserService
+    {
+        Task<int> UpdateUser(List<Data.DTOs.UserOrderDto> userInfo, string NewNameKH);
+    }
 }

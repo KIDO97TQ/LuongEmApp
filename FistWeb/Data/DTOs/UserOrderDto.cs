@@ -7,6 +7,7 @@ namespace FistWeb.Data.DTOs
     {
         public string Username { get; set; }
         public string phone { get; set; }
+        public long userid { get; set; }
     }
 
     public class DoanhThuThueDoDto

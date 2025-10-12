@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<div class="page" style="background-image: url('@bgUrl'); background-size: cover; background-position: center;">
+    <div class="sidebar" style="background-color: transparent;">
         <NavMenu />
     </div>
 
@@ -18,3 +18,22 @@
     <a class="dismiss">🗙</a>
 </div>
 
+@using FistWeb.Data.Services
+@inject IGetParaUserService GetUserInfo
+@code {
+    private static string? CachedBgUrl;
+    private string bgUrl = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(CachedBgUrl))
+        {
+            var bg = await GetUserInfo.GetLoginUser("background", null, null);
+            if (bg != null && bg.Any())
+            {
+                CachedBgUrl = bg[0].keyUsername;
+            }
+        }
+        bgUrl = CachedBgUrl ?? "";    
+    }
+}

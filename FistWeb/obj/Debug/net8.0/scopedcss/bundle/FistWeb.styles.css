@@ -11,6 +11,7 @@ main[b-sru35o4vx1] {
 
 .sidebar[b-sru35o4vx1] {
     /*background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);*/
+    background: transparent;
 }
 
 .top-row[b-sru35o4vx1] {
@@ -1311,7 +1312,34 @@ body[b-l54ik2cc7b] {
     cursor: not-allowed; /* con trỏ không cho nhập */
     opacity: 0.95;
 }
-</style[b-yie3h92shu]>
+
+/*------------------*/
+.DouleButton[b-yie3h92shu] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    .DouleButton input[b-yie3h92shu] {
+        flex: 1;
+        min-width: 0;
+    }
+.UserModify[b-yie3h92shu] {
+    margin-top: 0px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+    .UserModify:hover[b-yie3h92shu] {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        background: green;
+    }
+</style[b-yie3h92shu] >
 /* _content/FistWeb/Components/Pages/Quanlydo.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */

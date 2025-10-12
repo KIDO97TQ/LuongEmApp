@@ -15,7 +15,7 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService
     {
         private readonly AppDbContext _context;
 
@@ -30,7 +30,8 @@ namespace FistWeb.Data.Services
                 .Select(user => new UserOrderDto
                 {
                     Username = user.Username,
-                    phone = user.Phone
+                    phone = user.Phone,
+                    userid = user.UserId
                 })
                 .ToListAsync();
 
@@ -46,6 +47,20 @@ namespace FistWeb.Data.Services
             return userID;
         }
 
+        public async Task<List<UserOrderDto>> GetUserInfo1(string ContactKH)
+        {
+            var users = await _context.Users
+                .Where(user => user.Phone == ContactKH)
+                .Select(user => new UserOrderDto
+                {
+                    Username = user.Username,
+                    phone = user.Phone,
+                    userid = user.UserId
+                })
+                .ToListAsync();
+
+            return users;
+        }
         public async Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null)
         {
             try
@@ -196,7 +211,7 @@ namespace FistWeb.Data.Services
                 sql.Append(" and UPPER(b.item_key1)=@taikhoan ");
                 parameters.Add(new NpgsqlParameter("taikhoan", user));
             }
-            else if (fun == "tocken")
+            else if (fun == "tocken" || fun == "background")
             {
             }
             else
@@ -482,7 +497,7 @@ namespace FistWeb.Data.Services
                        new NpgsqlParameter("@bookingid", order.bookingid),
                        new NpgsqlParameter("@sl", order.QTYThue)
                     };
-                    
+
                     totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
                 }
 
@@ -542,6 +557,20 @@ namespace FistWeb.Data.Services
                  new NpgsqlParameter("@size", updatedProduct.Size),
                  new NpgsqlParameter("@type_production", updatedProduct.TypeSP),
                  new NpgsqlParameter("@saveqty",  updatedProduct.StockQTY)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateUser(List<Data.DTOs.UserOrderDto> userInfo, string NewNameKH)
+        {
+            string sql = @"update clothings.users set  fullname=@fullname
+                            WHERE userid=@userid and  facebookphone=@facebookphone ";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@fullname", NewNameKH),
+                 new NpgsqlParameter("@userid", userInfo[0].userid),
+                 new NpgsqlParameter("@facebookphone", userInfo[0].phone)
             };
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }

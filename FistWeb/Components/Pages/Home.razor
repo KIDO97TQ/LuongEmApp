@@ -64,7 +64,8 @@ else if (!isLoggedIn)
                     }
                     else
                     {
-                        if (!CheckforgotPW){
+                        if (!CheckforgotPW)
+                        {
                             <h2>Admin Login</h2>
                             <form @onsubmit:preventDefault="true">
                                 <div class="box">
@@ -93,7 +94,8 @@ else if (!isLoggedIn)
                             </form>
 
                             <p>Don't have an account? <a href="#">Register</a></p>
-                        }}
+                        }
+                    }
                 }
             </div>
         </div>
@@ -163,7 +165,7 @@ else
         bool res = await UpdatePW.UpdatePasswordAsync(pass1);
         if (res)
         {
-            await ShowErrorAsync("Đổi mật khẩu thành công!");          
+            await ShowErrorAsync("Đổi mật khẩu thành công!");
             forgotPW = false;
             CheckforgotPW = false;
             pass1 = "";
@@ -186,13 +188,13 @@ else
         {
             FGusername = datapara[0].keyUsername;
             CheckforgotPW = true;
-            forgotPW = false;         
+            forgotPW = false;
         }
         else
         {
             await ShowErrorAsync("Tài khoản không tồn tại!");
         }
-        isLoading = false; 
+        isLoading = false;
         StateHasChanged();
     }
     private async Task BackLogin()
