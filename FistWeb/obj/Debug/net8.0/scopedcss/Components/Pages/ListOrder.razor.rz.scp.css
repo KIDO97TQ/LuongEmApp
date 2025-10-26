@@ -17,7 +17,7 @@
     border-radius: 10px;
     background: white;
     color: #666;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -704,4 +704,17 @@
         box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
         background: green;
     }
+
+.header-controls[b-yie3h92shu] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controls-left[b-yie3h92shu] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
 </style[b-yie3h92shu] >

@@ -15,7 +15,7 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService, UpdateReturnAllOrder1
     {
         private readonly AppDbContext _context;
 
@@ -573,6 +573,56 @@ namespace FistWeb.Data.Services
                  new NpgsqlParameter("@facebookphone", userInfo[0].phone)
             };
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateReturnAllOrder1()
+        {
+
+            var products = await (from o in _context.Order
+                                  where o.Status == "BORROW"
+                                  select new Data.DTOs.OrderDetailDto
+                                  {
+                                      idorder = o.OrderId,
+                                      QTYThue = o.Qty,
+                                      bookingid = o.ProductId,
+                                      lastmoney = o.TotalAmount
+                                  }).ToListAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                int totalInserted = 0;
+
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = @"UPDATE clothings.orders SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+ 
+                            UPDATE clothings.products SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+                foreach (var order in products)
+                {
+                    var parameters = new[]
+                    {
+                       new NpgsqlParameter("@idorder", order.idorder),
+                       new NpgsqlParameter("@lastmoney", order.lastmoney),
+                       new NpgsqlParameter("@timereturn", gioVN),
+                       new NpgsqlParameter("@bookingid", order.bookingid),
+                       new NpgsqlParameter("@sl", order.QTYThue)
+                    };
+
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

@@ -20,6 +20,7 @@
 @inject IGetUserIDService GetuserID
 @inject IUpdateReturnOderService UpdateStatusOrder
 @inject IUpdateReturnAllOrderService UpdateReturnAllOrder
+@inject UpdateReturnAllOrder1 UpdateReturnAllOrder1
 @inject IGetUserInfo1Service GetUserInfo1
 @inject IUpdateUserService UpdateUserInfo
 @implements IDisposable
@@ -51,21 +52,26 @@
     }
     else
     {
-        <h3>
-            Trạng Thái
-            <select class="control-select" value="type" @onchange="OnTypeChanged">
-                <option>All</option>
-                <option>Đã trả</option>
-                <option>Chưa trả</option>
-                <option>Bị hủy</option>
-            </select>
-            Tháng
-            <select class="control-select" value="month" @onchange="OnMonthChanged">
-                @for (int i = 1; i <= 12; i++)
-                {
-                    <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                }
-            </select>
+        <h3 class="header-controls">
+            <div class="controls-left">
+                Trạng Thái
+                <select class="control-select" value="type" @onchange="OnTypeChanged">
+                    <option>All</option>
+                    <option>Đã trả</option>
+                    <option>Chưa trả</option>
+                    <option>Bị hủy</option>
+                </select>
+                Tháng
+                <select class="control-select" value="month" @onchange="OnMonthChanged">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                    }
+                </select>
+            </div>
+            <button class="UserModify" type="button" @onclick="ReturnAllOrder">
+                <img src="return.png" alt="icon" style="width: 37px; height: 33px;">
+            </button>
         </h3>
         <div class="chart-order">
             @*Hiện lên table*@
@@ -634,6 +640,29 @@
             }
         }
     }
+
+    private async Task ReturnAllOrder()
+    {
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn trả tất cả đơn chưa trả ?");
+
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateReturnAllOrder1.UpdateReturnAllOrder1();
+            if (checkupdate > 0)
+            {
+                await LoadData();
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Trả toàn bộ đơn thành công!");
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Trả toàn bộ đơn không thành công!");
+            }
+        }
+    }
     #endregion
 
     #region tab2
@@ -777,7 +806,7 @@
             {
                 await JSx.InvokeVoidAsync("alert", $"Không tìm thấy khách hàng với SĐT/CCCD {sdt}");
             }
-        }     
+        }
     }
 
     private bool showGalleryModal = false;
@@ -878,17 +907,17 @@
         }
 
         ProductList.Add(new Data.DTOs.ProductItem
-            {
-                TypeSP = typeSP,
-                TienCoc = coc,
-                QTYThue = int.Parse(qtythue),
-                Notes = note,
-                PricePerDay = gia,
-                Size = size,
-                ProductID = long.Parse(productid),
-                TongTienThue = total,
-                TongTienThueNonCoc = totalnoncoc
-            });
+        {
+            TypeSP = typeSP,
+            TienCoc = coc,
+            QTYThue = int.Parse(qtythue),
+            Notes = note,
+            PricePerDay = gia,
+            Size = size,
+            ProductID = long.Parse(productid),
+            TongTienThue = total,
+            TongTienThueNonCoc = totalnoncoc
+        });
 
         resutlsImage = null;
         SelectSizeSP = null;
@@ -1015,4 +1044,5 @@
 
     #endregion
     #endregion
-}
+}
+
