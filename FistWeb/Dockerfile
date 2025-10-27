@@ -15,10 +15,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-#EXPOSE 80
-#ENTRYPOINT ["dotnet", "FistWeb.dll", "--urls", "http://+:80"]
-
-ENV ASPNETCORE_URLS=http://+:${PORT}
-EXPOSE ${PORT}
-
-ENTRYPOINT ["dotnet", "FistWeb.dll"]
+EXPOSE 80
+ENTRYPOINT ["dotnet", "FistWeb.dll", "--urls", "http://+:80"]
