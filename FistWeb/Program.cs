@@ -49,7 +49,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationService>();
 
 
-//var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 //builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddRazorComponents()
@@ -72,7 +72,7 @@ if (app.Environment.IsProduction())
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapGet("/", () => Results.Ok("App is running"));
+//app.MapGet("/", () => Results.Ok("App is running"));
 app.MapGet("/ping", () => Results.Ok("pong"));
 
 app.MapRazorComponents<App>()
