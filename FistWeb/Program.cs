@@ -64,14 +64,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-if (app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
-}
+//if (app.Environment.IsProduction())
+//{
+//    app.UseHttpsRedirection();
+//}
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.MapGet("/", () => Results.Ok("App is running"));
 app.MapGet("/ping", () => Results.Ok("pong"));
 
 app.MapRazorComponents<App>()
