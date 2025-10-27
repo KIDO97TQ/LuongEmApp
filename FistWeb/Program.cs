@@ -51,7 +51,7 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
