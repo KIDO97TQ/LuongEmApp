@@ -51,7 +51,14 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+//builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+var port = Environment.GetEnvironmentVariable("PORT");
+if (string.IsNullOrEmpty(port))
+{
+    throw new Exception("PORT environment variable is not set.");
+}
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
