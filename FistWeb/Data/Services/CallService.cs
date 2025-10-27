@@ -336,6 +336,7 @@ namespace FistWeb.Data.Services
         {
             var products = await _context.Products
                 .Where(p => p.type_production == typeProduction)
+                .OrderByDescending(p => p.createdate)
                 .Select(p => new ProductImageDto
                 {
                     ProductID = p.productid,

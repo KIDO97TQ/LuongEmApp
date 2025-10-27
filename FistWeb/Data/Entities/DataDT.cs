@@ -82,8 +82,8 @@ namespace FistWeb.Data.Entities
         public decimal priceperday { get; set; }
         [Column("stockquantity")]
         public int stockquantity { get; set; }
-        [Column("createday")]
-        public DateTime createday { get; set; }
+        [Column("createdate")]
+        public DateTime createdate { get; set; }
         [Column("size")]
         public string size { get; set; }
         [Column("type_production")]
