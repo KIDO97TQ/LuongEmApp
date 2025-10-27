@@ -77,7 +77,7 @@ namespace FistWeb.Data.Entities
         [Column("productname")]
         public string productname { get; set; }
         [Column("description")]
-        public string description { get; set; }
+        public string? description { get; set; }
         [Column("priceperday")]
         public decimal priceperday { get; set; }
         [Column("stockquantity")]
