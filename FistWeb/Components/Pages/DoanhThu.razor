@@ -18,13 +18,23 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                 Tổng doanh thu tháng @month
+                Tổng doanh thu tháng @month
             </h3>
             <div class="staff-controls">
+                <label class="label-ca">Tháng: </label>
                 <select class="control-select" value="Month" @onchange="OnMonthChanged">
                     @for (int i = 1; i <= 12; i++)
                     {
                         <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                    }
+                </select>
+            </div>
+            <div class="staff-controls">
+                <label class="label-ca">Ngày: </label>
+                <select class="control-select" @onchange="OnDayChanged">
+                    @foreach (var day in DaysInMonth)
+                    {
+                        <option value="@day">@day.ToString("D2")</option>
                     }
                 </select>
             </div>
@@ -40,7 +50,7 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                 Tổng doanh thu năm @year
+                Tổng doanh thu năm @year
             </h3>
             <div class="staff-controls">
                 <select class="control-select" value="year" @onchange="OnYearChanged">
@@ -62,7 +72,7 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                 Tổng doanh thu theo sản phẩm trong năm @year
+                Tổng doanh thu theo sản phẩm trong năm @year
             </h3>
         </div>
         <div class="staff-chart">
@@ -107,7 +117,19 @@
         int thang = int.Parse(e.Value.ToString());
         month = thang.ToString("D2");
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang);
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang,0);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private async Task OnDayChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        int thang = int.Parse(DateTime.Now.Month.ToString());
+        int ngay = int.Parse(e.Value.ToString());
+        month = thang.ToString("D2");
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
         StateHasChanged();
     }
@@ -119,7 +141,7 @@
             int thang = int.Parse(this.month);
             int nam = int.Parse(this.year);
 
-            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang);
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
             var dataDoanhthunam = await Getdoanhthunam(nam);
             var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP();
 
@@ -224,9 +246,12 @@
         return chartData;
     }
 
-    public async Task<object> Getdoanhthuthang(int nam, int thang)
+    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
     {
-        Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang);
+        if (ngay == 0)
+            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang);
+        else
+            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang, ngay);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.revenue);
 
 
@@ -296,6 +321,14 @@
         this.yearFix0 = DateTime.Now.Year.ToString();
         this.yearFix1 = (DateTime.Now.Year - 1).ToString();
         this.yearFix2 = (DateTime.Now.Year + 1).ToString();
+        UpdateDays();
+    }
+
+    private List<int> DaysInMonth = new();
+    private void UpdateDays()
+    {
+        int days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+        DaysInMonth = Enumerable.Range(1, days).ToList();
     }
 
     private static readonly Random rand = new Random();

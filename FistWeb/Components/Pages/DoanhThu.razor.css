@@ -234,4 +234,12 @@ article.dashboard-page {
         background: linear-gradient(135deg, #5a6fd8, #6a4190);
     }
 
+.label-ca {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    align-items: center;
+    gap: 10px;
+}
 </style >
