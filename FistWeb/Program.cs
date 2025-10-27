@@ -72,13 +72,12 @@ if (!app.Environment.IsDevelopment())
 
 if (app.Environment.IsProduction())
 {
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
 }
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-//app.MapGet("/", () => Results.Ok("App is running"));
 app.MapGet("/ping", () => Results.Ok("pong"));
 
 app.MapRazorComponents<App>()
