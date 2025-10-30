@@ -29,9 +29,16 @@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" @onclick="() => checkloading('4')">
+                <span class="bi bi-mastodon" aria-hidden="true"></span> Make-up
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="() => checkloading('5')">
                 <span class="bi bi-graph-up-arrow" aria-hidden="true"></span> Tổng hợp doanh thu
             </NavLink>
         </div>
+       
     </nav>
 </div>
 @using FistWeb.Data.Services
@@ -46,7 +53,8 @@
         {
             "2" => "quanlydo",
             "3" => "oderlist",
-            "4" => "DoanhThu"
+            "4" => "makeup",
+            "5" => "DoanhThu"
         };
         if (!string.IsNullOrWhiteSpace(url))
             Navigation.NavigateTo(url);

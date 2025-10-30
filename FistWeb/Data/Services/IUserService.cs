@@ -113,4 +113,18 @@ namespace FistWeb.Data.Services
     {
         Task<int> UpdateReturnAllOrder1();
     }
+    public interface IGetParamaterMakeupService
+    {
+        Task<List<ListParamaterMakeup>> GetParamaterMakeUp();
+    }
+
+    public interface IInsertRevenueService
+    {
+        Task<int> InsertRevenue(string id, string NameKach, decimal price);
+    }
+
+    public interface IGetSumRevenueService
+    {
+        Task<List<RentalSummaryMakeup>> SumGetListMakeup(int year, int? month = null, int? day = null);
+    }
 }

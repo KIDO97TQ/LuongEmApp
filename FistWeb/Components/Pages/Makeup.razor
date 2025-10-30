@@ -1,0 +1,684 @@
+﻿@page "/makeup"
+@using Microsoft.EntityFrameworkCore
+@using System.Data
+@using System.Text.Json
+@using FistWeb.Data.Services
+@using System.Text.RegularExpressions
+@inject Data.AppDbContext Db
+@inject IGetParamaterMakeupService GetListParamaterMakeup
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using System.Text
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IGetParaUserService GetSPInfo
+@inject IAddParaService AddPara
+@inject IDeleteParaService DeletePara
+@inject IGetParaUserService GetUserInfo
+@implements IDisposable
+@inject IInsertRevenueService AddOrderMake
+@inject IGetSumRevenueService GetSumMakeup
+@inject LoadingService LoadingService
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab1">
+        <img src="makeup.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Thêm lịch Make-up
+    </button>
+    <button class="tab-btn" data-tab="tab2">
+        <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Tổng lịch Make-up
+    </button>
+</div>
+
+@* tab1 *@
+<div class="tab-content active" id="tab1">
+    <div class="form-container">
+        <div class="form-section-left">
+            <!-- Tên SP -->
+            <div class="form-group">
+                <label class="form-label required-label">Tên khách hàng:</label>
+                <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách hàng..." />
+                <div></div>
+            </div>
+
+            <!-- Gói make -->
+            <div class="form-group">
+                <label class="form-label required-label">Gói Makeup:</label>
+                <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
+                    <option value="">Chọn gói makeup</option>
+                    @{
+                        if (this.ListGoimake != null && !isLoading)
+                        {
+                            foreach (var item in this.ListGoimake)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    }
+                </select>
+                @if (isLoading)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    <div class="option-wrapper">
+                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                        <div class="option-menu">
+                            <div class="New-price">
+                                <input id="priceInput" type="text"
+                                       @bind="newValueSP"
+                                       @bind:event="oninput"
+                                       placeholder="Thêm mới gói makeup..." />
+
+                                <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
+                                    <i class="bi-option bi-plus-circle-fill"></i>
+                                </button>
+                            </div>
+                            <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa gói makeup đang chọn</div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Giá thuê theo ngày -->
+            <div class="form-group">
+                <label class="form-label required-label">Giá gói Makeup:</label>
+                <select class="form-select" @bind="SelectValuePrice" @bind:event="oninput">
+                    <option value="">Chọn mức giá</option>
+                    @{
+                        if (this.ListPrice != null && !isLoading)
+                        {
+                            @foreach (var item in this.ListPrice)
+                            {
+                                if (decimal.TryParse(item, NumberStyles.Number, new CultureInfo("vi-VN"), out var parsedValue))
+                                {
+                                    <option value="@item">@parsedValue.ToString("N0", new CultureInfo("vi-VN")) Vnđ</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+                @if (isLoading)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    <div class="option-wrapper">
+                        <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+
+                        <div class="option-menu">
+                            <div class="New-price">
+                                <input id="priceInput" type="text"
+                                       @bind="newValuePrice"
+                                       placeholder="Thêm mới gói makeup..."
+                                       @oninput="OnPriceInput"
+                                       autofocus />
+                                <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                    <i class="bi-option bi-plus-circle-fill"></i>
+                                </button>
+                            </div>
+                            <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá gói makeup đang chọn</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="store-info">
+                @if (UpdateisLoading)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    <button class="button-add" type="button" @onclick="ADDOrderMake"><i class="bi bi-check2-circle"></i>Thêm lịch MakeUp</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* tab2 *@
+<div class="tab-content" id="tab2">
+    <div class="dashboard-row">
+        <div class="chart-card">
+            <div class="staff-header">
+                <h3 class="card-title">
+                    <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                    Tổng doanh thu tháng @month
+                </h3>
+                <div class="staff-controls">
+                    <label class="label-ca">Tháng: </label>
+                    <select class="control-select" value="Month" @onchange="OnMonthChanged">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                        }
+                    </select>
+                </div>
+                <div class="staff-controls">
+                    <label class="label-ca">Ngày: </label>
+                    <select class="control-select" @onchange="OnDayChanged">
+                        @foreach (var day in DaysInMonth)
+                        {
+                            <option value="@day">@day.ToString("D2")</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="Doanhthuthang"></canvas>
+                    <h4 class="chart-legend">Tổng doanh thu tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="staff-header">
+                <h3 class="card-title">
+                    <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                    Tổng doanh thu năm @year
+                </h3>
+                <div class="staff-controls">
+                    <select class="control-select" value="year" @onchange="OnYearChanged">
+                        <option value="@yearFix1">@yearFix1</option>
+                        <option value="@yearFix0">@yearFix0</option>
+                        <option value="@yearFix2">@yearFix2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="Doanhthunam"></canvas>
+                <h4 class="chart-legend">Tổng doanh thu năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
+    });
+</script>
+
+
+@code {
+    private string month;
+    private string year;
+    private List<Data.DTOs.ListParamaterMakeup> datapara = new();
+    private List<Data.DTOs.ProductStock> dataWH = new();
+    Dictionary<string, string> ListGoimake;
+    List<string> ListPrice;
+    private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
+    private string SelectValueSP, TextValueNameSP, SelectValuePrice, newValueSP, newValuePrice;
+    private string typeSelect, typeWHSelect;
+    [Inject] private IJSRuntime JSx { get; set; }
+    private bool isLoadingService = true;
+    private bool _disposed = false;
+    private CancellationTokenSource cts = new();
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.month = DateTime.Now.Month.ToString();
+        this.year = DateTime.Now.Year.ToString();
+        this.yearFix0 = DateTime.Now.Year.ToString();
+        this.yearFix1 = (DateTime.Now.Year - 1).ToString();
+        this.yearFix2 = (DateTime.Now.Year + 1).ToString();
+        UpdateDays();
+    }
+
+    private ValueTask OnBeforeNavigation(LocationChangingContext context)
+    {
+        if (isLoadingService)
+        {
+            context.PreventNavigation();
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                LoadingService.Begin();
+                bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+                if (isLoggedIn)
+                {
+                    isLoading = true;
+                    //await GetMaterialInWH(true, false);
+                    await TimKiem();
+                    datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
+                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeup").ToDictionary(x => x.keyData1, x => x.keyData2);
+                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeup")
+                                         .OrderBy(x =>
+                                         {
+                                             if (decimal.TryParse(x.keyData1, out var number))
+                                                 return number;
+                                             return decimal.MaxValue;
+                                         })
+                                         .Select(x => x.keyData1)
+                                         .ToList();
+                    isLoading = false;
+                    if (!_disposed)
+                    {
+                        StateHasChanged();
+                    }
+                    LoadingService.End();
+                    isLoadingService = false;
+                }
+                else
+                {
+                    LoadingService.End();
+                    isLoadingService = false;
+                    Navigation.NavigateTo("/", true);
+
+                }
+            }
+            catch (Exception)
+            {
+                LoadingService.End();
+                isLoadingService = false;
+                throw;
+            }
+        }
+
+    }
+
+    #region tab1
+    private async Task addGoiMakeupClick()
+    {
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeup", newValueSP.ToUpper(), null);
+        if (datapara != null && datapara.Any())
+        {
+            await JS.InvokeVoidAsync("alert", $"Gói makeup ({newValueSP}) đã tồn tại!");
+        }
+        else
+        {
+            isLoading = true;
+            var random = new Random();
+            string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeup", newValueSP, id);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeup").ToDictionary(x => x.keyData1, x => x.keyData2);
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Thêm gói makeup ({newValueSP}) thành công!");
+                newValueSP = "";
+                StateHasChanged();
+            }
+            else
+            {
+                isLoading = false;
+                await JS.InvokeVoidAsync("alert", $"Thêm gói makeup ({newValueSP}) không thành công!");
+            }
+        }
+    }
+
+    private async Task XoaGoiMakeClick()
+    {
+        if (string.IsNullOrEmpty(SelectValueSP))
+        {
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn gói makeup cần xóa trước");
+            await JS.InvokeVoidAsync("closeAllOptionMenus");
+            return;
+        }
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa gói makeup này không?");
+
+        if (confirmed)
+        {
+            isLoading = true;
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeup", SelectValueSP, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeup").ToDictionary(x => x.keyData1, x => x.keyData2);
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Delete gói makeup ({SelectValueSP}) thành công!");
+                newValueSP = "";
+                StateHasChanged();
+            }
+            else
+            {
+                isLoading = false;
+                await JS.InvokeVoidAsync("alert", $"Delete gói makeup ({newValueSP}) không thành công!");
+            }
+        }
+    }
+
+    private async Task addPriceClick()
+    {
+        isLoading = true;
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeup", newValuePrice, null);
+        if (datapara != null && datapara.Any())
+        {
+            await JS.InvokeVoidAsync("alert", $"Giá gói makeup ({newValuePrice}) đã tồn tại!");
+            isLoading = false;
+        }
+        else
+        {
+            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeup", newValuePrice, null);
+            if (checkInsert > 0)
+            {
+
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeup")
+                                     .OrderBy(x =>
+                                     {
+                                         if (decimal.TryParse(x.keyData1, out var number))
+                                             return number;
+                                         return decimal.MaxValue;
+                                     })
+                                     .Select(x => x.keyData1)
+                                     .ToList();
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói makeup ({newValuePrice}) thành công!");
+                newValuePrice = "";
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói makeup ({newValuePrice}) không thành công!");
+                isLoading = false;
+            }
+        }
+    }
+
+    private async Task XoaPriceClick()
+    {
+        if (string.IsNullOrEmpty(SelectValuePrice))
+        {
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá gói makeup cần xóa trước");
+            await JS.InvokeVoidAsync("closeAllOptionMenus");
+            return;
+        }
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá gói makeup này không?");
+
+        if (confirmed)
+        {
+            isLoading = true;
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeup", SelectValuePrice, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeup")
+                                     .OrderBy(x =>
+                                     {
+                                         if (decimal.TryParse(x.keyData1, out var number))
+                                             return number;
+                                         return decimal.MaxValue;
+                                     })
+                                     .Select(x => x.keyData1)
+                                     .ToList();
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói makeup ({SelectValuePrice}) thành công!");
+                newValueSP = "";
+                isLoading = false;
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói makeup ({SelectValuePrice}) không thành công!");
+            }
+        }
+    }
+
+    private void OnPriceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            newValuePrice = "";
+            return;
+        }
+
+        if (int.TryParse(digitsOnly, out int number))
+        {
+            var culture = new CultureInfo("vi-VN");
+            newValuePrice = number.ToString("N0", culture);
+        }
+        else
+            newValuePrice = "";
+    }
+
+    private async Task ADDOrderMake()
+    {
+        try
+        {
+            //SelectValueSP,TextValueNameSP,SelectValuePrice
+            if (string.IsNullOrEmpty(SelectValueSP) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameSP))
+            {
+                await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+                return;
+            }
+            UpdateisLoading = true;
+
+            string id = ListGoimake[SelectValueSP];
+
+            string cleanedGiaTheoNgay = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
+            bool parseGiaOk = decimal.TryParse(cleanedGiaTheoNgay, out decimal gia);
+
+            //Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
+
+            int checkInsert = await AddOrderMake.InsertRevenue(id, TextValueNameSP, gia);
+            if (checkInsert > 0)
+            {
+                SelectValuePrice = null;
+                SelectValueSP = null;
+                TextValueNameSP = null;
+
+                await JS.InvokeVoidAsync("alert", "Thêm Order mới ok!");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Upload thất bại");
+            }
+            UpdateisLoading = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload ảnh: {ex.Message}");
+        }
+    }
+    #endregion
+
+    #region Dummary chart
+    private double tongdoanhthuthang, tongDoanhThuNam;
+    private string yearFix0, yearFix1, yearFix2;
+
+    private async Task TimKiem()
+    {
+        try
+        {
+            int nam = int.Parse(DateTime.Now.Year.ToString());
+            int thang = int.Parse(DateTime.Now.Month.ToString());
+
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+            var dataDoanhthunam = await Getdoanhthunam(nam);
+
+            await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+            await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
+
+            if (!_disposed)
+            {
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private async Task OnYearChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(e.Value.ToString());
+        year = nam.ToString();
+        var dataDoanhthunam = await Getdoanhthunam(nam);
+
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
+        StateHasChanged();
+    }
+
+    private async Task OnMonthChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        int thang = int.Parse(e.Value.ToString());
+        month = thang.ToString("D2");
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private async Task OnDayChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        int thang = int.Parse(DateTime.Now.Month.ToString());
+        int ngay = int.Parse(e.Value.ToString());
+        month = thang.ToString("D2");
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private List<Data.DTOs.RentalSummaryMakeup> DoanhthuNam;
+    private List<Data.DTOs.RentalSummaryMakeup> Doanhthuthang;
+    public async Task<object> Getdoanhthunam(int nam)
+    {
+        DoanhthuNam = await GetSumMakeup.SumGetListMakeup(nam);
+        tongDoanhThuNam = (double)DoanhthuNam.Sum(x => x.Reverue);
+
+        // Lấy danh sách tháng có dữ liệu
+        var labels = DoanhthuNam
+            .Select(x => x.Date.ToString("MM/yyyy"))
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        // Tính tổng doanh thu cho từng tháng
+        var data = labels
+            .Select(label => DoanhthuNam
+                .Where(x => x.Date.ToString("MM/yyyy") == label)
+                .Sum(x => x.Reverue))
+            .ToList();
+
+        // Tạo dataset (dạng đơn, không phân nhóm)
+        var datasets = new[]
+        {
+        new
+        {
+            label = "Tổng doanh thu",
+            data = data,
+            backgroundColor = "rgba(79, 195, 247, 0.5)",
+            borderColor = "rgba(79, 195, 247, 1)",
+            borderWidth = 2,
+            fill = true,
+            tension = 0.4
+        }
+    };
+
+        // Tạo chartData trả về JS
+        var chartData = new
+        {
+            labels = labels,
+            datasets = datasets
+        };
+
+        return chartData;
+    }
+
+    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
+    {
+        if (ngay == 0)
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeup(nam, thang, null);
+        else
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeup(nam, thang, ngay);
+        tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
+
+
+        var labels = Doanhthuthang
+            .Select(x => x.Date.Date.ToString("MM/yyyy"))
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        // Nhóm theo loại sản phẩm
+        var productGroups = Doanhthuthang
+            .GroupBy(x => x.Type)
+            .ToDictionary(
+                g => g.Key,
+                g => labels.Select(label =>
+                    g.Where(x => x.Date.Date.ToString("MM/yyyy") == label)
+                     .Sum(x => x.Reverue)
+                ).ToList()
+            );
+
+        // Tạo datasets
+        var datasets = productGroups.Select(g => new
+        {
+            label = g.Key,
+            data = g.Value,
+            backgroundColor = GetRandomColor(),
+            borderColor = "'rgba(79, 195, 247, 0.1)",
+            borderWidth = 1,
+            fill = true,
+            tension = 0.4
+        }).ToList();
+
+        // Tạo chartData
+        var chartData = new
+        {
+            labels = labels,
+            datasets = datasets
+        };
+        return chartData;
+    }
+
+    private static readonly Random rand = new Random();
+    private string GetRandomColor()
+    {
+        int r = rand.Next(0, 256);
+        int g = rand.Next(0, 256);
+        int b = rand.Next(0, 256);
+        return $"rgba({r}, {g}, {b}, 0.5)";
+    }
+
+    private List<int> DaysInMonth = new();
+    private void UpdateDays()
+    {
+        int days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+        DaysInMonth = Enumerable.Range(1, days).ToList();
+    }
+    #endregion
+
+}

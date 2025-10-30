@@ -47,7 +47,12 @@ namespace FistWeb.Data.DTOs
         public string KeyPara { get; set; }
         public string keyData { get; set; }
     }
-
+    public class ListParamaterMakeup
+    {
+        public string KeyPara { get; set; }
+        public string keyData1 { get; set; }
+        public string? keyData2 { get; set; }
+    }
     public class ListParaUser
     {
         public string keyUsername { get; set; }
@@ -98,5 +103,12 @@ namespace FistWeb.Data.DTOs
         public long bookingid { get; set; }
         public decimal lastmoney { get; set; }
         public int QTYThue { get; set; }
+    }
+
+    public class RentalSummaryMakeup
+    {
+        public DateTime Date { get; set; }
+        public string Type { get; set; }
+        public decimal Reverue { get; set; }
     }
 }

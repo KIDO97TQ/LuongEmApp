@@ -37,6 +37,9 @@ builder.Services.AddScoped<IUpdateReturnAllOrderService, CallService>();
 builder.Services.AddScoped<IGetUserInfo1Service, CallService>();
 builder.Services.AddScoped<IUpdateUserService, CallService>(); 
 builder.Services.AddScoped<UpdateReturnAllOrder1, CallService>(); 
+builder.Services.AddScoped<IGetParamaterMakeupService, CallService>();
+builder.Services.AddScoped<IInsertRevenueService, CallService>(); 
+builder.Services.AddScoped<IGetSumRevenueService, CallService>();
 #endregion
 
 builder.Services.AddSingleton<LoadingService>();
@@ -54,12 +57,12 @@ builder.Services.AddRazorComponents()
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
 //builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-var port = Environment.GetEnvironmentVariable("PORT");
-if (string.IsNullOrEmpty(port))
-{
-    throw new Exception("PORT environment variable is not set.");
-}
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+//var port = Environment.GetEnvironmentVariable("PORT");
+//if (string.IsNullOrEmpty(port))
+//{
+//    throw new Exception("PORT environment variable is not set.");
+//}
+//builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
 

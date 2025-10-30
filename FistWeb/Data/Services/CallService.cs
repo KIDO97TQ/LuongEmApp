@@ -15,7 +15,8 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService, UpdateReturnAllOrder1
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService, 
+        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService
     {
         private readonly AppDbContext _context;
 
@@ -196,6 +197,19 @@ namespace FistWeb.Data.Services
             return await query.ToListAsync();
         }
 
+        public async Task<List<ListParamaterMakeup>> GetParamaterMakeUp()
+        {
+            var query = from u in _context.Paramater
+                        select new ListParamaterMakeup
+                        {
+                            KeyPara = u.FunctionName,
+                            keyData1 = u.item_key1,
+                            keyData2 = u.item_key2 ?? ""
+                        };
+
+            return await query.ToListAsync();
+        }
+
         public async Task<List<ListParaUser>> GetLoginUser(string fun, string user, string? pass)
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
@@ -240,7 +254,7 @@ namespace FistWeb.Data.Services
             {
                 new NpgsqlParameter("function_name", fun),
                 new NpgsqlParameter("item_key1", key1),
-                new NpgsqlParameter("item_key2", (object?)key2 ?? "")
+                new NpgsqlParameter("item_key2", (object?)key2 ?? " ")
             };
 
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
@@ -624,6 +638,58 @@ namespace FistWeb.Data.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<int> InsertRevenue(string id, string NameKach, decimal price)
+        {
+            var sql = new StringBuilder(@"INSERT INTO clothings.revenue (idorder, namekh, priremake) VALUES (@idorder, @namekh, @pricemake)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("idorder", id),
+                new NpgsqlParameter("namekh", NameKach),
+                new NpgsqlParameter("pricemake", price)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<RentalSummaryMakeup>> SumGetListMakeup( int year, int? month = null, int? day = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder();
+
+            try
+            {
+                sql.Append(@" SELECT 
+                               DATE(b.createdate) AS Date,
+                               p.item_key1 as Type,
+                               SUM(b.priremake) AS Reverue
+                           FROM clothings.revenue b
+                           JOIN clothings.paramater p ON b.idorder = p.item_key2
+                           WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
+
+                parameters.Add(new NpgsqlParameter("year", year));
+
+                if (day.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(DAY FROM b.createdate) = :ngay ");
+                    parameters.Add(new NpgsqlParameter("ngay", day));
+                }
+
+                if (month.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                    parameters.Add(new NpgsqlParameter("month", month));
+                }
+
+                sql.Append(" GROUP BY createdate, item_key1 ORDER BY createdate");
+
+                return await _context.Set<RentalSummaryMakeup>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
+            }
+            catch (Exception ex) { }
+            return new List<RentalSummaryMakeup>();
         }
     }
 }

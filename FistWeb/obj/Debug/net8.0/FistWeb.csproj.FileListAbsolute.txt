@@ -131,3 +131,4 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\refint\Fist
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\FistWeb.pdb
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\FistWeb.genruntimeconfig.cache
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Makeup.razor.rz.scp.css
