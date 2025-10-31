@@ -12,7 +12,7 @@ wwwroot\js\ListThueDo.js
 wwwroot\js\Quanlydo.js
 wwwroot\list.png
 wwwroot\makeup.png
+wwwroot\pie-chart.png
 wwwroot\return.png
 wwwroot\shopper.png
 wwwroot\statistics.png
-wwwroot\pie-chart.png
