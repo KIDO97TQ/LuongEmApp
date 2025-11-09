@@ -35,7 +35,13 @@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" @onclick="() => checkloading('5')">
-                <span class="bi bi-graph-up-arrow" aria-hidden="true"></span> Tổng hợp doanh thu
+                <span class="bi bi-bluesky" aria-hidden="true"></span> Học viên Make-up
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="() => checkloading('6')">
+                <span class="bi bi-graph-up-arrow" aria-hidden="true"></span> Doanh thu thuê đồ
             </NavLink>
         </div>
        
@@ -54,7 +60,8 @@
             "2" => "quanlydo",
             "3" => "oderlist",
             "4" => "makeup",
-            "5" => "DoanhThu"
+            "5" => "makeupstudents",
+            "6" => "DoanhThu"
         };
         if (!string.IsNullOrWhiteSpace(url))
             Navigation.NavigateTo(url);

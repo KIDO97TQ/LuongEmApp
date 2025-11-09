@@ -125,6 +125,11 @@ namespace FistWeb.Data.Services
 
     public interface IGetSumRevenueService
     {
-        Task<List<RentalSummaryMakeup>> SumGetListMakeup(int year, int? month = null, int? day = null);
+        Task<List<RentalSummaryMakeup>> SumGetListMakeup(string type, int year, int? month = null, int? day = null);
+    }
+
+    public interface IGetListMakeupService
+    {
+        Task<List<InfoMakeUp>> GetListMakeup(string fun, int year, int? month = null, string? type = null);
     }
 }

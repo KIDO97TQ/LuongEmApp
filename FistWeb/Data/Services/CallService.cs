@@ -15,8 +15,8 @@ namespace FistWeb.Data.Services
 {
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
-    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService, 
-        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService
+    IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService,
+        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService
     {
         private readonly AppDbContext _context;
 
@@ -653,7 +653,7 @@ namespace FistWeb.Data.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
-        public async Task<List<RentalSummaryMakeup>> SumGetListMakeup( int year, int? month = null, int? day = null)
+        public async Task<List<RentalSummaryMakeup>> SumGetListMakeup(string type, int year, int? month = null, int? day = null)
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
             StringBuilder sql = new StringBuilder();
@@ -682,7 +682,8 @@ namespace FistWeb.Data.Services
                     parameters.Add(new NpgsqlParameter("month", month));
                 }
 
-                sql.Append(" GROUP BY createdate, item_key1 ORDER BY createdate");
+                sql.Append(" and p.function_name= :type  GROUP BY createdate, item_key1 ORDER BY createdate");
+                parameters.Add(new NpgsqlParameter("type", type));
 
                 return await _context.Set<RentalSummaryMakeup>()
                         .FromSqlRaw(sql.ToString(), parameters.ToArray())
@@ -690,6 +691,39 @@ namespace FistWeb.Data.Services
             }
             catch (Exception ex) { }
             return new List<RentalSummaryMakeup>();
+        }
+
+        public async Task<List<InfoMakeUp>> GetListMakeup(string fun, int year, int? month = null, string type = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+            StringBuilder sql = new StringBuilder(@" SELECT b.namekh, 
+                                                            p.item_key1 as type,
+                                                            b.priremake as price,
+                                                            b.createdate
+                                                        FROM clothings.revenue b
+                                                        JOIN clothings.paramater p ON b.idorder = p.item_key2
+                                                        WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
+
+            parameters.Add(new NpgsqlParameter("year", year));
+
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+
+            if (!string.IsNullOrEmpty(type) && type != "All")
+            {
+                sql.Append(" and p.item_key1= :type ");
+                parameters.Add(new NpgsqlParameter("type", type));
+            }
+
+            sql.Append(" and p.function_name=:fun  ORDER BY createdate desc ");
+            parameters.Add(new NpgsqlParameter("fun", fun));
+            return await _context.Set<InfoMakeUp>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .ToListAsync();
         }
     }
 }

@@ -23,7 +23,8 @@ namespace FistWeb.Data
         public DbSet<OrderDetailDto> OrderDetailDto { get; set; }
         public DbSet<ListParamaterMakeup> ListParamaterMakeup { get; set; }
         public DbSet<RentalSummaryMakeup> RentalSummaryMakeup { get; set; }
-        
+        public DbSet<InfoMakeUp> InfoMakeUp { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,7 +57,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<OrderDetailDto>().HasNoKey();
             modelBuilder.Entity<ListParamaterMakeup>().HasNoKey();
             modelBuilder.Entity<RentalSummaryMakeup>().HasNoKey();
-
+            modelBuilder.Entity<InfoMakeUp>().HasNoKey();
         }
     }
 }

@@ -461,7 +461,7 @@
     }
     #region tab1
     private int currentPage = 1;
-    private int rowsPerPage = 15;
+    private int rowsPerPage = 12;
     private bool CanPrev => currentPage > 1;
     private bool CanNext => currentPage < totalPages;
     private int totalPages => (int)Math.Ceiling((decimal)(allData.Count) / rowsPerPage);
@@ -471,8 +471,9 @@
         int headerHeight = 200; // chiều cao phần menu + header
         int rowHeight = 50;     // chiều cao 1 row (tùy CSS thực tế)
 
-        rowsPerPage = (screenHeight - headerHeight) / rowHeight;
-        if (rowsPerPage < 1) rowsPerPage = 1;
+        //rowsPerPage = (screenHeight - headerHeight) / rowHeight;
+        if (rowsPerPage < 1)
+            rowsPerPage = 1;
     }
 
     private void LoadPage()
@@ -506,9 +507,9 @@
     [JSInvokable]
     public void OnResize(int newHeight)
     {
-        UpdateRowsPerPage(newHeight);
-        currentPage = 1;
-        LoadPage();
+        // UpdateRowsPerPage(newHeight);
+        // currentPage = 1;
+        // LoadPage();
     }
 
     protected override async Task OnInitializedAsync()
@@ -691,8 +692,8 @@
                 bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
                 if (isLoggedIn)
                 {
-                    int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
-                    UpdateRowsPerPage(height);
+                    //int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
+                    //UpdateRowsPerPage(height);
                     objRef = DotNetObjectReference.Create(this);
                     await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
                     await LoadData();
