@@ -1,11 +1,11 @@
 ﻿<style >
-*[b-5jmtznnos0] {
+*[b-2zqgo1jzzp] {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body[b-5jmtznnos0] {
+body[b-2zqgo1jzzp] {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
@@ -20,26 +20,26 @@ body[b-5jmtznnos0] {
 }*/
 
 /* Main Content */
-.main-content[b-5jmtznnos0] {
+.main-content[b-2zqgo1jzzp] {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-article.dashboard-page[b-5jmtznnos0] {
+article.dashboard-page[b-2zqgo1jzzp] {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
 
 /* Dashboard Grid */
-.dashboard-grid[b-5jmtznnos0] {
+.dashboard-grid[b-2zqgo1jzzp] {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: 30px;
 }
 
-.chart-card[b-5jmtznnos0] {
+.chart-card[b-2zqgo1jzzp] {
     background: white;
     border-radius: 20px;
     padding: 25px;
@@ -49,7 +49,7 @@ article.dashboard-page[b-5jmtznnos0] {
     overflow: hidden;
 }
 
-    .chart-card[b-5jmtznnos0]::before {
+    .chart-card[b-2zqgo1jzzp]::before {
         content: "";
         position: absolute;
         top: 0;
@@ -59,12 +59,12 @@ article.dashboard-page[b-5jmtznnos0] {
         background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
-    .chart-card:hover[b-5jmtznnos0] {
+    .chart-card:hover[b-2zqgo1jzzp] {
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
 
-.card-title[b-5jmtznnos0] {
+.card-title[b-2zqgo1jzzp] {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -75,14 +75,14 @@ article.dashboard-page[b-5jmtznnos0] {
 }
 
 /* 2 biểu đồ trên */
-.chart-container[b-5jmtznnos0] {
+.chart-container[b-2zqgo1jzzp] {
     position: relative;
     height: calc(100vh / 3); /*300px;*/
     margin-bottom: 20px;
     grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr));
 }
 
-.dashboard-row[b-5jmtznnos0] {
+.dashboard-row[b-2zqgo1jzzp] {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1rem;
@@ -93,13 +93,13 @@ article.dashboard-page[b-5jmtznnos0] {
     padding-left: 10px;
 }
 
-    .dashboard-row .chart-card[b-5jmtznnos0] {
+    .dashboard-row .chart-card[b-2zqgo1jzzp] {
         flex: 1 1 50%; /* mỗi card chiếm 50% chiều ngang */
         min-width: 310px; /* để khi màn hình nhỏ thì xuống hàng */
     }
 
 /* text doanh thu */
-.chart-legend[b-5jmtznnos0] {
+.chart-legend[b-2zqgo1jzzp] {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -111,7 +111,7 @@ article.dashboard-page[b-5jmtznnos0] {
 }
 
 /* Staff Statistics */
-.staff-section[b-5jmtznnos0] {
+.staff-section[b-2zqgo1jzzp] {
     background: white;
     border-radius: 20px;
     padding: 25px;
@@ -120,7 +120,7 @@ article.dashboard-page[b-5jmtznnos0] {
     overflow: hidden;
 }
 
-    .staff-section[b-5jmtznnos0]::before {
+    .staff-section[b-2zqgo1jzzp]::before {
         content: "";
         position: absolute;
         top: 0;
@@ -130,19 +130,19 @@ article.dashboard-page[b-5jmtznnos0] {
         background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
-.staff-header[b-5jmtznnos0] {
+.staff-header[b-2zqgo1jzzp] {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.staff-controls[b-5jmtznnos0] {
+.staff-controls[b-2zqgo1jzzp] {
     display: flex;
     gap: 10px;
 }
 
-.control-select[b-5jmtznnos0] {
+.control-select[b-2zqgo1jzzp] {
     padding: 8px 12px;
     border: 2px solid #e9ecef;
     border-radius: 10px;
@@ -153,46 +153,46 @@ article.dashboard-page[b-5jmtznnos0] {
     transition: all 0.3s ease;
 }
 
-    .control-select:focus[b-5jmtznnos0], .control-select:hover[b-5jmtznnos0] {
+    .control-select:focus[b-2zqgo1jzzp], .control-select:hover[b-2zqgo1jzzp] {
         border-color: #667eea;
         outline: none;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
 /* biểu đồ dưới */
-.staff-chart[b-5jmtznnos0] {
+.staff-chart[b-2zqgo1jzzp] {
     height: calc(100vh / 3); /*400px;*/
     position: relative;
 }
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .dashboard-grid[b-5jmtznnos0] {
+    .dashboard-grid[b-2zqgo1jzzp] {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .container[b-5jmtznnos0] {
+    .container[b-2zqgo1jzzp] {
         flex-direction: column;
     }
 
-    .sidebar[b-5jmtznnos0] {
+    .sidebar[b-2zqgo1jzzp] {
         width: 100%;
         height: auto;
     }
 
-    .content[b-5jmtznnos0] {
+    .content[b-2zqgo1jzzp] {
         padding: 20px;
     }
 
-    .header[b-5jmtznnos0] {
+    .header[b-2zqgo1jzzp] {
         padding: 15px 20px;
     }
 }
 
 /* Animations */
-@keyframes fadeInUp-b-5jmtznnos0 {
+@keyframes fadeInUp-b-2zqgo1jzzp {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -204,37 +204,37 @@ article.dashboard-page[b-5jmtznnos0] {
     }
 }
 
-.chart-card[b-5jmtznnos0], .staff-section[b-5jmtznnos0] {
-    animation: fadeInUp-b-5jmtznnos0 0.6s ease-out;
+.chart-card[b-2zqgo1jzzp], .staff-section[b-2zqgo1jzzp] {
+    animation: fadeInUp-b-2zqgo1jzzp 0.6s ease-out;
 }
 
-    .chart-card:nth-child(2)[b-5jmtznnos0] {
+    .chart-card:nth-child(2)[b-2zqgo1jzzp] {
         animation-delay: 0.1s;
     }
 
-.staff-section[b-5jmtznnos0] {
+.staff-section[b-2zqgo1jzzp] {
     animation-delay: 0.2s;
 }
 
 /* Custom scrollbar */
-[b-5jmtznnos0]::-webkit-scrollbar {
+[b-2zqgo1jzzp]::-webkit-scrollbar {
     width: 8px;
 }
 
-[b-5jmtznnos0]::-webkit-scrollbar-track {
+[b-2zqgo1jzzp]::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-[b-5jmtznnos0]::-webkit-scrollbar-thumb {
+[b-2zqgo1jzzp]::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #667eea, #764ba2);
     border-radius: 4px;
 }
 
-    [b-5jmtznnos0]::-webkit-scrollbar-thumb:hover {
+    [b-2zqgo1jzzp]::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(135deg, #5a6fd8, #6a4190);
     }
 
-.label-ca[b-5jmtznnos0] {
+.label-ca[b-2zqgo1jzzp] {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -242,4 +242,4 @@ article.dashboard-page[b-5jmtznnos0] {
     align-items: center;
     gap: 10px;
 }
-</style[b-5jmtznnos0] >
+</style[b-2zqgo1jzzp] >

@@ -24,7 +24,7 @@ namespace FistWeb.Data
         public DbSet<ListParamaterMakeup> ListParamaterMakeup { get; set; }
         public DbSet<RentalSummaryMakeup> RentalSummaryMakeup { get; set; }
         public DbSet<InfoMakeUp> InfoMakeUp { get; set; }
-
+        public DbSet<TotalDoanhThu> TotalDoanhThu { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,6 +58,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<ListParamaterMakeup>().HasNoKey();
             modelBuilder.Entity<RentalSummaryMakeup>().HasNoKey();
             modelBuilder.Entity<InfoMakeUp>().HasNoKey();
+            modelBuilder.Entity<TotalDoanhThu>().HasNoKey();
         }
     }
 }

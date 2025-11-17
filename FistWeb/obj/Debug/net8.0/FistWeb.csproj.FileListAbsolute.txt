@@ -41,7 +41,6 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.MvcA
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.sourcelink.json
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\DoanhThu.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\ListOrder.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Quanlydo.razor.rz.scp.css
@@ -50,12 +49,6 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\scopedcss\pr
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets.build.json
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets.development.json
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets\msbuild.FistWeb.Microsoft.AspNetCore.StaticWebAssets.props
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets\msbuild.FistWeb.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets\msbuild.build.FistWeb.props
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.FistWeb.props
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.FistWeb.props
-D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets.pack.json
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.csproj.Up2Date
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\Web\FistWeb\obj\Debug\net8.0\FistWeb.dll
@@ -133,3 +126,12 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\FistWeb.gen
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Makeup.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\MakeupStudents.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\DoanhThuThueDo.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Makeup.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\MakeupStudents.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\TotalDoanhThu.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\staticwebassets.build.json.cache

@@ -41,6 +41,7 @@ builder.Services.AddScoped<IGetParamaterMakeupService, CallService>();
 builder.Services.AddScoped<IInsertRevenueService, CallService>(); 
 builder.Services.AddScoped<IGetSumRevenueService, CallService>(); 
 builder.Services.AddScoped<IGetListMakeupService, CallService>(); 
+builder.Services.AddScoped<IGetTotalDoanhThuService, CallService>(); 
 
 #endregion
 

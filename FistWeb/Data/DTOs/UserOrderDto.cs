@@ -112,6 +112,13 @@ namespace FistWeb.Data.DTOs
         public decimal Reverue { get; set; }
     }
 
+    public class TotalDoanhThu
+    {
+        public DateTime Date { get; set; }
+        public string Type { get; set; }
+        public decimal Reverue { get; set; }
+    }
+
     public class InfoMakeUp
     {
         public string namekh { get; set; }           

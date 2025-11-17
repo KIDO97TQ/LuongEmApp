@@ -9,73 +9,77 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = FistWeb
 build_property.RootNamespace = FistWeb
-build_property.ProjectDir = D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb\
+build_property.ProjectDir = D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web1\FistWeb
+build_property.MSBuildProjectDirectory = D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/App.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/App.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/App.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/Error.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/ImageGalleryModal.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/ImageGalleryModal.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbWFnZUdhbGxlcnlNb2RhbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Routes.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Shared/EmptyLayout.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Shared/EmptyLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcRW1wdHlMYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/_Imports.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Layout/MainLayout.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-sru35o4vx1
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Layout/NavMenu.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-4axgcipqhk
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/DoanhThu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2FuaFRodS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-5jmtznnos0
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/DoanhThuThueDo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb2FuaFRodVRodWVEby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-sekuvkbkgj
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/Home.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-l54ik2cc7b
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/ListOrder.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/ListOrder.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0T3JkZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-yie3h92shu
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/Makeup.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/Makeup.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWtldXAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-oqkmri18lr
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/MakeupStudents.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/MakeupStudents.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWtldXBTdHVkZW50cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-h2ylhoyxeg
 
-[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web1/FistWeb/Components/Pages/Quanlydo.razor]
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/Quanlydo.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xRdWFubHlkby5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-auhx5faxoe
+
+[D:/Bak_DESKTOP/FREE CODE/LuongEmStudio/web/FistWeb/Components/Pages/TotalDoanhThu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xUb3RhbERvYW5oVGh1LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-2zqgo1jzzp

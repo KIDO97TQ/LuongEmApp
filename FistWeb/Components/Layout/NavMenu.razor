@@ -44,6 +44,12 @@
                 <span class="bi bi-graph-up-arrow" aria-hidden="true"></span> Doanh thu thuê đồ
             </NavLink>
         </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="() => checkloading('7')">
+                <span class="bi bi-bar-chart-line-fill" aria-hidden="true"></span>Tổng doanh thu
+            </NavLink>
+        </div>
        
     </nav>
 </div>
@@ -61,7 +67,8 @@
             "3" => "oderlist",
             "4" => "makeup",
             "5" => "makeupstudents",
-            "6" => "DoanhThu"
+            "6" => "DoanhThu",
+            "7" => "totaldoanhthu"
         };
         if (!string.IsNullOrWhiteSpace(url))
             Navigation.NavigateTo(url);

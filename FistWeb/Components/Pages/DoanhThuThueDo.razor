@@ -1,0 +1,342 @@
+﻿@using FistWeb.Data.Services
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@page "/doanhthu"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage sessionStorage
+@inject IThongKeService ThongKeService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager Navigation
+@implements IDisposable
+@inject LoadingService LoadingService
+
+<div class="dashboard-row">
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                Tổng doanh thu tháng @month
+            </h3>
+            <div class="staff-controls">
+                <label class="label-ca">Tháng: </label>
+                <select class="control-select" value="Month" @onchange="OnMonthChanged">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                    }
+                </select>
+            </div>
+            <div class="staff-controls">
+                <label class="label-ca">Ngày: </label>
+                <select class="control-select" @onchange="OnDayChanged">
+                    @foreach (var day in DaysInMonth)
+                    {
+                        <option value="@day">@day.ToString("D2")</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="chart-wrapper">
+            <div class="chart-container">
+                <canvas id="Doanhthuthang"></canvas>
+                <h4 class="chart-legend">Tổng doanh thu thuê đồ tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
+            </div>
+        </div>
+    </div>
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                Tổng doanh thu năm @year
+            </h3>
+            <div class="staff-controls">
+                <select class="control-select" value="year" @onchange="OnYearChanged">
+                    <option value="@yearFix1">@yearFix1</option>
+                    <option value="@yearFix0">@yearFix0</option>
+                    <option value="@yearFix2">@yearFix2</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="Doanhthunam"></canvas>
+            <h4 class="chart-legend">Tổng doanh thu thuê đồ năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+    <div class="chart-card">
+        <div class="staff-header">
+            <h3 class="card-title">
+                <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                Tổng doanh thu theo sản phẩm trong năm @year
+            </h3>
+        </div>
+        <div class="staff-chart">
+            <canvas id="DoanhthunamtheoSP"></canvas>
+        </div>
+    </div>
+</div>
+
+@code {
+    private DateTime selectedDate = DateTime.Today;
+    private List<Data.DTOs.DoanhThuThueDoDto> Doanhthuthang;
+    private List<Data.DTOs.DoanhThuThueDoDto> Doanhthunam;
+    private bool _disposed = false;
+
+    private string month;
+    private string year, yearFix0, yearFix1, yearFix2;
+    private double tongdoanhthuthang;
+    private double tongDoanhThuNam;
+    private bool isLoadingService = true;
+
+    private CancellationTokenSource cts = new();
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    private async Task OnYearChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(e.Value.ToString());
+        year = nam.ToString();
+        var dataDoanhthunam = await Getdoanhthunam(nam);
+
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
+        StateHasChanged();
+    }
+
+    private async Task OnMonthChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        int thang = int.Parse(e.Value.ToString());
+        month = thang.ToString("D2");
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang,0);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private async Task OnDayChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        int thang = int.Parse(DateTime.Now.Month.ToString());
+        int ngay = int.Parse(e.Value.ToString());
+        month = thang.ToString("D2");
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private async Task TimKiem()
+    {
+        try
+        {
+            int thang = int.Parse(this.month);
+            int nam = int.Parse(this.year);
+
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+            var dataDoanhthunam = await Getdoanhthunam(nam);
+            var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP();
+
+            await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+            await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
+            await JS.InvokeVoidAsync("chartHelper.renderChart", "DoanhthunamtheoSP", dataDoanhthunamtheoSP, "bar");
+
+            if (!_disposed)
+            {
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Logger.LogInformation(ex.Message);
+        }
+    }
+
+    public async Task<object> Getdoanhthunam(int nam)
+    {
+        Doanhthunam = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam);
+        tongDoanhThuNam = (double)Doanhthunam.Sum(x => x.revenue);
+
+        // Lấy danh sách tháng có dữ liệu
+        var labels = Doanhthunam
+            .Select(x => x.rental_date.ToString("MM/yyyy"))
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        // Tính tổng doanh thu cho từng tháng
+        var data = labels
+            .Select(label => Doanhthunam
+                .Where(x => x.rental_date.ToString("MM/yyyy") == label)
+                .Sum(x => x.revenue))
+            .ToList();
+
+        // Tạo dataset (dạng đơn, không phân nhóm)
+        var datasets = new[]
+        {
+        new
+        {
+            label = "Tổng doanh thu",
+            data = data,
+            backgroundColor = "rgba(79, 195, 247, 0.5)",
+            borderColor = "rgba(79, 195, 247, 1)",
+            borderWidth = 2,
+            fill = true,
+            tension = 0.4
+        }
+    };
+
+        // Tạo chartData trả về JS
+        var chartData = new
+        {
+            labels = labels,
+            datasets = datasets
+        };
+
+        return chartData;
+    }
+
+    public async Task<object> GetdoanhthunamTheoSP()
+    {
+        Doanhthunam = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", 2025);
+
+        var labels = Doanhthunam
+            .Select(x => x.rental_date.Date.ToString("MM/yyyy"))
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        // Nhóm theo loại sản phẩm
+        var productGroups = Doanhthunam
+            .GroupBy(x => x.product_type)
+            .ToDictionary(
+                g => g.Key,
+                g => labels.Select(label =>
+                    g.Where(x => x.rental_date.Date.ToString("MM/yyyy") == label)
+                     .Sum(x => x.revenue)
+                ).ToList()
+            );
+
+        // Tạo datasets
+        var datasets = productGroups.Select(g => new
+        {
+            label = g.Key,
+            data = g.Value,
+            backgroundColor = GetRandomColor(),
+            borderColor = "'rgba(79, 195, 247, 0.1)",
+            borderWidth = 1,
+            fill = true,
+            tension = 0.4
+        }).ToList();
+
+        // Tạo chartData
+        var chartData = new
+        {
+            labels = labels,
+            datasets = datasets
+        };
+        return chartData;
+    }
+   
+    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
+    {
+        if (ngay == 0)
+            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang);
+        else
+            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang, ngay);
+        tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.revenue);
+
+
+        var labels = Doanhthuthang
+            .Select(x => x.rental_date.Date.ToString("MM/yyyy"))
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        // Nhóm theo loại sản phẩm
+        var productGroups = Doanhthuthang
+            .GroupBy(x => x.product_type)
+            .ToDictionary(
+                g => g.Key,
+                g => labels.Select(label =>
+                    g.Where(x => x.rental_date.Date.ToString("MM/yyyy") == label)
+                     .Sum(x => x.revenue)
+                ).ToList()
+            );
+
+        // Tạo datasets
+        var datasets = productGroups.Select(g => new
+        {
+            label = g.Key,
+            data = g.Value,
+            backgroundColor = GetRandomColor(),
+            borderColor = "'rgba(79, 195, 247, 0.1)",
+            borderWidth = 1,
+            fill = true,
+            tension = 0.4
+        }).ToList();
+
+        // Tạo chartData
+        var chartData = new
+        {
+            labels = labels,
+            datasets = datasets
+        };
+        return chartData;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            LoadingService.Begin();
+            bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+            if (isLoggedIn)
+            {
+                await TimKiem();
+                LoadingService.End();
+                isLoadingService = false;
+            }
+            else
+            {
+                LoadingService.End();
+                isLoadingService = false;
+                Navigation.NavigateTo("/", true);
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.month = DateTime.Now.Month.ToString();
+        this.year = DateTime.Now.Year.ToString();
+        this.yearFix0 = DateTime.Now.Year.ToString();
+        this.yearFix1 = (DateTime.Now.Year - 1).ToString();
+        this.yearFix2 = (DateTime.Now.Year + 1).ToString();
+        UpdateDays();
+    }
+
+    private List<int> DaysInMonth = new();
+    private void UpdateDays()
+    {
+        int days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+        DaysInMonth = Enumerable.Range(1, days).ToList();
+    }
+
+    private static readonly Random rand = new Random();
+    private string GetRandomColor()
+    {
+        int r = rand.Next(0, 256);
+        int g = rand.Next(0, 256);
+        int b = rand.Next(0, 256);
+        return $"rgba({r}, {g}, {b}, 0.5)";
+    }
+}

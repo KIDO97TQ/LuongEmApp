@@ -1501,11 +1501,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web1\\FistWeb\\FistWeb.csproj",
+      "projectUniqueName": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj",
       "projectName": "FistWeb",
-      "projectPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web1\\FistWeb\\FistWeb.csproj",
+      "projectPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj",
       "packagesPath": "C:\\Users\\kido_nguyen\\.nuget\\packages\\",
-      "outputPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web1\\FistWeb\\obj\\",
+      "outputPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -132,4 +132,9 @@ namespace FistWeb.Data.Services
     {
         Task<List<InfoMakeUp>> GetListMakeup(string fun, int year, int? month = null, string? type = null);
     }
+
+    public interface IGetTotalDoanhThuService
+    {
+        Task<List<TotalDoanhThu>> TotalDoanhThu(int year, int? month = null, int? day = null);
+    }
 }

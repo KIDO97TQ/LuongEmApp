@@ -3,15 +3,16 @@
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 @inject IJSRuntime JS
-@page "/doanhthu"
+@page "/totaldoanhthu"
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
-@inject IThongKeService ThongKeService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @implements IDisposable
 @inject LoadingService LoadingService
+@inject IGetTotalDoanhThuService TotalDoanhThuService
+
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -72,7 +73,7 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                Tổng doanh thu theo sản phẩm trong năm @year
+                Tổng doanh thu theo mục trong năm @year
             </h3>
         </div>
         <div class="staff-chart">
@@ -83,8 +84,8 @@
 
 @code {
     private DateTime selectedDate = DateTime.Today;
-    private List<Data.DTOs.DoanhThuThueDoDto> Doanhthuthang;
-    private List<Data.DTOs.DoanhThuThueDoDto> Doanhthunam;
+    private List<Data.DTOs.TotalDoanhThu> Doanhthuthang;
+    private List<Data.DTOs.TotalDoanhThu> Doanhthunam;
     private bool _disposed = false;
 
     private string month;
@@ -162,12 +163,12 @@
 
     public async Task<object> Getdoanhthunam(int nam)
     {
-        Doanhthunam = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam);
-        tongDoanhThuNam = (double)Doanhthunam.Sum(x => x.revenue);
+        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(nam);
+        tongDoanhThuNam = (double)Doanhthunam.Sum(x => x.Reverue);
 
         // Lấy danh sách tháng có dữ liệu
         var labels = Doanhthunam
-            .Select(x => x.rental_date.ToString("MM/yyyy"))
+            .Select(x => x.Date.ToString("MM/yyyy"))
             .Distinct()
             .OrderBy(x => x)
             .ToList();
@@ -175,8 +176,8 @@
         // Tính tổng doanh thu cho từng tháng
         var data = labels
             .Select(label => Doanhthunam
-                .Where(x => x.rental_date.ToString("MM/yyyy") == label)
-                .Sum(x => x.revenue))
+                .Where(x => x.Date.ToString("MM/yyyy") == label)
+                .Sum(x => x.Reverue))
             .ToList();
 
         // Tạo dataset (dạng đơn, không phân nhóm)
@@ -206,22 +207,22 @@
 
     public async Task<object> GetdoanhthunamTheoSP()
     {
-        Doanhthunam = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", 2025);
+        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(2025);
 
         var labels = Doanhthunam
-            .Select(x => x.rental_date.Date.ToString("MM/yyyy"))
+            .Select(x => x.Date.Date.ToString("MM/yyyy"))
             .Distinct()
             .OrderBy(x => x)
             .ToList();
 
         // Nhóm theo loại sản phẩm
         var productGroups = Doanhthunam
-            .GroupBy(x => x.product_type)
+            .GroupBy(x => x.Type)
             .ToDictionary(
                 g => g.Key,
                 g => labels.Select(label =>
-                    g.Where(x => x.rental_date.Date.ToString("MM/yyyy") == label)
-                     .Sum(x => x.revenue)
+                    g.Where(x => x.Date.Date.ToString("MM/yyyy") == label)
+                     .Sum(x => x.Reverue)
                 ).ToList()
             );
 
@@ -249,26 +250,26 @@
     public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
     {
         if (ngay == 0)
-            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang);
+            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThu(nam, thang);
         else
-            Doanhthuthang = await ThongKeService.GetDoanhThuThueDoUocTinhAsync("", nam, thang, ngay);
-        tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.revenue);
+            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThu(nam, thang, ngay);
+        tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 
         var labels = Doanhthuthang
-            .Select(x => x.rental_date.Date.ToString("MM/yyyy"))
+            .Select(x => x.Date.Date.ToString("MM/yyyy"))
             .Distinct()
             .OrderBy(x => x)
             .ToList();
 
         // Nhóm theo loại sản phẩm
         var productGroups = Doanhthuthang
-            .GroupBy(x => x.product_type)
+            .GroupBy(x => x.Type)
             .ToDictionary(
                 g => g.Key,
                 g => labels.Select(label =>
-                    g.Where(x => x.rental_date.Date.ToString("MM/yyyy") == label)
-                     .Sum(x => x.revenue)
+                    g.Where(x => x.Date.Date.ToString("MM/yyyy") == label)
+                     .Sum(x => x.Reverue)
                 ).ToList()
             );
 

@@ -16,7 +16,7 @@ namespace FistWeb.Data.Services
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
     IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService,
-        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService
+        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService
     {
         private readonly AppDbContext _context;
 
@@ -725,5 +725,76 @@ namespace FistWeb.Data.Services
                     .FromSqlRaw(sql.ToString(), parameters.ToArray())
                     .ToListAsync();
         }
+
+
+        public async Task<List<TotalDoanhThu>> TotalDoanhThu(int year, int? month = null, int? day = null)
+        {
+            try
+            {
+                var parameters = new List<NpgsqlParameter>
+                {
+                    new NpgsqlParameter("year", year)
+                    {
+                        DbType = DbType.Int32
+                    },
+                    new NpgsqlParameter("day", day.HasValue ? day.Value : (object)DBNull.Value)
+                    {
+                        DbType = DbType.Int32
+                    },
+                    new NpgsqlParameter("month", month.HasValue ? month.Value : (object)DBNull.Value)
+                    {
+                        DbType = DbType.Int32
+                    }
+                };
+
+                var sql = new StringBuilder(@"SELECT 
+                                                  merged.date AS Date,
+                                                  merged.type AS Type,
+                                                  SUM(merged.reverue) AS Reverue
+                                              FROM
+                                              (
+                                                  SELECT 
+                                                      DATE(b.createdate) AS date,
+                                                      CASE 
+                                                           WHEN p.function_name = 'goiMakeup' THEN 'Makeup'
+                                                           WHEN p.function_name = 'goiMakeupStu' THEN 'Học Viên Makeup'
+                                                      END AS type,
+                                                      SUM(b.priremake) AS reverue
+                                                  FROM clothings.revenue b
+                                                  JOIN clothings.paramater p ON b.idorder = p.item_key2
+                                                  WHERE EXTRACT(YEAR FROM b.createdate) = :year
+                                                      AND (:day IS NULL OR EXTRACT(DAY FROM b.createdate) = :day)
+                                                      AND (:month IS NULL OR EXTRACT(MONTH FROM b.createdate) = :month)
+                                                      AND p.function_name IN ('goiMakeup','goiMakeupStu')
+                                                  GROUP BY date, type
+                                              
+                                                  UNION ALL
+                                              
+                                                  SELECT 
+                                                      o.borrowdate::date AS date,
+                                                      'Thuê Đồ' AS type,
+                                                      SUM(o.totalamount) AS reverue
+                                                  FROM clothings.orders o 
+                                                  JOIN clothings.products p ON p.productid = o.productid
+                                                  WHERE EXTRACT(YEAR FROM o.borrowdate) = :year
+                                                      AND (:day IS NULL OR EXTRACT(DAY FROM o.borrowdate) = :day)
+                                                      AND (:month IS NULL OR EXTRACT(MONTH FROM o.borrowdate) = :month)
+                                                  GROUP BY date
+                                              ) AS merged
+                                              GROUP BY merged.date, merged.type
+                                              ORDER BY merged.date ");
+
+                return await _context.Set<TotalDoanhThu>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return new List<TotalDoanhThu>();
+        }
+
     }
 }
