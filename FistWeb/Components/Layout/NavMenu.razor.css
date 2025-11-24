@@ -64,6 +64,7 @@
         background: none;
         border: none;
         border-radius: 4px;
+        cursor: pointer;
         height: 3rem;
         display: flex;
         align-items: center;
