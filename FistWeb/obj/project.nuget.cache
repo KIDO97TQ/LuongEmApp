@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "t33v483K04c=",
+  "dgSpecHash": "1xz6V0dwbpg=",
   "success": true,
-  "projectFilePath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj",
+  "projectFilePath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\FistWeb.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kido_nguyen\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
     "C:\\Users\\kido_nguyen\\.nuget\\packages\\blazored.sessionstorage\\2.4.0\\blazored.sessionstorage.2.4.0.nupkg.sha512",

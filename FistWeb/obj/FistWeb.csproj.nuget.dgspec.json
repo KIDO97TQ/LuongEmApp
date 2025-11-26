@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj": {}
+    "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\FistWeb.csproj": {}
   },
   "projects": {
-    "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj": {
+    "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\FistWeb.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj",
+        "projectUniqueName": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\FistWeb.csproj",
         "projectName": "FistWeb",
-        "projectPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\FistWeb.csproj",
+        "projectPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\FistWeb.csproj",
         "packagesPath": "C:\\Users\\kido_nguyen\\.nuget\\packages\\",
-        "outputPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\web\\FistWeb\\obj\\",
+        "outputPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
