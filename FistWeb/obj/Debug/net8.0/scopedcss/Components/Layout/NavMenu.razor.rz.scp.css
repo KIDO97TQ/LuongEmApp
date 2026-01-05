@@ -1,6 +1,5 @@
 .navbar-toggler[b-4axgcipqhk] {
     appearance: none;
-    cursor: pointer;
     width: 3.5rem;
     height: 2.5rem;
     color: white;
@@ -64,6 +63,7 @@
         background: none;
         border: none;
         border-radius: 4px;
+        cursor: pointer;
         height: 3rem;
         display: flex;
         align-items: center;

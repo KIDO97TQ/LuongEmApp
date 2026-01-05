@@ -1,4 +1,4 @@
-﻿@page "/makeupstudents"
+﻿@page "/makeupstudentsAmy"
 @using Microsoft.EntityFrameworkCore
 @using System.Data
 @using System.Text.Json
@@ -18,9 +18,9 @@
 @inject IDeleteParaService DeletePara
 @inject IGetParaUserService GetUserInfo
 @implements IDisposable
-@inject IInsertRevenueService AddOrderMake
-@inject IGetSumRevenueService GetSumMakeup
-@inject IGetListMakeupService GetListMakeup
+@inject IInsertRevenueAmyService AddOrderMake
+@inject IGetSumRevenueAmyService GetSumMakeup
+@inject IGetListMakeupAmyService GetListMakeup
 @inject LoadingService LoadingService
 
 <div class="tabs">
@@ -363,8 +363,8 @@
                     //await GetMaterialInWH(true, false);
                     await TimKiem();
                     datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
-                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
-                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeupStu")
+                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeupStuAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
+                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeupStuAmy")
                                          .OrderBy(x =>
                                          {
                                              if (decimal.TryParse(x.keyData1, out var number))
@@ -403,7 +403,7 @@
     #region tab1
     private async Task addGoiMakeupClick()
     {
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStu", newValueSP.ToUpper(), null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStuAmy", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"khóa makeup ({newValueSP}) đã tồn tại!");
@@ -413,11 +413,11 @@
             isLoading = true;
             var random = new Random();
             string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
-            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupStu", newValueSP, id);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupStuAmy", newValueSP, id);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStuAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
                 await JS.InvokeVoidAsync("alert", $"Thêm khóa makeup ({newValueSP}) thành công!");
@@ -445,11 +445,11 @@
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeupStu", SelectValueSP, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeupStuAmy", SelectValueSP, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStuAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
                 await JS.InvokeVoidAsync("alert", $"Delete khóa makeup ({SelectValueSP}) thành công!");
@@ -467,7 +467,7 @@
     private async Task addPriceClick()
     {
         isLoading = true;
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupStu", newValuePrice, null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupStuAmy", newValuePrice, null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"Giá khóa makeup ({newValuePrice}) đã tồn tại!");
@@ -475,12 +475,12 @@
         }
         else
         {
-            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeupStu", newValuePrice, null);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeupStuAmy", newValuePrice, null);
             if (checkInsert > 0)
             {
 
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStuAmy")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -516,11 +516,11 @@
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeupStu", SelectValuePrice, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeupStuAmy", SelectValuePrice, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStuAmy")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -582,15 +582,14 @@
 
             //Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
 
-            int checkInsert = await AddOrderMake.InsertRevenue(id, TextValueNameSP, gia);
+            int checkInsert = await AddOrderMake.InsertRevenueAmy(id, TextValueNameSP, gia);
             if (checkInsert > 0)
             {
                 SelectValuePrice = null;
                 SelectValueSP = null;
                 TextValueNameSP = null;
-
                 await TimKiem();
-                allData = await GetListMakeup.GetListMakeup("goiMakeupStuAmy", null, null, "");
+                allData = await GetListMakeup.GetListMakeupAmy("goiMakeupStuAmy", null, null, "");
                 await JS.InvokeVoidAsync("alert", "Thêm học viên makeup mới ok!");
                 LoadPage();
             }
@@ -648,7 +647,7 @@
 
     private async Task LoadData(string type, int? month)
     {
-        allData = await GetListMakeup.GetListMakeup("goiMakeupStu", int.Parse(this.year), month, type);
+        allData = await GetListMakeup.GetListMakeupAmy("goiMakeupStuAmy", int.Parse(this.year), month, type);
 
         checkNull = !(allData != null && allData.Any());
 
@@ -737,7 +736,7 @@
     private List<Data.DTOs.RentalSummaryMakeup> Doanhthuthang;
     public async Task<object> Getdoanhthunam(int nam)
     {
-        DoanhthuNam = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam);
+        DoanhthuNam = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupStuAmy", nam);
         tongDoanhThuNam = (double)DoanhthuNam.Sum(x => x.Reverue);
 
         // Lấy danh sách tháng có dữ liệu
@@ -782,9 +781,9 @@
     public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
     {
         if (ngay == 0)
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, null);
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupStuAmy", nam, thang, null);
         else
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, ngay);
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupStuAmy", nam, thang, ngay);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 

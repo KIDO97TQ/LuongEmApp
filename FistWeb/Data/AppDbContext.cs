@@ -14,8 +14,9 @@ namespace FistWeb.Data
 
         public DbSet<users> Users { get; set; }
         public DbSet<Order> Order { get; set; }
+        public DbSet<OrderAmy> OrderAmy { get; set; }
         public DbSet<Paramater> Paramater { get; set; }
-        public DbSet<Products> Products { get; set; }       
+        public DbSet<Products> Products { get; set; }
         public DbSet<ListParaUser> ListParaUsers { get; set; }
         public DbSet<ListParaSP> ListParaSP { get; set; }
         public DbSet<ProductStock> ProductStock { get; set; }
@@ -26,10 +27,15 @@ namespace FistWeb.Data
         public DbSet<InfoMakeUp> InfoMakeUp { get; set; }
         public DbSet<TotalDoanhThu> TotalDoanhThu { get; set; }
 
+        public DbSet<ProductsAmy> ProductsAmy { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<users>().HasKey(u => u.UserId);
             modelBuilder.Entity<Products>().HasKey(u => u.productid);
+            modelBuilder.Entity<ProductsAmy>().HasKey(u => u.productid);
+            modelBuilder.Entity<OrderAmy>().HasKey(u => u.OrderId);
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<users>()
@@ -40,8 +46,16 @@ namespace FistWeb.Data
                 .ToTable("orders", "clothings");
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<OrderAmy>()
+                .ToTable("ordersamy", "clothings");
+
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Products>()
                 .ToTable("products", "clothings");
+
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ProductsAmy>()
+                .ToTable("productsamy", "clothings");
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Paramater>()

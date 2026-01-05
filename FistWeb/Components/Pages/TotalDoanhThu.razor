@@ -107,7 +107,9 @@
         int nam = int.Parse(e.Value.ToString());
         year = nam.ToString();
         var dataDoanhthunam = await Getdoanhthunam(nam);
+        var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP(nam);
 
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "DoanhthunamtheoSP", dataDoanhthunamtheoSP, "bar");
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
         StateHasChanged();
     }
@@ -144,7 +146,7 @@
 
             var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
             var dataDoanhthunam = await Getdoanhthunam(nam);
-            var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP();
+            var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP(nam);
 
             await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
             await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthunam", dataDoanhthunam, "bar");
@@ -205,9 +207,10 @@
         return chartData;
     }
 
-    public async Task<object> GetdoanhthunamTheoSP()
+    public async Task<object> GetdoanhthunamTheoSP(int year_)
     {
-        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(2025);
+        year = year_.ToString();
+        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(int.Parse(year));
 
         var labels = Doanhthunam
             .Select(x => x.Date.Date.ToString("MM/yyyy"))

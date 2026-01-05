@@ -232,6 +232,7 @@ else
                     await localStorage.SetItemAsync("isLoggedIn", true);
                     await localStorage.SetItemAsync("username", u);
                 }
+                Navigation.NavigateTo("/", true);
             }
             else
             {
@@ -291,6 +292,7 @@ else
         username = string.Empty;
         pass = string.Empty;
         savedUsername = string.Empty;
+        Navigation.NavigateTo("/", true);
         StateHasChanged();
     }
 }

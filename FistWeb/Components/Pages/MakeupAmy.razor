@@ -1,4 +1,4 @@
-﻿@page "/makeupstudents"
+﻿@page "/makeupAmy"
 @using Microsoft.EntityFrameworkCore
 @using System.Data
 @using System.Text.Json
@@ -18,23 +18,23 @@
 @inject IDeleteParaService DeletePara
 @inject IGetParaUserService GetUserInfo
 @implements IDisposable
-@inject IInsertRevenueService AddOrderMake
-@inject IGetSumRevenueService GetSumMakeup
-@inject IGetListMakeupService GetListMakeup
+@inject IInsertRevenueAmyService AddOrderMake
+@inject IGetSumRevenueAmyService GetSumMakeup
 @inject LoadingService LoadingService
+@inject IGetListMakeupAmyService GetListMakeup
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">
-        <img src="makeup-artist.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Thêm lịch học Make-up
+        <img src="makeup.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Thêm lịch Make-up
     </button>
     <button class="tab-btn" data-tab="tab2">
-        <img src="customer.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        List học viên
+        <img src="task.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        List lịch Make-up
     </button>
     <button class="tab-btn" data-tab="tab3">
         <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Tổng lịch học Make-up
+        Tổng lịch Make-up
     </button>
 </div>
 
@@ -44,16 +44,16 @@
         <div class="form-section-left">
             <!-- Tên SP -->
             <div class="form-group">
-                <label class="form-label required-label">Tên học viên:</label>
-                <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên học viên..." />
+                <label class="form-label required-label">Tên khách hàng:</label>
+                <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách hàng..." />
                 <div></div>
             </div>
 
             <!-- Gói make -->
             <div class="form-group">
-                <label class="form-label required-label">Khóa Makeup:</label>
+                <label class="form-label required-label">Gói Makeup:</label>
                 <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
-                    <option value="">Chọn khóa makeup</option>
+                    <option value="">Chọn gói makeup</option>
                     @{
                         if (this.ListGoimake != null && !isLoading)
                         {
@@ -77,13 +77,13 @@
                                 <input id="priceInput" type="text"
                                        @bind="newValueSP"
                                        @bind:event="oninput"
-                                       placeholder="Thêm mới khóa makeup..." />
+                                       placeholder="Thêm mới gói makeup..." />
 
                                 <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
                                     <i class="bi-option bi-plus-circle-fill"></i>
                                 </button>
                             </div>
-                            <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa khóa makeup đang chọn</div>
+                            <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa gói makeup đang chọn</div>
 
                         </div>
                     </div>
@@ -92,7 +92,7 @@
 
             <!-- Giá thuê theo ngày -->
             <div class="form-group">
-                <label class="form-label required-label">Giá khóa Makeup:</label>
+                <label class="form-label required-label">Giá gói Makeup:</label>
                 <select class="form-select" @bind="SelectValuePrice" @bind:event="oninput">
                     <option value="">Chọn mức giá</option>
                     @{
@@ -121,14 +121,14 @@
                             <div class="New-price">
                                 <input id="priceInput" type="text"
                                        @bind="newValuePrice"
-                                       placeholder="Thêm mới khóa makeup..."
+                                       placeholder="Thêm mới gói makeup..."
                                        @oninput="OnPriceInput"
                                        autofocus />
                                 <button class="option-itemAdd" type="button" @onclick="addPriceClick">
                                     <i class="bi-option bi-plus-circle-fill"></i>
                                 </button>
                             </div>
-                            <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá khóa makeup đang chọn</div>
+                            <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá gói makeup đang chọn</div>
                         </div>
                     </div>
                 }
@@ -141,7 +141,7 @@
                 }
                 else
                 {
-                    <button class="button-add" type="button" @onclick="ADDOrderMake"><i class="bi bi-check2-circle"></i>Thêm học viên MakeUp</button>
+                    <button class="button-add" type="button" @onclick="ADDOrderMake"><i class="bi bi-check2-circle"></i>Thêm lịch MakeUp</button>
                 }
             </div>
         </div>
@@ -158,7 +158,7 @@
     {
         <h3 class="header-controls">
             <div class="controls-left">
-                Khóa Makeup
+                Gói Makeup
                 <select class="control-select" value="type" @onchange="OnTypeChanged">
                     @{
                         if (this.ListGoimake != null && !isLoading)
@@ -187,8 +187,8 @@
                     <tr>
                         <th>Stt</th>
                         <th>Họ tên</th>
-                        <th>Khóa Makeup</th>
-                        <th>Giá Khóa Makeup</th>
+                        <th>Gói Makeup</th>
+                        <th>Giá Gói Makeup</th>
                         <th>Ngày tạo</th>
                     </tr>
                 </thead>
@@ -201,8 +201,8 @@
                             <tr>
                                 <td data-label="STT">@count</td>
                                 <td data-label="Họ tên">@item.namekh</td>
-                                <td data-label="Khóa Makeup">@item.type</td>
-                                <td data-label="Giá Khóa Makeup">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                <td data-label="Gói Makeup">@item.type</td>
+                                <td data-label="Giá Gói Makeup">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày tạo">@item.createdate.ToString("dd/MM/yyyy HH:mm")</td>
                             </tr>
                             count++;
@@ -363,8 +363,8 @@
                     //await GetMaterialInWH(true, false);
                     await TimKiem();
                     datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
-                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
-                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeupStu")
+                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeupAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
+                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeupAmy")
                                          .OrderBy(x =>
                                          {
                                              if (decimal.TryParse(x.keyData1, out var number))
@@ -373,7 +373,7 @@
                                          })
                                          .Select(x => x.keyData1)
                                          .ToList();
-                    await LoadData(this.type_, null);
+                    await LoadData(this.type_, int.Parse(this.month));
                     isLoading = false;
                     if (!_disposed)
                     {
@@ -403,31 +403,31 @@
     #region tab1
     private async Task addGoiMakeupClick()
     {
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStu", newValueSP.ToUpper(), null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupAmy", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
-            await JS.InvokeVoidAsync("alert", $"khóa makeup ({newValueSP}) đã tồn tại!");
+            await JS.InvokeVoidAsync("alert", $"Gói makeup ({newValueSP}) đã tồn tại!");
         }
         else
         {
             isLoading = true;
             var random = new Random();
             string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
-            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupStu", newValueSP, id);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupAmy", newValueSP, id);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Thêm khóa makeup ({newValueSP}) thành công!");
-                newValueSP = "";
+                await JS.InvokeVoidAsync("alert", $"Thêm gói makeup ({newValueSP}) thành công!");
+                newValueSP = "";              
                 StateHasChanged();
             }
             else
             {
                 isLoading = false;
-                await JS.InvokeVoidAsync("alert", $"Thêm khóa makeup ({newValueSP}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm gói makeup ({newValueSP}) không thành công!");
             }
         }
     }
@@ -436,30 +436,30 @@
     {
         if (string.IsNullOrEmpty(SelectValueSP))
         {
-            await JS.InvokeVoidAsync("alert", "Vui lòng chọn khóa makeup cần xóa trước");
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn gói makeup cần xóa trước");
             await JS.InvokeVoidAsync("closeAllOptionMenus");
             return;
         }
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa khóa makeup này không?");
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa gói makeup này không?");
 
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeupStu", SelectValueSP, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeupAmy", SelectValueSP, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupAmy").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Delete khóa makeup ({SelectValueSP}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete gói makeup ({SelectValueSP}) thành công!");
                 newValueSP = "";
                 StateHasChanged();
             }
             else
             {
                 isLoading = false;
-                await JS.InvokeVoidAsync("alert", $"Delete khóa makeup ({newValueSP}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete gói makeup ({newValueSP}) không thành công!");
             }
         }
     }
@@ -467,20 +467,20 @@
     private async Task addPriceClick()
     {
         isLoading = true;
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupStu", newValuePrice, null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupAmy", newValuePrice, null);
         if (datapara != null && datapara.Any())
         {
-            await JS.InvokeVoidAsync("alert", $"Giá khóa makeup ({newValuePrice}) đã tồn tại!");
+            await JS.InvokeVoidAsync("alert", $"Giá gói makeup ({newValuePrice}) đã tồn tại!");
             isLoading = false;
         }
         else
         {
-            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeupStu", newValuePrice, null);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeupAmy", newValuePrice, null);
             if (checkInsert > 0)
             {
 
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupAmy")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -491,13 +491,13 @@
                                      .ToList();
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Thêm Giá khóa makeup ({newValuePrice}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói makeup ({newValuePrice}) thành công!");
                 newValuePrice = "";
                 StateHasChanged();
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", $"Thêm Giá khóa makeup ({newValuePrice}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói makeup ({newValuePrice}) không thành công!");
                 isLoading = false;
             }
         }
@@ -507,20 +507,20 @@
     {
         if (string.IsNullOrEmpty(SelectValuePrice))
         {
-            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá khóa makeup cần xóa trước");
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá gói makeup cần xóa trước");
             await JS.InvokeVoidAsync("closeAllOptionMenus");
             return;
         }
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá khóa makeup này không?");
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá gói makeup này không?");
 
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeupStu", SelectValuePrice, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeupAmy", SelectValuePrice, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupAmy")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -530,14 +530,14 @@
                                      .Select(x => x.keyData1)
                                      .ToList();
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Delete giá khóa makeup ({SelectValuePrice}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói makeup ({SelectValuePrice}) thành công!");
                 newValueSP = "";
                 isLoading = false;
                 StateHasChanged();
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", $"Delete giá khóa makeup ({SelectValuePrice}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói makeup ({SelectValuePrice}) không thành công!");
             }
         }
     }
@@ -582,17 +582,15 @@
 
             //Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
 
-            int checkInsert = await AddOrderMake.InsertRevenue(id, TextValueNameSP, gia);
+            int checkInsert = await AddOrderMake.InsertRevenueAmy(id, TextValueNameSP, gia);
             if (checkInsert > 0)
             {
                 SelectValuePrice = null;
                 SelectValueSP = null;
                 TextValueNameSP = null;
-
                 await TimKiem();
-                allData = await GetListMakeup.GetListMakeup("goiMakeupStuAmy", null, null, "");
-                await JS.InvokeVoidAsync("alert", "Thêm học viên makeup mới ok!");
-                LoadPage();
+                await LoadData(this.type_, int.Parse(this.month));
+                await JS.InvokeVoidAsync("alert", "Thêm Order mới ok!");
             }
             else
             {
@@ -603,7 +601,7 @@
         }
         catch (Exception ex)
         {
-            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload: {ex.Message}");
+            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload ảnh: {ex.Message}");
         }
     }
     #endregion
@@ -646,9 +644,9 @@
         }
     }
 
-    private async Task LoadData(string type, int? month)
+    private async Task LoadData(string type, int month)
     {
-        allData = await GetListMakeup.GetListMakeup("goiMakeupStu", int.Parse(this.year), month, type);
+        allData = await GetListMakeup.GetListMakeupAmy("goiMakeupAmy", int.Parse(this.year), month, type);
 
         checkNull = !(allData != null && allData.Any());
 
@@ -660,8 +658,8 @@
     {
         string type = e.Value?.ToString() ?? "";
         this.type_ = type;
-        int moth = int.Parse(this.month);
-        await LoadData(type, moth);
+        int month = int.Parse(this.month);
+        await LoadData(type, month);
     }
 
     private string type_ = "";
@@ -737,7 +735,7 @@
     private List<Data.DTOs.RentalSummaryMakeup> Doanhthuthang;
     public async Task<object> Getdoanhthunam(int nam)
     {
-        DoanhthuNam = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam);
+        DoanhthuNam = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupAmy", nam);
         tongDoanhThuNam = (double)DoanhthuNam.Sum(x => x.Reverue);
 
         // Lấy danh sách tháng có dữ liệu
@@ -782,9 +780,9 @@
     public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
     {
         if (ngay == 0)
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, null);
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupAmy", nam, thang, null);
         else
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, ngay);
+            Doanhthuthang = await GetSumMakeup.SumGetListMakeupAmy("goiMakeupAmy", nam, thang, ngay);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 

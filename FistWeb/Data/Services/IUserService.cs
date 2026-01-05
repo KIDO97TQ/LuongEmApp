@@ -7,6 +7,8 @@ namespace FistWeb.Data.Services
     {
         Task<List<UserOrderDto>> GetUserInfo();
     }
+
+    #region Luong
     public interface IThongKeService
     {
         Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null);
@@ -130,11 +132,89 @@ namespace FistWeb.Data.Services
 
     public interface IGetListMakeupService
     {
-        Task<List<InfoMakeUp>> GetListMakeup(string fun, int year, int? month = null, string? type = null);
+        Task<List<InfoMakeUp>> GetListMakeup(string fun, int? year = null, int? month = null, string? type = null);
     }
 
     public interface IGetTotalDoanhThuService
     {
         Task<List<TotalDoanhThu>> TotalDoanhThu(int year, int? month = null, int? day = null);
     }
+    #endregion
+
+    #region Tam
+    public interface IGetSumWHAmyService
+    {
+        Task<List<ProductStock>> GetTotalWHAmy(bool all, bool rdNotReturn, string? typeSP = null);
+    }
+
+    public interface IInsertSPAmyService
+    {
+        Task<int> InserProductAmy(long productID, string nameSP, string? DescSP, decimal PriceSP, int QtySP, string sizeSP, string typeSP);
+    }
+
+    public interface IGetProductIDAmyService
+    {
+        Task<List<ProductImageDto>> GetProductIDAmy(string typeSP);
+    }
+
+    public interface IUpdateProductByIdAmyService
+    {
+        Task<int> UpdateProductByIdAmy(ProductImageDto updatedProduct);
+    }
+
+    public interface IDeleteProductAmyService
+    {
+        Task<int> DeleteProductByIdAmy(long productID);
+    }
+
+    public interface IInsertRevenueAmyService
+    {
+        Task<int> InsertRevenueAmy(string id, string NameKach, decimal price);
+    }
+
+    public interface IGetSumRevenueAmyService
+    {
+        Task<List<RentalSummaryMakeup>> SumGetListMakeupAmy(string type, int year, int? month = null, int? day = null);
+    }
+
+    public interface IGetListMakeupAmyService
+    {
+        Task<List<InfoMakeUp>> GetListMakeupAmy(string fun, int? year = null, int? month = null, string? type = null);
+    }
+
+    public interface IGetTotalDoanhThuAmyService
+    {
+        Task<List<TotalDoanhThu>> TotalDoanhThuAmy(int year, int? month = null, int? day = null);
+    }
+
+    public interface GetListThueDoAmy
+    {
+        Task<List<InfoThueDoDto>> GetListThueDoAmy(string status, int year, int? month = null);
+    }
+
+    public interface IUpdateReturnOderAmyService
+    {
+        Task<int> UpdateReturnOrderAmy(long orderId, decimal? lastmoney, long productid, int QTYThue, string status);
+    }
+
+    public interface IUpdateReturnAllOrderAmyService
+    {
+        Task<int> UpdateReturnAllOrderAmy(string SDTuser, string status);
+    }
+
+    public interface UpdateReturnAllOrder1Amy
+    {
+        Task<int> UpdateReturnAllOrder1Amy();
+    }
+
+    public interface IStockQTYAmyService
+    {
+        Task<int> GetStockQTYAmy(long productID);
+    }
+
+    public interface IInsertOrdersAmyService
+    {
+        Task<int> InsertOrderAmy(long userID, List<Data.DTOs.ProductItem> ProductList);
+    }
+    #endregion
 }

@@ -135,3 +135,8 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Co
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\MakeupStudents.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\TotalDoanhThu.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\web\FistWeb\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\QuanlydoAmy.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\MakeupAmy.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\MakeupStudentsAmy.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\TotalDoanhThuAmy.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\ListOrderAmy.razor.rz.scp.css

@@ -588,7 +588,8 @@
                 SelectValuePrice = null;
                 SelectValueSP = null;
                 TextValueNameSP = null;
-
+                await TimKiem();
+                await LoadData(this.type_, int.Parse(this.month));
                 await JS.InvokeVoidAsync("alert", "Thêm Order mới ok!");
             }
             else

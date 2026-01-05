@@ -16,7 +16,10 @@ namespace FistWeb.Data.Services
     public class CallService : IThongKeService, GetListThueDo, SumGetListThueDo, IGetParaUserService, IGetParamaterService, IAddParaService, IGetUserIDService,
     IDeleteParaService, IInsertSPService, IGetSumWHService, IGetUserInfoService, IGetProductIDService, IStockQTYService, IInserUserService, IInsertOrdersService,
     IUpdateReturnOderService, IUpdatePWService, IDeleteProductService, IUpdateProductByIdService, IUpdateReturnAllOrderService, IGetUserInfo1Service, IUpdateUserService,
-        UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService
+    UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
+    IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
+    IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
+    IStockQTYAmyService
     {
         private readonly AppDbContext _context;
 
@@ -62,6 +65,7 @@ namespace FistWeb.Data.Services
 
             return users;
         }
+        #region Luong
         public async Task<List<DoanhThuThueDoDto>> GetDoanhThuThueDoUocTinhAsync(string typesp, int year, int? month = null, int? day = null)
         {
             try
@@ -220,7 +224,7 @@ namespace FistWeb.Data.Services
 
             parameters.Add(new NpgsqlParameter("function_name", fun));
 
-            if (fun == "type")
+            if (fun == "type" || fun == "typeAmy")
             {
                 sql.Append(" and UPPER(b.item_key1)=@taikhoan ");
                 parameters.Add(new NpgsqlParameter("taikhoan", user));
@@ -693,7 +697,7 @@ namespace FistWeb.Data.Services
             return new List<RentalSummaryMakeup>();
         }
 
-        public async Task<List<InfoMakeUp>> GetListMakeup(string fun, int year, int? month = null, string type = null)
+        public async Task<List<InfoMakeUp>> GetListMakeup(string fun, int? year = null, int? month = null, string type = null)
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
@@ -703,9 +707,9 @@ namespace FistWeb.Data.Services
                                                             b.createdate
                                                         FROM clothings.revenue b
                                                         JOIN clothings.paramater p ON b.idorder = p.item_key2
-                                                        WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
-
-            parameters.Add(new NpgsqlParameter("year", year));
+                                                        WHERE 1=1 ");
+            //EXTRACT(YEAR FROM b.createdate) = :year ");
+            //parameters.Add(new NpgsqlParameter("year", year));
 
             if (month.HasValue)
             {
@@ -795,6 +799,518 @@ namespace FistWeb.Data.Services
 
             return new List<TotalDoanhThu>();
         }
+        #endregion
 
+        #region Tam
+        public async Task<List<ProductStock>> GetTotalWHAmy(bool all, bool rdNotReturn, string? typeSP = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder();
+
+            // Chọn cột cần group
+            string groupByColumn = (typeSP == null) ? "type_production" : "productname";
+            string whereClause = (typeSP == null) ? "" : "WHERE type_production = :type_production";
+
+            if (typeSP != null)
+            {
+                parameters.Add(new NpgsqlParameter("type_production", typeSP));
+            }
+
+            if (all)
+            {
+                sql.Append($@"SELECT {groupByColumn} AS type_production, SUM(saveqty) AS total_quantity
+                              FROM clothings.productsamy
+                              {whereClause}
+                              GROUP BY {groupByColumn}
+                              ORDER BY {groupByColumn}");
+            }
+            else if (rdNotReturn)
+            {
+                sql.Append($@" SELECT {groupByColumn} AS type_production, SUM(stockquantity - saveqty) AS total_quantity
+                                 FROM clothings.productsamy
+                                 {whereClause}
+                                 GROUP BY {groupByColumn}
+                                 ORDER BY {groupByColumn}");
+            }
+            else
+            {
+                sql.Append($@"SELECT {groupByColumn} AS type_production, SUM(stockquantity) AS total_quantity
+                                FROM clothings.productsamy
+                                {whereClause}
+                                GROUP BY {groupByColumn}
+                                ORDER BY {groupByColumn}");
+            }
+
+            return await _context.ProductStock
+                                       .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                                       .ToListAsync();
+        }
+
+        public async Task<int> InserProductAmy(long productID, string nameSP, string? DescSP, decimal PriceSP, int QtySP, string sizeSP, string typeSP)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            var sql = new StringBuilder(@"INSERT INTO clothings.productsamy (ProductID, ProductName, Description, PricePerDay, StockQuantity, Size, Type_production, saveqty,createdate) 
+                         VALUES (@productID, @productName, @description, @priceperday, @stockquantity, @size, @typeproduct, @qtysave,@createdate)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("productID", productID),
+                new NpgsqlParameter("productName", nameSP),
+                new NpgsqlParameter("description", (object?)DescSP ?? ""),
+                new NpgsqlParameter("priceperday", PriceSP),
+                new NpgsqlParameter("stockquantity", QtySP),
+                new NpgsqlParameter("size", sizeSP),
+                new NpgsqlParameter("typeproduct", typeSP),
+                new NpgsqlParameter("qtysave", QtySP),
+                new NpgsqlParameter("createdate", gioVN)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<ProductImageDto>> GetProductIDAmy(string typeProduction)
+        {
+            var products = await _context.ProductsAmy
+                .Where(p => p.type_production == typeProduction)
+                .OrderByDescending(p => p.createdate)
+                .Select(p => new ProductImageDto
+                {
+                    ProductID = p.productid,
+                    Price = p.priceperday,
+                    Size = p.size,
+                    Desc = p.description ?? "",
+                    StockQTY = p.stockquantity,
+                    SaveQTY = p.saveqty,
+                    ImageUrl = p.productid + ".jpg",
+                    TypeSP = p.type_production,
+                    NameSP = p.productname
+                })
+                .ToListAsync();
+            return products;
+        }
+
+        public async Task<int> UpdateProductByIdAmy(ProductImageDto updatedProduct)
+        {
+            string sql = @"update clothings.productsamy set  productId=@productId, productname=@productname, description=@description, priceperday=@priceperday,
+                            stockquantity=@stockquantity, size=@size, type_production=@type_production, saveqty=@saveqty
+                            WHERE productID=@productId";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@productId", updatedProduct.ProductID),
+                 new NpgsqlParameter("@productname", updatedProduct.NameSP),
+                 new NpgsqlParameter("@description", updatedProduct.Desc),
+                 new NpgsqlParameter("@priceperday", updatedProduct.Price),
+                 new NpgsqlParameter("@stockquantity",  updatedProduct.StockQTY),
+                 new NpgsqlParameter("@size", updatedProduct.Size),
+                 new NpgsqlParameter("@type_production", updatedProduct.TypeSP),
+                 new NpgsqlParameter("@saveqty",  updatedProduct.StockQTY)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> DeleteProductByIdAmy(long productId)
+        {
+            string sql = @"DELETE from clothings.productsamy WHERE productID=@productId";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@productId", productId)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> InsertRevenueAmy(string id, string NameKach, decimal price)
+        {
+            var sql = new StringBuilder(@"INSERT INTO clothings.revenueamy (idorder, namekh, priremake) VALUES (@idorder, @namekh, @pricemake)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("idorder", id),
+                new NpgsqlParameter("namekh", NameKach),
+                new NpgsqlParameter("pricemake", price)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<RentalSummaryMakeup>> SumGetListMakeupAmy(string type, int year, int? month = null, int? day = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder();
+
+            try
+            {
+                sql.Append(@" SELECT 
+                               DATE(b.createdate) AS Date,
+                               p.item_key1 as Type,
+                               SUM(b.priremake) AS Reverue
+                           FROM clothings.revenueamy b
+                           JOIN clothings.paramater p ON b.idorder = p.item_key2
+                           WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
+
+                parameters.Add(new NpgsqlParameter("year", year));
+
+                if (day.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(DAY FROM b.createdate) = :ngay ");
+                    parameters.Add(new NpgsqlParameter("ngay", day));
+                }
+
+                if (month.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                    parameters.Add(new NpgsqlParameter("month", month));
+                }
+
+                sql.Append(" and p.function_name= :type  GROUP BY createdate, item_key1 ORDER BY createdate");
+                parameters.Add(new NpgsqlParameter("type", type));
+
+                return await _context.Set<RentalSummaryMakeup>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
+            }
+            catch (Exception ex) { }
+            return new List<RentalSummaryMakeup>();
+        }
+
+        public async Task<List<InfoMakeUp>> GetListMakeupAmy(string fun, int? year = null, int? month = null, string type = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+            StringBuilder sql = new StringBuilder(@" SELECT b.namekh, 
+                                                            p.item_key1 as type,
+                                                            b.priremake as price,
+                                                            b.createdate
+                                                        FROM clothings.revenueamy b
+                                                        JOIN clothings.paramater p ON b.idorder = p.item_key2
+                                                        WHERE 1=1 ");
+            //EXTRACT(YEAR FROM b.createdate) = :year ");
+            //parameters.Add(new NpgsqlParameter("year", year));
+
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+
+            if (!string.IsNullOrEmpty(type) && type != "All")
+            {
+                sql.Append(" and p.item_key1= :type ");
+                parameters.Add(new NpgsqlParameter("type", type));
+            }
+
+            sql.Append(" and p.function_name=:fun  ORDER BY createdate desc ");
+            parameters.Add(new NpgsqlParameter("fun", fun));
+            return await _context.Set<InfoMakeUp>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .ToListAsync();
+        }
+
+        public async Task<List<TotalDoanhThu>> TotalDoanhThuAmy(int year, int? month = null, int? day = null)
+        {
+            try
+            {
+                var parameters = new List<NpgsqlParameter>
+                {
+                    new NpgsqlParameter("year", year)
+                    {
+                        DbType = DbType.Int32
+                    },
+                    new NpgsqlParameter("day", day.HasValue ? day.Value : (object)DBNull.Value)
+                    {
+                        DbType = DbType.Int32
+                    },
+                    new NpgsqlParameter("month", month.HasValue ? month.Value : (object)DBNull.Value)
+                    {
+                        DbType = DbType.Int32
+                    }
+                };
+
+                var sql = new StringBuilder(@"SELECT 
+                                                  merged.date AS Date,
+                                                  merged.type AS Type,
+                                                  SUM(merged.reverue) AS Reverue
+                                              FROM
+                                              (
+                                                  SELECT 
+                                                      DATE(b.createdate) AS date,
+                                                      CASE 
+                                                           WHEN p.function_name = 'goiMakeupAmy' THEN 'Makeup'
+                                                           WHEN p.function_name = 'goiMakeupStuAmy' THEN 'Học Viên Makeup'
+                                                      END AS type,
+                                                      SUM(b.priremake) AS reverue
+                                                  FROM clothings.revenueamy b
+                                                  JOIN clothings.paramater p ON b.idorder = p.item_key2
+                                                  WHERE EXTRACT(YEAR FROM b.createdate) = :year
+                                                      AND (:day IS NULL OR EXTRACT(DAY FROM b.createdate) = :day)
+                                                      AND (:month IS NULL OR EXTRACT(MONTH FROM b.createdate) = :month)
+                                                      AND p.function_name IN ('goiMakeupAmy','goiMakeupStuAmy')
+                                                  GROUP BY date, type
+                                              
+                                                  UNION ALL
+                                              
+                                                  SELECT 
+                                                      o.borrowdate::date AS date,
+                                                      'Thuê Đồ' AS type,
+                                                      SUM(o.totalamount) AS reverue
+                                                  FROM clothings.ordersamy o 
+                                                  JOIN clothings.productsamy p ON p.productid = o.productid
+                                                  WHERE EXTRACT(YEAR FROM o.borrowdate) = :year
+                                                      AND (:day IS NULL OR EXTRACT(DAY FROM o.borrowdate) = :day)
+                                                      AND (:month IS NULL OR EXTRACT(MONTH FROM o.borrowdate) = :month)
+                                                  GROUP BY date
+                                              ) AS merged
+                                              GROUP BY merged.date, merged.type
+                                              ORDER BY merged.date ");
+
+                return await _context.Set<TotalDoanhThu>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return new List<TotalDoanhThu>();
+        }
+
+        public async Task<List<InfoThueDoDto>> GetListThueDoAmy(string status, int year, int? month = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+            StringBuilder sql = new StringBuilder(@" SELECT fullname,
+                                                    facebookphone,
+                                                    borrowdate,
+                                                    returndate,
+                                                    type_production,
+                                                    size,
+                                                    qty,
+                                                    totalamount,
+                                                    priceperday,
+                                                    moneycoc,
+                                                    tienphatsinh,
+                                                    status, orderid, b.productid
+                                             FROM clothings.ordersamy b
+                                             JOIN clothings.productsamy p ON b.productid = p.productid
+                                             JOIN clothings.users u ON u.userid = b.userid
+                                             WHERE EXTRACT(YEAR FROM b.borrowdate) = @year");
+
+            parameters.Add(new NpgsqlParameter("year", year));
+
+            if (month != null)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.borrowdate) = @month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+
+            if (status != "ALL")
+            {
+                sql.Append(" AND b.status = @status ");
+                parameters.Add(new NpgsqlParameter("status", status));
+            }
+            sql.Append(" order by borrowdate desc ");
+            return await _context.Set<InfoThueDoDto>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .ToListAsync();
+        }
+
+        public async Task<int> UpdateReturnOrderAmy(long orderId, decimal? lastmoney, long productid, int QTYThue, string status)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            string sql = "";
+
+            if (status == "RETURN")
+                sql = @"UPDATE clothings.ordersamy SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                         WHERE orderid=@idorder;
+
+                        UPDATE clothings.productsamy SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+            else
+                sql = @"UPDATE clothings.ordersamy SET status='CANCEL', returndate=@timereturn, lastmoney = totalamount 
+                             WHERE orderid=@idorder;
+
+                            UPDATE clothings.productsamy SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@idorder", orderId),
+                 new NpgsqlParameter("@lastmoney", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = lastmoney ?? 0m },
+                 new NpgsqlParameter("@timereturn", gioVN),
+                 new NpgsqlParameter("@bookingid", productid),
+                 new NpgsqlParameter("@sl", QTYThue)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateReturnAllOrderAmy(string sdt, string status)
+        {
+
+            var products = await (from o in _context.OrderAmy
+                                  join u in _context.Users on o.UserId equals u.UserId
+                                  where u.Phone == sdt && o.Status == "BORROW"
+                                  select new Data.DTOs.OrderDetailDto
+                                  {
+                                      idorder = o.OrderId,
+                                      QTYThue = o.Qty,
+                                      bookingid = o.ProductId,
+                                      lastmoney = o.TotalAmount
+                                  }).ToListAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                int totalInserted = 0;
+
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = "";
+                if (status == "RETURN")
+                    sql = @"UPDATE clothings.ordersamy SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+ 
+                            UPDATE clothings.productsamy SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+                else
+                    sql = @"UPDATE clothings.ordersamy SET status='CANCEL', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+
+                            UPDATE clothings.productsamy SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+                foreach (var order in products)
+                {
+                    var parameters = new[]
+                    {
+                       new NpgsqlParameter("@idorder", order.idorder),
+                       new NpgsqlParameter("@lastmoney", order.lastmoney),
+                       new NpgsqlParameter("@timereturn", gioVN),
+                       new NpgsqlParameter("@bookingid", order.bookingid),
+                       new NpgsqlParameter("@sl", order.QTYThue)
+                    };
+
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<int> UpdateReturnAllOrder1Amy()
+        {
+
+            var products = await (from o in _context.OrderAmy
+                                  where o.Status == "BORROW"
+                                  select new Data.DTOs.OrderDetailDto
+                                  {
+                                      idorder = o.OrderId,
+                                      QTYThue = o.Qty,
+                                      bookingid = o.ProductId,
+                                      lastmoney = o.TotalAmount
+                                  }).ToListAsync();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                int totalInserted = 0;
+
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = @"UPDATE clothings.ordersamy SET status='RETURN', returndate=@timereturn, lastmoney = totalamount 
+                            WHERE orderid=@idorder;
+ 
+                            UPDATE clothings.productsamy SET  saveqty=saveqty + :sl where productid=:bookingid; ";
+
+                foreach (var order in products)
+                {
+                    var parameters = new[]
+                    {
+                       new NpgsqlParameter("@idorder", order.idorder),
+                       new NpgsqlParameter("@lastmoney", order.lastmoney),
+                       new NpgsqlParameter("@timereturn", gioVN),
+                       new NpgsqlParameter("@bookingid", order.bookingid),
+                       new NpgsqlParameter("@sl", order.QTYThue)
+                    };
+
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<int> GetStockQTYAmy(long idproduct)
+        {
+            int stock = await _context.ProductsAmy
+                .Where(p => p.productid == idproduct)
+                .Select(p => p.saveqty)
+                .FirstOrDefaultAsync();
+
+            return stock;
+        }
+
+        public async Task<int> InsertOrderAmy(long UserID, List<Data.DTOs.ProductItem> products)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                int totalInserted = 0;
+
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+
+                string sql = @"INSERT INTO clothings.ordersamy
+                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+                               VALUES 
+                                   (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+
+                               UPDATE clothings.productsamy
+                               SET saveqty = saveqty - @qty 
+                               WHERE productid = @productid;";
+
+                foreach (var order in products)
+                {
+                    long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+
+                    var parameters = new[]
+                    {
+                        new NpgsqlParameter("@orderid", orderId),
+                        new NpgsqlParameter("@userid", UserID),
+                        new NpgsqlParameter("@totalamount", order.TongTienThueNonCoc),
+                        new NpgsqlParameter("@moneycoc", order.TienCoc),
+                        new NpgsqlParameter("@productid", order.ProductID),
+                        new NpgsqlParameter("@qty", order.QTYThue),
+                        new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)order.Notes ?? "" },
+                        new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
+                        new NpgsqlParameter("@borrowdate", gioVN)
+                    };
+
+                    totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                }
+
+                await transaction.CommitAsync();
+                return totalInserted;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        #endregion
     }
 }
