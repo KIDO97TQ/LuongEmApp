@@ -85,6 +85,15 @@
                 </NavLink>
             </div>
         }
+        @if (loginResult == "true" && username.ToUpper() == "TRUONGDUNG")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="() => checkloading(13)">
+                    <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
+                </NavLink>
+            </div>
+        }
+
     </nav>
 </div>
 @using FistWeb.Data.Services
@@ -114,7 +123,8 @@
             "9" => "makeupAmy",
             "10" => "makeupstudentsAmy",
             "11" => "totaldoanhthuAmy",
-            "12" => "oderlistAmy"
+            "12" => "oderlistAmy",
+            "13" => "Lichchup"
 
         };
         if (!string.IsNullOrWhiteSpace(url))

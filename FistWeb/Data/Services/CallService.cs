@@ -19,7 +19,7 @@ namespace FistWeb.Data.Services
     UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
-    IStockQTYAmyService
+    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService
     {
         private readonly AppDbContext _context;
 
@@ -730,7 +730,6 @@ namespace FistWeb.Data.Services
                     .ToListAsync();
         }
 
-
         public async Task<List<TotalDoanhThu>> TotalDoanhThu(int year, int? month = null, int? day = null)
         {
             try
@@ -1311,6 +1310,119 @@ namespace FistWeb.Data.Services
                 throw;
             }
         }
+        #endregion
+
+        #region dung
+        public async Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, DateTime? datecuoi, string Notes)
+        {
+            var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note) 
+                                                 VALUES (@idorder, @namekh, @pricemake, @photograper, @datechup, @datetrafile, @datecuoi, @note)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("idorder", id),
+                new NpgsqlParameter("namekh", NameKach),
+                new NpgsqlParameter("pricemake", price),
+                new NpgsqlParameter("photograper", photograper),
+                new NpgsqlParameter("datechup", datechup),
+                new NpgsqlParameter("datetrafile", datetrafile),
+                new NpgsqlParameter("datecuoi", datecuoi),
+                new NpgsqlParameter("@note", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)Notes ?? "" }
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<ListInfoGoiChup>> GetListChupWedding(string fun, int? year = null, int? month = null, int? day = null, string type = null, string thochup = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+            StringBuilder sql = new StringBuilder(@" SELECT b.namekh, 
+                                                            p.item_key1 as type,
+                                                            b.priremake as price,b.photograper, b.datechup, b.datetrafile, b.datecuoi, b.note,
+                                                            b.createdate
+                                                        FROM clothings.revenuewedding b
+                                                        JOIN clothings.paramater p ON b.idorder = p.item_key2
+                                                        WHERE 1=1 ");
+            //EXTRACT(YEAR FROM b.createdate) = :year ");
+            //parameters.Add(new NpgsqlParameter("year", year));
+
+            if (day.HasValue)
+            {
+                sql.Append(" AND EXTRACT(DAY FROM b.datechup) = :day ");
+                parameters.Add(new NpgsqlParameter("day", day));
+            }
+
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.datechup) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+
+            if (!string.IsNullOrEmpty(type) && type != "All")
+            {
+                sql.Append(" and p.item_key1= :type ");
+                parameters.Add(new NpgsqlParameter("type", type));
+            }
+
+            if (!string.IsNullOrEmpty(thochup) && thochup != "All")
+            {
+                sql.Append(" and b.photograper= :thochup ");
+                parameters.Add(new NpgsqlParameter("thochup", thochup));
+            }
+
+            sql.Append(" and p.function_name=:fun  ORDER BY createdate desc ");
+            parameters.Add(new NpgsqlParameter("fun", fun));
+            return await _context.Set<ListInfoGoiChup>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .ToListAsync();
+        }
+
+        public async Task<List<RentalSummaryChup>> SumGetListWedding(string type, int year, int? month = null, int? day = null, string thochup = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder();
+
+            try
+            {
+                sql.Append(@" SELECT 
+                               DATE(b.createdate) AS Date,
+                               p.item_key1 as Type,
+                               SUM(b.priremake) AS Reverue
+                           FROM clothings.revenuewedding b
+                           JOIN clothings.paramater p ON b.idorder = p.item_key2
+                           WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
+
+                parameters.Add(new NpgsqlParameter("year", year));
+
+                if (day.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(DAY FROM b.datechup) = :ngay ");
+                    parameters.Add(new NpgsqlParameter("ngay", day));
+                }
+
+                if (month.HasValue)
+                {
+                    sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                    parameters.Add(new NpgsqlParameter("month", month));
+                }
+
+                if (!string.IsNullOrEmpty(thochup) && thochup != "All")
+                {
+                    sql.Append(" and b.photograper= :thochup ");
+                    parameters.Add(new NpgsqlParameter("thochup", thochup));
+                }
+
+                sql.Append(" and p.function_name= :type  GROUP BY createdate, item_key1 ORDER BY createdate");
+                parameters.Add(new NpgsqlParameter("type", type));
+
+                return await _context.Set<RentalSummaryChup>()
+                        .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                        .ToListAsync();
+            }
+            catch (Exception ex) { }
+            return new List<RentalSummaryChup>();
+        }
+
         #endregion
     }
 }

@@ -62,6 +62,13 @@ builder.Services.AddScoped<UpdateReturnAllOrder1Amy, CallService>();
 builder.Services.AddScoped<IInsertOrdersAmyService, CallService>();
 builder.Services.AddScoped<IStockQTYAmyService, CallService>();
 #endregion
+
+#region dung
+builder.Services.AddScoped<IInsertRevenueWeddingService, CallService>();
+builder.Services.AddScoped<IGetListWeddingService, CallService>();
+builder.Services.AddScoped<IGetSumRevenueWeddingService, CallService>();
+
+#endregion
 #endregion
 
 builder.Services.AddSingleton<LoadingService>();

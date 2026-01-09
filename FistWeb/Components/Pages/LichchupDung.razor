@@ -1,4 +1,4 @@
-﻿@page "/makeupstudents"
+﻿@page "/Lichchup"
 @using Microsoft.EntityFrameworkCore
 @using System.Data
 @using System.Text.Json
@@ -18,23 +18,24 @@
 @inject IDeleteParaService DeletePara
 @inject IGetParaUserService GetUserInfo
 @implements IDisposable
-@inject IInsertRevenueService AddOrderMake
-@inject IGetSumRevenueService GetSumMakeup
-@inject IGetListMakeupService GetListMakeup
+@inject IInsertRevenueWeddingService AddOrderChup
+@inject IGetSumRevenueWeddingService GetSumChup
+@inject IGetListWeddingService GetListChup
 @inject LoadingService LoadingService
+
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">
         <img src="makeup-artist.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Thêm lịch học Make-up
+        Thêm lịch Chụp
     </button>
     <button class="tab-btn" data-tab="tab2">
         <img src="customer.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        List học viên
+        Tổng hợp lịch chụp
     </button>
     <button class="tab-btn" data-tab="tab3">
         <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Tổng lịch học Make-up
+        Doanh thu chụp
     </button>
 </div>
 
@@ -42,18 +43,18 @@
 <div class="tab-content active" id="tab1">
     <div class="form-container">
         <div class="form-section-left">
-            <!-- Tên SP -->
+            <!-- Tên KH -->
             <div class="form-group">
-                <label class="form-label required-label">Tên học viên:</label>
-                <input type="text" @bind="TextValueNameSP" @bind:event="oninput" class="form-input" placeholder="Nhập tên học viên..." />
+                <label class="form-label required-label">Tên khách chụp:</label>
+                <input type="text" @bind="TextValueNameKH" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách chụp..." />
                 <div></div>
             </div>
 
-            <!-- Gói make -->
+            <!-- Gói chụp -->
             <div class="form-group">
-                <label class="form-label required-label">Khóa Makeup:</label>
+                <label class="form-label required-label">Chọn gói chụp:</label>
                 <select class="form-select" @bind="SelectValueSP" @bind:event="oninput">
-                    <option value="">Chọn khóa makeup</option>
+                    <option value="">Chọn gói chụp</option>
                     @{
                         if (this.ListGoimake != null && !isLoading)
                         {
@@ -77,24 +78,35 @@
                                 <input id="priceInput" type="text"
                                        @bind="newValueSP"
                                        @bind:event="oninput"
-                                       placeholder="Thêm mới khóa makeup..." />
+                                       placeholder="Thêm mới gói chụp..." />
 
-                                <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
+                                <button class="option-itemAdd" type="button" @onclick="addGoiChupClick">
                                     <i class="bi-option bi-plus-circle-fill"></i>
                                 </button>
                             </div>
-                            <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa khóa makeup đang chọn</div>
+                            <div class="option-item" @onclick="XoaGoiChupClick">🗑️ Xóa gói chụp đang chọn</div>
 
                         </div>
                     </div>
                 }
             </div>
 
-            <!-- Giá thuê theo ngày -->
+            <!-- Tên thợ chụp -->
             <div class="form-group">
-                <label class="form-label required-label">Giá khóa Makeup:</label>
+                <label class="form-label required-label">Thợ chụp:</label>
+                <select class="form-select" @bind="nameThochup" @bind:event="oninput">
+                    <option value="">Chọn thợ chụp</option>
+                    <option value="@nameThochup">Dũng</option>
+                    <option value="@nameThochup">Long</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Giá gói chụp -->
+            <div class="form-group">
+                <label class="form-label required-label">Giá gói chụp:</label>
                 <select class="form-select" @bind="SelectValuePrice" @bind:event="oninput">
-                    <option value="">Chọn mức giá</option>
+                    <option value="">Chọn giá gói chụp</option>
                     @{
                         if (this.ListPrice != null && !isLoading)
                         {
@@ -121,17 +133,51 @@
                             <div class="New-price">
                                 <input id="priceInput" type="text"
                                        @bind="newValuePrice"
-                                       placeholder="Thêm mới giá khóa makeup..."
+                                       placeholder="Thêm mới giá gói chụp..."
                                        @oninput="OnPriceInput"
                                        autofocus />
                                 <button class="option-itemAdd" type="button" @onclick="addPriceClick">
                                     <i class="bi-option bi-plus-circle-fill"></i>
                                 </button>
                             </div>
-                            <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá khóa makeup đang chọn</div>
+                            <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá gói chụp đang chọn</div>
                         </div>
                     </div>
                 }
+            </div>
+
+            <!-- Ngày Chup -->
+            <div class="form-group">
+                <label class="form-label required-label">Ngày chụp:</label>
+                <input type="datetime-local"
+                       class="form-control"
+                       value="@ngayGioChupString"
+                       @onchange="UpdateNgayGioChup" />
+            </div>
+
+            <!-- Ngày trả file -->
+            <div class="form-group">
+                <label class="form-label required-label">Ngày trả File:</label>
+                <input type="date"
+                       class="form-control"
+                       @bind-value="ngayTraFile"
+                       @bind-value:format="yyyy-MM-dd" />
+            </div>
+
+            <!-- Ngày cưới -->
+            <div class="form-group">
+                <label class="form-label required-label">Ngày Cưới:</label>
+                <input type="date"
+                       class="form-control"
+                       @bind-value="ngayCuoi"
+                       @bind-value:format="yyyy-MM-dd" />
+            </div>
+
+            <!-- Mô tả thêm -->
+            <div class="form-group">
+                <label class="form-label">Note:</label>
+                <textarea class="form-input" @bind="TextValueDesc" @bind:event="oninput" rows="4" placeholder="Lưu ý....."></textarea>
+                <div></div>
             </div>
 
             <div class="store-info">
@@ -141,7 +187,7 @@
                 }
                 else
                 {
-                    <button class="button-add" type="button" @onclick="ADDOrderMake"><i class="bi bi-check2-circle"></i>Thêm học viên MakeUp</button>
+                    <button class="button-add" type="button" @onclick="AddLichChup"><i class="bi bi-check2-circle"></i>THÊM GÓI CHỤP</button>
                 }
             </div>
         </div>
@@ -158,7 +204,7 @@
     {
         <h3 class="header-controls">
             <div class="controls-left">
-                Khóa Makeup
+                Gói chụp
                 <select class="control-select" value="type" @onchange="OnTypeChanged">
                     @{
                         if (this.ListGoimake != null && !isLoading)
@@ -171,6 +217,14 @@
                         }
                     }
                 </select>
+                Thợ chụp
+                <select class="control-select" value="type" @onchange="OnThoChupChanged">
+                    @{
+                        <option value="All">All</option>
+                        <option value="Dũng">Dũng</option>
+                        <option value="Long">Long</option>
+                    }
+                </select>
                 Tháng
                 <select class="control-select" value="month" @onchange="OnMonthChanged1">
                     @for (int i = 1; i <= 12; i++)
@@ -178,17 +232,47 @@
                         <option value="@i.ToString("D2")">@i.ToString("D2")</option>
                     }
                 </select>
+
+                <button class="Reset" type="button" @onclick="Reset">
+                    <img src="return.png" alt="icon" style="width: 37px; height: 33px;">
+                </button>
             </div>
         </h3>
+
+        <!-- Hàng ngày cập nhật theo tháng -->
+        <div class="month-days">
+            @for (int day = 1; day <= DaysofMonth(selectedYear, selectedMonth); day++)
+            {
+                var currentDay = day;
+
+                <div class="day-cell @(HasEventOnDay(currentDay) ? "has-event" : "")"
+                     @onclick="() => OnDayClicked(currentDay)">
+                    @currentDay
+                </div>
+            }
+
+            @* @for (int day = 1; day <= DaysofMonth(selectedYear, selectedMonth); day++)
+            {
+                <div class="day-cell @(HasEventOnDay(day) ? "has-event" : "")"
+                     @onclick="() => OnDayClicked(day)">
+                    @day
+                </div>
+            } *@
+        </div>
+
         <div class="chart-order">
             @*Hiện lên table*@
             <table class="table-custom">
                 <thead>
                     <tr>
                         <th>Stt</th>
-                        <th>Họ tên</th>
-                        <th>Khóa Makeup</th>
-                        <th>Giá Khóa Makeup</th>
+                        <th>Tên thợ</th>
+                        <th>Tên khách</th>
+                        <th>Gói chụp</th>
+                        <th>Giá gói chụp</th>
+                        <th>Ngày chụp</th>
+                        <th>Ngày trả File</th>
+                        <th>Ngày Cưới</th>
                         <th>Ngày tạo</th>
                     </tr>
                 </thead>
@@ -200,9 +284,13 @@
                         {
                             <tr>
                                 <td data-label="STT">@count</td>
-                                <td data-label="Họ tên">@item.namekh</td>
-                                <td data-label="Khóa Makeup">@item.type</td>
-                                <td data-label="Giá Khóa Makeup">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                <td data-label="Thợ chụp">@item.Photograper</td>
+                                <td data-label="Tên khách">@item.namekh</td>
+                                <td data-label="Gói chụp">@item.type</td>
+                                <td data-label="Giá gói chụp">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td data-label="Ngày trả File">@item.dateTraFile.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td data-label="Ngày Cưới">@item.dateCuoi.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td data-label="Ngày tạo">@item.createdate.ToString("dd/MM/yyyy HH:mm")</td>
                             </tr>
                             count++;
@@ -242,9 +330,17 @@
         <div class="chart-card">
             <div class="staff-header">
                 <h3 class="card-title">
-                    <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                    Tổng doanh thu tháng @month
+                    <img src="statistics.png" alt="icon" style="width: 30px; height: 30px; margin-right: 6px;">
+                    Tổng doanh thu chụp tháng @month
                 </h3>
+                <div class="staff-controls">
+                    <label class="label-ca">Thợ: </label>
+                    <select class="control-select" @onchange="OnThoChanged">
+                        <option value="All">All</option>
+                        <option value="Dũng">Dũng</option>
+                        <option value="Long">Long</option>
+                    </select>
+                </div>
                 <div class="staff-controls">
                     <label class="label-ca">Tháng: </label>
                     <select class="control-select" value="Month" @onchange="OnMonthChanged">
@@ -275,7 +371,7 @@
             <div class="staff-header">
                 <h3 class="card-title">
                     <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                    Tổng doanh thu năm @year
+                    Tổng doanh thu chụp năm @year
                 </h3>
                 <div class="staff-controls">
                     <select class="control-select" value="year" @onchange="OnYearChanged">
@@ -309,6 +405,7 @@
 
 
 @code {
+    private DateTime? ngayGioChup, ngayCuoi, ngayTraFile;
     private string month;
     private string year;
     private List<Data.DTOs.ListParamaterMakeup> datapara = new();
@@ -316,7 +413,7 @@
     Dictionary<string, string> ListGoimake;
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
-    private string SelectValueSP, TextValueNameSP, SelectValuePrice, newValueSP, newValuePrice;
+    private string SelectValueSP, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, nameThochup, TextValueDesc;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
     private bool isLoadingService = true;
@@ -327,6 +424,13 @@
         _disposed = true;
         cts.Cancel();
         cts.Dispose();
+    }
+    private string ngayGioChupString => ngayGioChup?.ToString("yyyy-MM-ddTHH:mm") ?? "";
+
+    private void UpdateNgayGioChup(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var dt))
+            ngayGioChup = dt;
     }
 
     protected override async Task OnInitializedAsync()
@@ -363,8 +467,8 @@
                     //await GetMaterialInWH(true, false);
                     await TimKiem();
                     datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
-                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
-                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceMakeupStu")
+                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => x.keyData2);
+                    this.ListPrice = datapara.Where(x => x.KeyPara == "priceGoiChup")
                                          .OrderBy(x =>
                                          {
                                              if (decimal.TryParse(x.keyData1, out var number))
@@ -373,7 +477,7 @@
                                          })
                                          .Select(x => x.keyData1)
                                          .ToList();
-                    await LoadData(this.type_, null);
+                    await LoadData(this.type_, null, null, thochup_);
                     isLoading = false;
                     if (!_disposed)
                     {
@@ -401,65 +505,65 @@
     }
 
     #region tab1
-    private async Task addGoiMakeupClick()
+    private async Task addGoiChupClick()
     {
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStu", newValueSP.ToUpper(), null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiChupWedding", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
-            await JS.InvokeVoidAsync("alert", $"khóa makeup ({newValueSP}) đã tồn tại!");
+            await JS.InvokeVoidAsync("alert", $"Gói chụp ({newValueSP}) đã tồn tại!");
         }
         else
         {
             isLoading = true;
             var random = new Random();
             string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
-            int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupStu", newValueSP, id);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("goiChupWedding", newValueSP, id);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Thêm khóa makeup ({newValueSP}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm gói chụp ({newValueSP}) thành công!");
                 newValueSP = "";
                 StateHasChanged();
             }
             else
             {
                 isLoading = false;
-                await JS.InvokeVoidAsync("alert", $"Thêm khóa makeup ({newValueSP}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm gói chụp ({newValueSP}) không thành công!");
             }
         }
     }
 
-    private async Task XoaGoiMakeClick()
+    private async Task XoaGoiChupClick()
     {
         if (string.IsNullOrEmpty(SelectValueSP))
         {
-            await JS.InvokeVoidAsync("alert", "Vui lòng chọn khóa makeup cần xóa trước");
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn gói chụp cần xóa trước");
             await JS.InvokeVoidAsync("closeAllOptionMenus");
             return;
         }
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa khóa makeup này không?");
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa gói chụp này không?");
 
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiMakeupStu", SelectValueSP, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiChupWedding", SelectValueSP, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiMakeupStu").ToDictionary(x => x.keyData1, x => x.keyData2);
+                this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => x.keyData2);
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Delete khóa makeup ({SelectValueSP}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({SelectValueSP}) thành công!");
                 newValueSP = "";
                 StateHasChanged();
             }
             else
             {
                 isLoading = false;
-                await JS.InvokeVoidAsync("alert", $"Delete khóa makeup ({newValueSP}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({newValueSP}) không thành công!");
             }
         }
     }
@@ -467,20 +571,20 @@
     private async Task addPriceClick()
     {
         isLoading = true;
-        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupStu", newValuePrice, null);
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceGoiChup", newValuePrice, null);
         if (datapara != null && datapara.Any())
         {
-            await JS.InvokeVoidAsync("alert", $"Giá khóa makeup ({newValuePrice}) đã tồn tại!");
+            await JS.InvokeVoidAsync("alert", $"Giá gói chụp ({newValuePrice}) đã tồn tại!");
             isLoading = false;
         }
         else
         {
-            int checkInsert = await AddPara.InsertParamaterRawAsync("priceMakeupStu", newValuePrice, null);
+            int checkInsert = await AddPara.InsertParamaterRawAsync("priceGoiChup", newValuePrice, null);
             if (checkInsert > 0)
             {
 
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceGoiChup")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -491,13 +595,13 @@
                                      .ToList();
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Thêm Giá khóa makeup ({newValuePrice}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói chụp ({newValuePrice}) thành công!");
                 newValuePrice = "";
                 StateHasChanged();
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", $"Thêm Giá khóa makeup ({newValuePrice}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Thêm Giá gói chụp ({newValuePrice}) không thành công!");
                 isLoading = false;
             }
         }
@@ -507,20 +611,20 @@
     {
         if (string.IsNullOrEmpty(SelectValuePrice))
         {
-            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá khóa makeup cần xóa trước");
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn giá gói chụp cần xóa trước");
             await JS.InvokeVoidAsync("closeAllOptionMenus");
             return;
         }
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá khóa makeup này không?");
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa giá gói chụp này không?");
 
         if (confirmed)
         {
             isLoading = true;
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceMakeupStu", SelectValuePrice, null);
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("priceGoiChup", SelectValuePrice, null);
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListPrice = data.Where(x => x.KeyPara == "priceMakeupStu")
+                this.ListPrice = data.Where(x => x.KeyPara == "priceGoiChup")
                                      .OrderBy(x =>
                                      {
                                          if (decimal.TryParse(x.keyData1, out var number))
@@ -530,14 +634,14 @@
                                      .Select(x => x.keyData1)
                                      .ToList();
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Delete giá khóa makeup ({SelectValuePrice}) thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói chụp ({SelectValuePrice}) thành công!");
                 newValueSP = "";
                 isLoading = false;
                 StateHasChanged();
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", $"Delete giá khóa makeup ({SelectValuePrice}) không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete giá gói chụp ({SelectValuePrice}) không thành công!");
             }
         }
     }
@@ -563,12 +667,13 @@
             newValuePrice = "";
     }
 
-    private async Task ADDOrderMake()
+    private async Task AddLichChup()
     {
         try
         {
             //SelectValueSP,TextValueNameSP,SelectValuePrice
-            if (string.IsNullOrEmpty(SelectValueSP) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameSP))
+            if (string.IsNullOrEmpty(SelectValueSP) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || string.IsNullOrEmpty(nameThochup)
+            || !ngayGioChup.HasValue || !ngayTraFile.HasValue || !ngayCuoi.HasValue)
             {
                 await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
                 return;
@@ -580,18 +685,20 @@
             string cleanedGiaTheoNgay = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
             bool parseGiaOk = decimal.TryParse(cleanedGiaTheoNgay, out decimal gia);
 
-            //Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
-
-            int checkInsert = await AddOrderMake.InsertRevenue(id, TextValueNameSP, gia);
+            int checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, gia, nameThochup, ngayGioChup, ngayTraFile, ngayCuoi, TextValueDesc);
             if (checkInsert > 0)
             {
                 SelectValuePrice = null;
                 SelectValueSP = null;
-                TextValueNameSP = null;
-
+                TextValueNameKH = null;
+                nameThochup = null;
+                ngayGioChup = null;
+                ngayTraFile = null;
+                ngayCuoi = null;
+                TextValueDesc = null;
                 await TimKiem();
-                allData = await GetListMakeup.GetListMakeup("goiMakeupStuAmy", null, null, "");
-                await JS.InvokeVoidAsync("alert", "Thêm học viên makeup mới ok!");
+                allData = await GetListChup.GetListChupWedding("goiChupWedding", null, null, null, "");
+                await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
                 LoadPage();
             }
             else
@@ -609,11 +716,11 @@
     #endregion
 
     #region tab2
-    private List<Data.DTOs.InfoMakeUp> allData = new();
-    private List<Data.DTOs.InfoMakeUp> currentPageData = new();
+    private List<Data.DTOs.ListInfoGoiChup> allData = new();
+    private List<Data.DTOs.ListInfoGoiChup> currentPageData = new();
     private bool checkNull = false, isLoadingOption = false;
     private int currentPage = 1;
-    private int rowsPerPage = 12;
+    private int rowsPerPage = 10;
     private bool CanPrev => currentPage > 1;
     private bool CanNext => currentPage < totalPages;
     private int totalPages => (int)Math.Ceiling((decimal)(allData.Count) / rowsPerPage);
@@ -646,9 +753,9 @@
         }
     }
 
-    private async Task LoadData(string type, int? month)
+    private async Task LoadData(string type, int? month, int? day, string? thochup)
     {
-        allData = await GetListMakeup.GetListMakeup("goiMakeupStu", int.Parse(this.year), month, type);
+        allData = await GetListChup.GetListChupWedding("goiChupWedding", int.Parse(this.year), month, day, type, thochup);
 
         checkNull = !(allData != null && allData.Any());
 
@@ -661,15 +768,54 @@
         string type = e.Value?.ToString() ?? "";
         this.type_ = type;
         int moth = int.Parse(this.month);
-        await LoadData(type, moth);
+        await LoadData(type, moth, null, thochup_);
+    }
+    private async Task OnThoChupChanged(ChangeEventArgs e)
+    {
+        string Thochup = e.Value?.ToString() ?? "";
+        this.thochup_ = Thochup;
+        int moth = int.Parse(this.month);
+        await LoadData(type_, moth, null, Thochup);
     }
 
-    private string type_ = "";
+    private string type_ = "", thochup_ = "";
     private async Task OnMonthChanged1(ChangeEventArgs e)
     {
         int thang = int.Parse(e.Value.ToString());
+        if (int.TryParse(e.Value?.ToString(), out int month))
+        {
+            selectedMonth = month;
+        }
+        await LoadData(this.type_, thang, null, thochup_);
+    }
 
-        await LoadData(this.type_, thang);
+    private async Task OnDayClicked(int day)
+    {
+        await LoadData(this.type_, selectedMonth, day, thochup_);
+    }
+
+    private int selectedMonth = DateTime.Now.Month;
+    private int selectedYear = DateTime.Now.Year;
+    private string selectedType = "All";
+
+    private int DaysofMonth(int year, int month)
+    {
+        return DateTime.DaysInMonth(year, month);
+    }
+
+    private bool HasEventOnDay(int day)
+    {
+        if (currentPageData == null) return false;
+        // Kiểm tra xem ngày có dữ liệu trong tháng hiện tại
+        return currentPageData.Any(x =>
+            x.dateChup.Day == day &&
+            x.dateChup.Month == selectedMonth &&
+            x.dateChup.Year == selectedYear);
+    }
+
+    private async Task Reset()
+    {
+        await LoadData(this.type_, selectedMonth, null, thochup_);
     }
     #endregion
 
@@ -684,7 +830,7 @@
             int nam = int.Parse(DateTime.Now.Year.ToString());
             int thang = int.Parse(DateTime.Now.Month.ToString());
 
-            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, Nguoichup_);
             var dataDoanhthunam = await Getdoanhthunam(nam);
 
             await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
@@ -715,8 +861,9 @@
         int nam = int.Parse(DateTime.Now.Year.ToString());
         int thang = int.Parse(e.Value.ToString());
         month = thang.ToString("D2");
+        Thang_ = thang;
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, Nguoichup_);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
         StateHasChanged();
     }
@@ -728,16 +875,29 @@
         int ngay = int.Parse(e.Value.ToString());
         month = thang.ToString("D2");
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay);
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay, Nguoichup_);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
         StateHasChanged();
     }
 
-    private List<Data.DTOs.RentalSummaryMakeup> DoanhthuNam;
-    private List<Data.DTOs.RentalSummaryMakeup> Doanhthuthang;
+    private int Thang_ = int.Parse(DateTime.Now.Month.ToString());
+    private string Nguoichup_="";
+    private async Task OnThoChanged(ChangeEventArgs e)
+    {
+        int nam = int.Parse(DateTime.Now.Year.ToString());
+        string thochup = e.Value.ToString();
+        Nguoichup_ = thochup;
+
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, Thang_, 0, thochup);
+        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        StateHasChanged();
+    }
+
+    private List<Data.DTOs.RentalSummaryChup> DoanhthuNam;
+    private List<Data.DTOs.RentalSummaryChup> Doanhthuthang;
     public async Task<object> Getdoanhthunam(int nam)
     {
-        DoanhthuNam = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam);
+        DoanhthuNam = await GetSumChup.SumGetListWedding("goiChupWedding", nam);
         tongDoanhThuNam = (double)DoanhthuNam.Sum(x => x.Reverue);
 
         // Lấy danh sách tháng có dữ liệu
@@ -779,12 +939,12 @@
         return chartData;
     }
 
-    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
+    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay, string thochup)
     {
         if (ngay == 0)
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, null);
+            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, null, thochup);
         else
-            Doanhthuthang = await GetSumMakeup.SumGetListMakeup("goiMakeupStu", nam, thang, ngay);
+            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, ngay, thochup);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 

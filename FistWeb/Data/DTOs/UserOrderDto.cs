@@ -126,4 +126,23 @@ namespace FistWeb.Data.DTOs
         public decimal price { get; set; }
         public DateTime createdate { get; set; }
     }
+
+    public class RentalSummaryChup
+    {
+        public DateTime Date { get; set; }
+        public string Type { get; set; }
+        public decimal Reverue { get; set; }
+    }
+
+    public class ListInfoGoiChup
+    {
+        public string namekh { get; set; }
+        public string type { get; set; }
+        public string Photograper { get; set; }
+        public decimal price { get; set; }
+        public DateTime dateChup { get; set; }
+        public DateTime dateTraFile { get; set; }
+        public DateTime dateCuoi { get; set; }
+        public DateTime createdate { get; set; }
+    }
 }

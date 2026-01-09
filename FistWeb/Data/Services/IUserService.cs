@@ -217,4 +217,22 @@ namespace FistWeb.Data.Services
         Task<int> InsertOrderAmy(long userID, List<Data.DTOs.ProductItem> ProductList);
     }
     #endregion
+
+    #region dung
+    public interface IInsertRevenueWeddingService
+    {
+        Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, DateTime? datecuoi, string Notes);
+    }
+    
+    public interface IGetListWeddingService
+    {
+        Task<List<ListInfoGoiChup>> GetListChupWedding(string fun, int? year = null, int? month = null, int? day = null, string type = null, string thochup = null);
+    }
+
+    public interface IGetSumRevenueWeddingService
+    {
+        Task<List<RentalSummaryChup>> SumGetListWedding(string type, int year, int? month = null, int? day = null, string thochup = null);
+    }
+
+    #endregion
 }

@@ -28,7 +28,8 @@ namespace FistWeb.Data
         public DbSet<TotalDoanhThu> TotalDoanhThu { get; set; }
 
         public DbSet<ProductsAmy> ProductsAmy { get; set; }
-
+        public DbSet<RentalSummaryChup> RentalSummaryChup { get; set; }
+        public DbSet<ListInfoGoiChup> ListInfoGoiChup { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,9 @@ namespace FistWeb.Data
             modelBuilder.Entity<RentalSummaryMakeup>().HasNoKey();
             modelBuilder.Entity<InfoMakeUp>().HasNoKey();
             modelBuilder.Entity<TotalDoanhThu>().HasNoKey();
+
+            modelBuilder.Entity<RentalSummaryChup>().HasNoKey();
+            modelBuilder.Entity<ListInfoGoiChup>().HasNoKey();
         }
     }
 }
