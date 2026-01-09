@@ -1,9 +1,12 @@
 wwwroot\add-product.png
 wwwroot\bootstrap\bootstrap.min.css
 wwwroot\bootstrap\bootstrap.min.css.map
+wwwroot\camera.png
+wwwroot\cameralist.png
 wwwroot\css\app.css
 wwwroot\css\Loading.css
 wwwroot\customer.png
+wwwroot\descriptionCamera.png
 wwwroot\edit-account.png
 wwwroot\edit.png
 wwwroot\fashion-blogger.png

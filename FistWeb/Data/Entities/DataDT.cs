@@ -67,6 +67,9 @@ namespace FistWeb.Data.Entities
 
         [Column("item_key4")]
         public string? item_key4 { get; set; }
+
+        [Column("imageid")]
+        public long? imageid { get; set; }
     }
 
     [Table("products", Schema = "clothings")]

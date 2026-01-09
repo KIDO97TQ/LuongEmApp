@@ -53,8 +53,14 @@
                 </NavLink>
             </div>
         }
-        @if (loginResult == "true" && username.ToUpper() == "BANGTAM")
+        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG"))
         {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="() => checkloading(13)">
+                    <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
+                </NavLink>
+            </div>
+
             <div class="nav-item px-3">
                 <NavLink class="nav-link" @onclick="() => checkloading(8)">
                     <span class="bi bi-journal-richtext" aria-hidden="true"></span> Quản lý đồ
@@ -85,15 +91,6 @@
                 </NavLink>
             </div>
         }
-        @if (loginResult == "true" && username.ToUpper() == "TRUONGDUNG")
-        {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(13)">
-                    <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
-                </NavLink>
-            </div>
-        }
-
     </nav>
 </div>
 @using FistWeb.Data.Services

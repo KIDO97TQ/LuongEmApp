@@ -470,6 +470,7 @@
 /*----------button ok------*/
 .button-add {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -614,10 +615,18 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 20px;
+    min-width: 340px;
     animation: fadeIn 0.2s ease-in-out;
 }
-
+#priceInput {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu {
+    }
+}
 .option-item {
     padding: 10px 12px;
     cursor: pointer;

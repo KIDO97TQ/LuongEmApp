@@ -221,7 +221,8 @@ namespace FistWeb.Data.Services
     #region dung
     public interface IInsertRevenueWeddingService
     {
-        Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, DateTime? datecuoi, string Notes);
+        Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, 
+            DateTime? datecuoi, string Notes, long imageID);
     }
     
     public interface IGetListWeddingService
@@ -234,5 +235,9 @@ namespace FistWeb.Data.Services
         Task<List<RentalSummaryChup>> SumGetListWedding(string type, int year, int? month = null, int? day = null, string thochup = null);
     }
 
+    public interface IAddParaWeddingService
+    {
+        Task<int> InsertParamaterWeding(string fun, string user, string? pass, long imageid);
+    }
     #endregion
 }

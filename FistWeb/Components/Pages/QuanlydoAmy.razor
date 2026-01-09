@@ -469,6 +469,8 @@
 
     private async Task addSpClick()
     {
+        if (string.IsNullOrEmpty(newValueSP))
+        { return; }
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("typeAmy", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
@@ -530,6 +532,8 @@
 
     private async Task addPriceClick()
     {
+        if (string.IsNullOrEmpty(newValuePrice))
+        { return; }
         isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceAmy", newValuePrice, null);
         if (datapara != null && datapara.Any())

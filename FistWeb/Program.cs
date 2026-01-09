@@ -66,7 +66,8 @@ builder.Services.AddScoped<IStockQTYAmyService, CallService>();
 #region dung
 builder.Services.AddScoped<IInsertRevenueWeddingService, CallService>();
 builder.Services.AddScoped<IGetListWeddingService, CallService>();
-builder.Services.AddScoped<IGetSumRevenueWeddingService, CallService>();
+builder.Services.AddScoped<IGetSumRevenueWeddingService, CallService>(); 
+builder.Services.AddScoped<IAddParaWeddingService, CallService>();
 
 #endregion
 #endregion

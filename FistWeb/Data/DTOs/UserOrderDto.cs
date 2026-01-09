@@ -52,6 +52,7 @@ namespace FistWeb.Data.DTOs
         public string KeyPara { get; set; }
         public string keyData1 { get; set; }
         public string? keyData2 { get; set; }
+        public long? imageid { get; set; }
     }
     public class ListParaUser
     {
@@ -142,7 +143,9 @@ namespace FistWeb.Data.DTOs
         public decimal price { get; set; }
         public DateTime dateChup { get; set; }
         public DateTime dateTraFile { get; set; }
-        public DateTime dateCuoi { get; set; }
+        public DateTime? dateCuoi { get; set; }
+        public string note { get; set; }
         public DateTime createdate { get; set; }
+        public long imageid { get; set; }      
     }
 }

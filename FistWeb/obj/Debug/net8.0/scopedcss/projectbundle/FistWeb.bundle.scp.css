@@ -675,6 +675,7 @@ body {
 
 .button-add[b-v0dgx4v6zf] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -1126,7 +1127,13 @@ body {
     gap: 10px;
     padding: 10px;
     justify-content: space-between;
-    border-radius: 5px;
+    border-radius: 15px;
+}
+
+#priceInput[b-v0dgx4v6zf] {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .option-itemAdd[b-v0dgx4v6zf] {
@@ -1157,8 +1164,20 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-v0dgx4v6zf 0.2s ease-in-out;
+    margin-right: 0px;
+}
+#priceInput[b-v0dgx4v6zf] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+    .option-menu[b-v0dgx4v6zf] {
+        
+    }
 }
 
 .option-item[b-v0dgx4v6zf] {
@@ -1428,7 +1447,7 @@ body {
 
 /*++++++++++++++++++++tab3+++++++++++++++++++*/
 .option-menutab2[b-v0dgx4v6zf] {
-    padding: 12px 12px 12px 12px;
+    padding: 2px 12px 12px 12px;
     border: 2px solid #e9ecef;
     border-radius: 8px;
     font-size: 14px;
@@ -2173,6 +2192,7 @@ body {
 /*----------button ok------*/
 .button-add[b-yie3h92shu] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -2317,10 +2337,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 20px;
+    min-width: 340px;
     animation: fadeIn-b-yie3h92shu 0.2s ease-in-out;
 }
-
+#priceInput[b-yie3h92shu] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu[b-yie3h92shu] {
+    }
+}
 .option-item[b-yie3h92shu] {
     padding: 10px 12px;
     cursor: pointer;
@@ -2894,6 +2922,7 @@ body {
 /*----------button ok------*/
 .button-add[b-lm8ymg7stb] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -3038,10 +3067,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 20px;
+    min-width: 340px;
     animation: fadeIn-b-lm8ymg7stb 0.2s ease-in-out;
 }
-
+#priceInput[b-lm8ymg7stb] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu[b-lm8ymg7stb] {
+    }
+}
 .option-item[b-lm8ymg7stb] {
     padding: 10px 12px;
     cursor: pointer;
@@ -3177,6 +3214,7 @@ body {
 
 .button-add[b-oqkmri18lr] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -3659,10 +3697,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-oqkmri18lr 0.2s ease-in-out;
 }
-
+#priceInput[b-oqkmri18lr] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu[b-oqkmri18lr] {
+    }
+}
 .option-item[b-oqkmri18lr] {
     padding: 10px 12px;
     cursor: pointer;
@@ -4163,6 +4209,7 @@ body {
 
 .button-add[b-8nvljwcw69] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -4645,10 +4692,20 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-8nvljwcw69 0.2s ease-in-out;
 }
+#priceInput[b-8nvljwcw69] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
 
+
+@media (max-width: 576px) {
+    .option-menu[b-8nvljwcw69] {
+    }
+}
 .option-item[b-8nvljwcw69] {
     padding: 10px 12px;
     cursor: pointer;
@@ -5149,6 +5206,7 @@ body {
 
 .button-add[b-h2ylhoyxeg] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -5631,10 +5689,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-h2ylhoyxeg 0.2s ease-in-out;
 }
-
+#priceInput[b-h2ylhoyxeg] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu[b-h2ylhoyxeg] {
+    }
+}
 .option-item[b-h2ylhoyxeg] {
     padding: 10px 12px;
     cursor: pointer;
@@ -6132,6 +6198,7 @@ body {
 
 .button-add[b-plxl433bzw] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -6614,10 +6681,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-plxl433bzw 0.2s ease-in-out;
 }
-
+@media (max-width: 576px) {
+    .option-menu[b-plxl433bzw] {
+    }
+}
+#priceInput[b-plxl433bzw] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
 .option-item[b-plxl433bzw] {
     padding: 10px 12px;
     cursor: pointer;
@@ -7115,6 +7190,7 @@ body {
 
 .button-add[b-auhx5faxoe] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -7597,10 +7673,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-auhx5faxoe 0.2s ease-in-out;
 }
-
+@media (max-width: 576px) {
+    .option-menu[b-auhx5faxoe] {
+    }
+}
+#priceInput[b-auhx5faxoe] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
 .option-item[b-auhx5faxoe] {
     padding: 10px 12px;
     cursor: pointer;
@@ -7817,6 +7901,7 @@ body {
 
 .button-add[b-e5ujpgredd] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -8299,10 +8384,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-e5ujpgredd 0.2s ease-in-out;
 }
-
+#priceInput[b-e5ujpgredd] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .option-menu[b-e5ujpgredd] {
+    }
+}
 .option-item[b-e5ujpgredd] {
     padding: 10px 12px;
     cursor: pointer;

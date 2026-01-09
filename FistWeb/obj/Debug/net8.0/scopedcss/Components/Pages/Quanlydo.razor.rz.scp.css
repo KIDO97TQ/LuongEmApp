@@ -32,6 +32,7 @@ body {
 
 .button-add[b-auhx5faxoe] {
     margin-top: 25px;
+    margin-bottom: 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -514,10 +515,18 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: none;
     z-index: 10;
-    min-width: 120px;
+    min-width: 340px;
     animation: fadeIn-b-auhx5faxoe 0.2s ease-in-out;
 }
-
+@media (max-width: 576px) {
+    .option-menu[b-auhx5faxoe] {
+    }
+}
+#priceInput[b-auhx5faxoe] {
+    flex: 1; /* 👈 QUAN TRỌNG */
+    width: 100%;
+    box-sizing: border-box;
+}
 .option-item[b-auhx5faxoe] {
     padding: 10px 12px;
     cursor: pointer;

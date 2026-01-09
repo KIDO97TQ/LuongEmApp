@@ -403,6 +403,8 @@
     #region tab1
     private async Task addGoiMakeupClick()
     {
+        if (string.IsNullOrEmpty(newValueSP))
+        { return; }
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStu", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
@@ -466,6 +468,8 @@
 
     private async Task addPriceClick()
     {
+        if (string.IsNullOrEmpty(newValuePrice))
+        { return; }
         isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("priceMakeupStu", newValuePrice, null);
         if (datapara != null && datapara.Any())
