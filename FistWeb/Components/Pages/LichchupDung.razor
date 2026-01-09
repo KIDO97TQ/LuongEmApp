@@ -49,7 +49,7 @@
             {
                 <div class="form-section-right">
                     <label for="fileInput" class="image-upload-area">
-                        <img src=@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" style="max-width: 100%; margin-top: 10px;" />
+                        <img src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" style="max-width: 100%; margin-top: 10px;" />
                     </label>
                 </div>
             }
@@ -126,8 +126,7 @@
                     <select class="form-select" @bind="nameThochup" @bind:event="oninput">
                         <option value="">Chọn thợ chụp</option>
                         <option value="@nameThochup">Dũng</option>
-                        <option value="@nameThochup">Long</option>
-                        }
+                        <option value="@nameThochup">Long</option>                        
                     </select>
                 </div>
 
@@ -195,7 +194,9 @@
 
                 <!-- Ngày cưới -->
                 @if (!string.IsNullOrEmpty(SelectValueSP) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
-                { }
+                {
+                    
+                }
                 else
                 {
                     <div class="form-group">
