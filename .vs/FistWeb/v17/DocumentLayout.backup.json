@@ -3,28 +3,20 @@
   "WorkspaceRootPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\imagegallerymodalwedding.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\imagegallerymodalwedding.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\lichchupdung.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\lichchupdung.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\totaldoanhthuamy.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\totaldoanhthuamy.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\makeup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\makeup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\data\\services\\callservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\data\\services\\callservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\data\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\data\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\quanlydo.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\quanlydo.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\data\\dtos\\userorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -33,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\web\\fistweb\\components\\pages\\makeup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\makeup.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -51,39 +39,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ImageGalleryModalWedding.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\ImageGalleryModalWedding.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\ImageGalleryModalWedding.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\ImageGalleryModalWedding.razor*",
-              "RelativeToolTip": "FistWeb\\Components\\Pages\\ImageGalleryModalWedding.razor*",
-              "ViewState": "AgIAAFMAAAAAAAAAAAD4v2oAAAAVAAAAAAAAAA==",
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "FistWeb\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "FistWeb\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAEEAAAAAAAAAAAD4v04AAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-09T23:24:36.251Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TotalDoanhThuAmy.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\TotalDoanhThuAmy.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\TotalDoanhThuAmy.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\TotalDoanhThuAmy.razor",
-              "RelativeToolTip": "FistWeb\\Components\\Pages\\TotalDoanhThuAmy.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-09T22:32:10.421Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Quanlydo.razor",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\Quanlydo.razor",
-              "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Quanlydo.razor",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\Quanlydo.razor",
-              "RelativeToolTip": "FistWeb\\Components\\Pages\\Quanlydo.razor",
-              "ViewState": "AgIAAFMDAAAAAAAAAAD4v7gDAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-09T19:55:23.233Z",
+              "WhenOpened": "2026-01-10T13:41:14.189Z",
               "EditorCaption": ""
             },
             {
@@ -94,14 +57,14 @@
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\LichchupDung.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\LichchupDung.razor",
               "RelativeToolTip": "FistWeb\\Components\\Pages\\LichchupDung.razor",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAqwDMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACsAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-01-08T13:00:01.224Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Program.cs",
               "RelativeDocumentMoniker": "FistWeb\\Program.cs",
@@ -113,19 +76,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 2,
               "Title": "Makeup.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\Makeup.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\Makeup.razor",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Components\\Pages\\Makeup.razor",
               "RelativeToolTip": "FistWeb\\Components\\Pages\\Makeup.razor",
-              "ViewState": "AgIAAEUBAAAAAAAAAAAAALIBAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAL0BAAAAAAAAAAApwC4CAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-09T19:48:45.137Z"
+              "WhenOpened": "2026-01-09T19:48:45.137Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "UserOrderDto.cs",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Data\\DTOs\\UserOrderDto.cs",
               "RelativeDocumentMoniker": "FistWeb\\Data\\DTOs\\UserOrderDto.cs",
@@ -143,22 +107,10 @@
               "RelativeDocumentMoniker": "FistWeb\\Data\\Services\\CallService.cs",
               "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Data\\Services\\CallService.cs",
               "RelativeToolTip": "FistWeb\\Data\\Services\\CallService.cs",
-              "ViewState": "AgIAAAQEAAAAAAAAAAAIwCwEAABRAAAAAAAAAA==",
+              "ViewState": "AgIAAN8AAAAAAAAAAAAiwPoAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-09T15:51:56.766Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Data\\Services\\IUserService.cs",
-              "RelativeDocumentMoniker": "FistWeb\\Data\\Services\\IUserService.cs",
-              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\WEB\\FistWeb\\Data\\Services\\IUserService.cs",
-              "RelativeToolTip": "FistWeb\\Data\\Services\\IUserService.cs",
-              "ViewState": "AgIAAKYAAAAAAAAAAAD4v7oAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-09T00:11:08.318Z"
             }
           ]
         }

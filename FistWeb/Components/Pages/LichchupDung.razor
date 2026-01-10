@@ -35,10 +35,13 @@
         <img src="cameralist.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Tổng hợp lịch chụp
     </button>
-    <button class="tab-btn" data-tab="tab3">
-        <img src="descriptionCamera.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Doanh thu chụp
-    </button>
+    @if (usernameLogin.ToUpper() == "BANGTAM" || usernameLogin.ToUpper() == "TRUONGDUNG")
+    {
+        <button class="tab-btn" data-tab="tab3">
+            <img src="descriptionCamera.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+            Doanh thu chụp
+        </button>
+    }
 </div>
 
 @* tab1 *@
@@ -109,9 +112,16 @@
                                            @bind:after="OnTextChanged"
                                            placeholder="Thêm mới gói chụp..." />
 
-                                    <button class="option-itemAdd" type="button" @onclick="addGoiChupClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
+                                    @if (isLoading)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <button class="option-itemAdd" type="button" @onclick="addGoiChupClick">
+                                            <i class="bi-option bi-plus-circle-fill"></i>
+                                        </button>
+                                    }
                                 </div>
                                 <div class="option-item" @onclick="XoaGoiChupClick">🗑️ Xóa gói chụp đang chọn</div>
 
@@ -126,7 +136,7 @@
                     <select class="form-select" @bind="nameThochup" @bind:event="oninput">
                         <option value="">Chọn thợ chụp</option>
                         <option value="@nameThochup">Dũng</option>
-                        <option value="@nameThochup">Long</option>                        
+                        <option value="@nameThochup">Long</option>
                     </select>
                 </div>
 
@@ -164,9 +174,16 @@
                                            placeholder="Thêm mới giá gói chụp..."
                                            @oninput="OnPriceInput"
                                            autofocus />
-                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
+                                    @if (isLoading)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                            <i class="bi-option bi-plus-circle-fill"></i>
+                                        </button>
+                                    }
                                 </div>
                                 <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá gói chụp đang chọn</div>
                             </div>
@@ -195,7 +212,7 @@
                 <!-- Ngày cưới -->
                 @if (!string.IsNullOrEmpty(SelectValueSP) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
                 {
-                    
+
                 }
                 else
                 {
@@ -495,6 +512,7 @@
         return ValueTask.CompletedTask;
     }
 
+    private string usernameLogin = "";
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -508,6 +526,7 @@
                 {
                     isLoading = true;
                     //await GetMaterialInWH(true, false);
+                    usernameLogin = await localStorage.GetItemAsync<string>("username");
                     await TimKiem();
                     datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
                     this.ListGoimake = datapara.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
@@ -552,14 +571,16 @@
     {
         if (string.IsNullOrEmpty(newValueSP))
         { return; }
+        isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiChupWedding", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"Gói chụp ({newValueSP}) đã tồn tại!");
+            isLoading = false;
         }
         else
         {
-            isLoading = true;
+
 
             bool checkupdateImage = !string.IsNullOrWhiteSpace(newValueSP) && newValueSP.Contains("concept", StringComparison.OrdinalIgnoreCase);
             long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
@@ -636,7 +657,7 @@
         if (confirmed)
         {
             UpdateisLoading2 = true;
-
+            isLoading = true;
             showUploadImage = !string.IsNullOrWhiteSpace(imageid) && SelectValueSP.Contains("concept", StringComparison.OrdinalIgnoreCase);
             if (showUploadImage)
             {
@@ -661,7 +682,7 @@
                 }
             }
 
-            isLoading = true;
+
             int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiChupWedding", SelectValueSP, null);
             if (checkInsert > 0)
             {

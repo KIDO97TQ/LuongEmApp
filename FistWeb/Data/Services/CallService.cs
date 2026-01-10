@@ -225,7 +225,7 @@ namespace FistWeb.Data.Services
 
             parameters.Add(new NpgsqlParameter("function_name", fun));
 
-            if (fun == "type" || fun == "typeAmy")
+            if (fun == "type" || fun == "typeAmy" || fun == "goiChupWedding")
             {
                 sql.Append(" and UPPER(b.item_key1)=@taikhoan ");
                 parameters.Add(new NpgsqlParameter("taikhoan", user));

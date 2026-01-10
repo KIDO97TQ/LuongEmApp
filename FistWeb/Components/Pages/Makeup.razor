@@ -78,10 +78,16 @@
                                        @bind="newValueSP"
                                        @bind:event="oninput"
                                        placeholder="Thêm mới gói makeup..." />
-
-                                <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
-                                    <i class="bi-option bi-plus-circle-fill"></i>
-                                </button>
+                                @if (isLoading)
+                                {
+                                    <div class="spinner" style="margin-top:10px;"></div>
+                                }
+                                else
+                                {
+                                    <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                }
                             </div>
                             <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa gói makeup đang chọn</div>
 
@@ -124,9 +130,16 @@
                                        placeholder="Thêm mới giá gói makeup..."
                                        @oninput="OnPriceInput"
                                        autofocus />
-                                <button class="option-itemAdd" type="button" @onclick="addPriceClick">
-                                    <i class="bi-option bi-plus-circle-fill"></i>
-                                </button>
+                                @if (isLoading)
+                                {
+                                    <div class="spinner" style="margin-top:10px;"></div>
+                                }
+                                else
+                                {
+                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                }
                             </div>
                             <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá gói makeup đang chọn</div>
                         </div>
@@ -405,14 +418,15 @@
     {
         if (string.IsNullOrEmpty(newValueSP))
         { return; }
+        isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeup", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"Gói makeup ({newValueSP}) đã tồn tại!");
+            isLoading = false;
         }
         else
-        {
-            isLoading = true;
+        { 
             var random = new Random();
             string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
             int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeup", newValueSP, id);
@@ -542,6 +556,7 @@
             else
             {
                 await JS.InvokeVoidAsync("alert", $"Delete giá gói makeup ({SelectValuePrice}) không thành công!");
+                isLoading = false;
             }
         }
     }

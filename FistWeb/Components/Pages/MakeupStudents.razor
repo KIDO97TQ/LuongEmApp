@@ -79,9 +79,16 @@
                                        @bind:event="oninput"
                                        placeholder="Thêm mới khóa makeup..." />
 
-                                <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
-                                    <i class="bi-option bi-plus-circle-fill"></i>
-                                </button>
+                                @if (isLoading)
+                                {
+                                    <div class="spinner" style="margin-top:10px;"></div>
+                                }
+                                else
+                                {
+                                    <button class="option-itemAdd" type="button" @onclick="addGoiMakeupClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                }
                             </div>
                             <div class="option-item" @onclick="XoaGoiMakeClick">🗑️ Xóa khóa makeup đang chọn</div>
 
@@ -124,9 +131,16 @@
                                        placeholder="Thêm mới giá khóa makeup..."
                                        @oninput="OnPriceInput"
                                        autofocus />
-                                <button class="option-itemAdd" type="button" @onclick="addPriceClick">
-                                    <i class="bi-option bi-plus-circle-fill"></i>
-                                </button>
+                                @if (isLoading)
+                                {
+                                    <div class="spinner" style="margin-top:10px;"></div>
+                                }
+                                else
+                                {
+                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                        <i class="bi-option bi-plus-circle-fill"></i>
+                                    </button>
+                                }
                             </div>
                             <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá khóa makeup đang chọn</div>
                         </div>
@@ -404,15 +418,16 @@
     private async Task addGoiMakeupClick()
     {
         if (string.IsNullOrEmpty(newValueSP))
-        { return; }
+        { return; } 
+        isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("goiMakeupStu", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"khóa makeup ({newValueSP}) đã tồn tại!");
+            isLoading = false;
         }
         else
         {
-            isLoading = true;
             var random = new Random();
             string id = DateTime.Now.ToString("yyyyMMddHHmmss") + random.Next(10, 99);
             int checkInsert = await AddPara.InsertParamaterRawAsync("goiMakeupStu", newValueSP, id);

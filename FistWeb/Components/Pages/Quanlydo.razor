@@ -97,10 +97,16 @@
                                            @bind="newValueSP"
                                            @bind:event="oninput"
                                            placeholder="Thêm mới loại sp..." />
-
-                                    <button class="option-itemAdd" type="button" @onclick="addSpClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
+                                    @if (isLoading)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <button class="option-itemAdd" type="button" @onclick="addSpClick">
+                                            <i class="bi-option bi-plus-circle-fill"></i>
+                                        </button>
+                                    }
                                 </div>
                                 <div class="option-item" @onclick="XoaSpClick">🗑️ Xóa loại sp đang chọn</div>
 
@@ -150,9 +156,16 @@
                                            placeholder="Thêm mới mức giá..."
                                            @oninput="OnPriceInput"
                                            autofocus />
-                                    <button class="option-itemAdd" type="button" @onclick="addPriceClick">
-                                        <i class="bi-option bi-plus-circle-fill"></i>
-                                    </button>
+                                    @if (isLoading)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <button class="option-itemAdd" type="button" @onclick="addPriceClick">
+                                            <i class="bi-option bi-plus-circle-fill"></i>
+                                        </button>
+                                    }
                                 </div>
                                 <div class="option-item" @onclick="XoaPriceClick">🗑️ Xóa giá sp đang chọn</div>
                             </div>
@@ -401,7 +414,7 @@
         cts.Dispose();
     }
     #region add SP
-    
+
     private ValueTask OnBeforeNavigation(LocationChangingContext context)
     {
         if (isLoadingService)
@@ -471,14 +484,15 @@
     {
         if (string.IsNullOrEmpty(newValueSP))
         { return; }
+        isLoading = true;
         List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("type", newValueSP.ToUpper(), null);
         if (datapara != null && datapara.Any())
         {
             await JS.InvokeVoidAsync("alert", $"Loại sp ({newValueSP}) đã tồn tại!");
+            isLoading = false;
         }
         else
         {
-            isLoading = true;
             int checkInsert = await AddPara.InsertParamaterRawAsync("type", newValueSP, null);
             if (checkInsert > 0)
             {
@@ -758,9 +772,9 @@
         var json = JsonSerializer.Serialize(payload);
 
         var request = new HttpRequestMessage(HttpMethod.Put, putUrl)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
 
         var response = await http.SendAsync(request);
         if (!response.IsSuccessStatusCode)
@@ -912,8 +926,8 @@
         UpdateisLoading2 = true;
         bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
         if (confirmed)
-        {         
-            bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace(".","").Replace("Vnđ", "").Trim(), out decimal Price1);
+        {
+            bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace(".", "").Replace("Vnđ", "").Trim(), out decimal Price1);
             FistWeb.Data.DTOs.ProductImageDto ProductImageDto = new FistWeb.Data.DTOs.ProductImageDto
             {
                 TypeSP = TextloaiSPtab2,
@@ -939,7 +953,7 @@
             }
             UpdateisLoading2 = false;
             ClearModifySP();
-            
+
         }
         UpdateisLoading2 = false;
         StateHasChanged();
@@ -980,8 +994,8 @@
                 return;
             }
             UpdateisLoading2 = false;
-            ClearModifySP();           
-            
+            ClearModifySP();
+
         }
     }
 
@@ -1030,9 +1044,9 @@
         string json = JsonSerializer.Serialize(payload);
 
         var request = new HttpRequestMessage(HttpMethod.Delete, getUrl)
-            {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
-            };
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
 
         var deleteResp = await http.SendAsync(request);
         if (!deleteResp.IsSuccessStatusCode)

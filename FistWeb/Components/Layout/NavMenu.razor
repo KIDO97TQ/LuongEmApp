@@ -15,7 +15,7 @@
             </NavLink>
         </div>
 
-        @if (loginResult == "true" && username.ToUpper() =="LUONGEM")
+        @if (loginResult == "true" && username.ToUpper() == "LUONGEM")
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" @onclick="() => checkloading(2)">
@@ -53,43 +53,53 @@
                 </NavLink>
             </div>
         }
-        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG"))
+        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENCHUP" || username.ToUpper() == "NHANVIENTHUEDO"))
         {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(13)">
-                    <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
-                </NavLink>
-            </div>
+            @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENCHUP"))
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(13)">
+                        <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
+                    </NavLink>
+                </div>
+            }
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(8)">
-                    <span class="bi bi-journal-richtext" aria-hidden="true"></span> Quản lý đồ
-                </NavLink>
-            </div>
+            @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENTHUEDO"))
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(8)">
+                        <span class="bi bi-journal-richtext" aria-hidden="true"></span> Quản lý đồ
+                    </NavLink>
+                </div>
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(12)">
-                    <span class="bi bi-list-stars" aria-hidden="true"></span>Quản lý thuê đồ
-                </NavLink>
-            </div>
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(9)">
-                    <span class="bi bi-mastodon" aria-hidden="true"></span> Make-up
-                </NavLink>
-            </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(12)">
+                        <span class="bi bi-list-stars" aria-hidden="true"></span>Quản lý thuê đồ
+                    </NavLink>
+                </div>
+            }
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(10)">
-                    <span class="bi bi-person-check" aria-hidden="true"></span> Học viên Make-up
-                </NavLink>
-            </div>
+            @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG"))
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(9)">
+                        <span class="bi bi-mastodon" aria-hidden="true"></span> Make-up
+                    </NavLink>
+                </div>
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" @onclick="() => checkloading(11)">
-                    <span class="bi bi-bar-chart-line-fill" aria-hidden="true"></span>Tổng doanh thu
-                </NavLink>
-            </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(10)">
+                        <span class="bi bi-person-check" aria-hidden="true"></span> Học viên Make-up
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="() => checkloading(11)">
+                        <span class="bi bi-bar-chart-line-fill" aria-hidden="true"></span>Tổng doanh thu
+                    </NavLink>
+                </div>
+            }
         }
     </nav>
 </div>
@@ -105,7 +115,7 @@
     private string username;
 
     private async Task checkloading(int context)
-    {       
+    {
         if (LoadingService.IsLoading) { return; }
         var url = context.ToString() switch
         {
