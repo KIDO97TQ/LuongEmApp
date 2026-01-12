@@ -35,13 +35,11 @@
         <img src="cameralist.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Tổng hợp lịch chụp
     </button>
-    @if (usernameLogin.ToUpper() == "BANGTAM" || usernameLogin.ToUpper() == "TRUONGDUNG")
-    {
-        <button class="tab-btn" data-tab="tab3">
-            <img src="descriptionCamera.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-            Doanh thu chụp
-        </button>
-    }
+    <button class="tab-btn @(IsAdminUser ? "" : "d-none")" data-tab="tab3">
+        <img src="descriptionCamera.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Doanh thu chụp
+    </button>
+
 </div>
 
 @* tab1 *@
@@ -513,6 +511,7 @@
     }
 
     private string usernameLogin = "";
+    private bool IsAdminUser => !string.IsNullOrEmpty(usernameLogin) && (usernameLogin.ToUpper() == "BANGTAM" || usernameLogin.ToUpper() == "TRUONGDUNG");
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -547,6 +546,7 @@
                     }
                     LoadingService.End();
                     isLoadingService = false;
+                    StateHasChanged();
                 }
                 else
                 {

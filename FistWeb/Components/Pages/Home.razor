@@ -23,7 +23,7 @@ else if (!isLoggedIn)
                 @{
                     if (CheckforgotPW)
                     {
-                        <h2>Confirm Password</h2>
+                        <h2>Xác nhận mật khẩu</h2>
                         <form @onsubmit:preventDefault="true">
                             <div class="box">
                                 <input type="text" @bind="pass1" placeholder="Nhập mật khẩu mới..." />
@@ -45,7 +45,7 @@ else if (!isLoggedIn)
                     }
                     if (forgotPW)
                     {
-                        <h2>Forgot Password?</h2>
+                        <h2>Quên mật khẩu?</h2>
                         <form @onsubmit:preventDefault="true">
                             <div class="box">
                                 <input type="text" @bind="FGusername" placeholder="Nhập tên đăng nhập..." />
@@ -80,7 +80,7 @@ else if (!isLoggedIn)
                                     <label>
                                         <input type="checkbox" @bind="rememberMe" /> Ghi nhớ đăng nhập
                                     </label>
-                                    <a href="#" @onclick="ForgotPW">Forgot Password?</a>
+                                    <a href="#" @onclick="ForgotPW">Quên mật khẩu??</a>
                                 </div>
 
                                 @if (isLoading)

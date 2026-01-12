@@ -1075,4 +1075,8 @@ body {
     background: green;
 }
 
+.d-none {
+    display: none !important;
+}
+
 </style >
