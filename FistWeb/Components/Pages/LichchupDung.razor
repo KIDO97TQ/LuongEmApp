@@ -22,6 +22,7 @@
 @inject IInsertRevenueWeddingService AddOrderChup
 @inject IGetSumRevenueWeddingService GetSumChup
 @inject IGetListWeddingService GetListChup
+@inject IUpdateLichChupWedding UpdateLichChupWedding
 @inject LoadingService LoadingService
 @inject HttpClient Http
 @using System.Net;
@@ -126,6 +127,15 @@
                             </div>
                         </div>
                     }
+                </div>
+
+                <!-- Số lượng -->
+                <div class="form-group">
+                    <label class="form-label required-label">Số lượng:</label>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*"
+                           maxlength="2" @bind="TextValueQTY" @bind:event="oninput"
+                           class="form-input" placeholder="Nhập số lượng..." min="1" />
+                    <div></div>
                 </div>
 
                 <!-- Tên thợ chụp -->
@@ -320,12 +330,14 @@
                         <th>Tên thợ</th>
                         <th>Tên khách</th>
                         <th>Gói chụp</th>
-                        <th>Giá gói chụp</th>
+                        <th>Số lượng</th>
+                        <th class="@(IsAdminUser ? "" : "d-none")">Giá gói chụp</th>
                         <th>Ngày chụp</th>
                         <th>Ngày trả File</th>
                         <th>Ngày Cưới</th>
                         <th>Ngày tạo</th>
                         <th style="display: none;">imageid</th>
+                        <th class="@(IsAdminUser ? "" : "d-none")">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -339,12 +351,26 @@
                                 <td data-label="Thợ chụp">@item.Photograper</td>
                                 <td data-label="Tên khách">@item.namekh</td>
                                 <td data-label="Gói chụp">@item.type</td>
-                                <td data-label="Giá gói chụp">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                <td data-label="Số lượng">@item.qty.ToString()</td>
+                                <td data-label="Giá gói chụp" class="@(IsAdminUser ? "" : "d-none")">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td data-label="Ngày trả File">@item.dateTraFile.ToString("dd/MM/yyyy")</td>
                                 <td data-label="Ngày Cưới">@(item.dateCuoi.HasValue? item.dateCuoi.Value.ToString("dd/MM/yyyy"): "")</td>
                                 <td data-label="Ngày tạo">@item.createdate.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td style="display: none;" data-label="imageid">@item.imageid</td>
+                                @if (IsAdminUser)
+                                {
+                                    <td data-label="Action" @onclick:stopPropagation="true">
+                                        @if (isLoadingOption)
+                                        {
+                                            <div class="spinner"></div>
+                                        }
+                                        else if (item.dateChup > DateTime.Now)
+                                        {
+                                            <button class="btn btn-option" @onclick="() => CancelLichChup(item)">Cancel</button>
+                                        }
+                                    </td>
+                                }
                             </tr>
                             count++;
                         }
@@ -377,7 +403,7 @@
 
         @if (showGalleryModal)
         {
-            <ImageGalleryModalWedding Product="ProductInfo" OnClose="CloseGalleryModal" OnImageSelected="HandleImageSelected" />
+            <ImageGalleryModalWedding Product="ProductInfo" checkAdmin="IsAdminUser" OnClose="CloseGalleryModal" OnImageSelected="HandleImageSelected" />
         }
     }
 </div>
@@ -472,11 +498,14 @@
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
     private string SelectValueSP, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, nameThochup, TextValueDesc;
+    private int TextValueQTY = 1;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
     private bool isLoadingService = true;
     private bool _disposed = false;
     private CancellationTokenSource cts = new();
+
+
     public void Dispose()
     {
         _disposed = true;
@@ -856,6 +885,13 @@
     {
         try
         {
+            decimal total = 0;
+            if (TextValueQTY == 0 || string.IsNullOrEmpty(TextValueQTY.ToString()))
+            {
+                await JS.InvokeVoidAsync("alert", $"Vui lòng điền số lượng trước!");
+                return;
+            }
+
             bool checkupdateImage = false;
             if (!string.IsNullOrEmpty(SelectValueSP) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
             { checkupdateImage = true; }
@@ -882,8 +918,10 @@
 
             string id = ListGoimake[SelectValueSP].Item1;
 
-            string cleanedGiaTheoNgay = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
-            bool parseGiaOk = decimal.TryParse(cleanedGiaTheoNgay, out decimal gia);
+            string Tienorder = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
+            bool checkTien = decimal.TryParse(Tienorder, out decimal money);
+            total = money * TextValueQTY;
+
             long imageid_ = 0;
 
             if (long.TryParse(imageid, out long value))
@@ -898,9 +936,9 @@
 
             int checkInsert = 0;
             if (checkupdateImage)
-                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, gia, nameThochup, ngayGioChup, ngayTraFile, null, TextValueDesc, imageid_);
+                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, total, nameThochup, ngayGioChup, ngayTraFile, null, TextValueDesc, imageid_, TextValueQTY);
             else
-                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, gia, nameThochup, ngayGioChup, ngayTraFile, ngayCuoi, TextValueDesc, imageid_);
+                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, total, nameThochup, ngayGioChup, ngayTraFile, ngayCuoi, TextValueDesc, imageid_, TextValueQTY);
             if (checkInsert > 0)
             {
                 imageid = "";
@@ -912,6 +950,7 @@
                 ngayTraFile = null;
                 ngayCuoi = null;
                 TextValueDesc = null;
+                TextValueQTY = 0;
                 await TimKiem();
                 allData = await GetListChup.GetListChupWedding("goiChupWedding", null, null, null, "");
                 await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
@@ -1157,7 +1196,6 @@
     // private List<Data.DTOs.ListInfoGoiChup> ProductInfo = new();
     private void OnRowClick(Data.DTOs.ListInfoGoiChup item)
     {
-
         //ProductInfo = new List<Data.DTOs.ListInfoGoiChup> { item };
         ProductInfo = item;
         showGalleryModal = true;
@@ -1172,6 +1210,32 @@
     {
         showGalleryModal = false;
         // StateHasChanged();
+    }
+
+    private async void CancelLichChup(Data.DTOs.ListInfoGoiChup item)
+    {
+        Data.DTOs.ListInfoGoiChup? ProductInfo = item;
+
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn Hủy lịch chụp của bạn {item.namekh} không?");
+
+        if (confirmed)
+        {
+            isLoadingOption = true;
+            int checkupdate = await UpdateLichChupWedding.UpdateLichChupWedding(item.id);
+            if (checkupdate > 0)
+            {
+                await LoadData(this.type_, null, null, thochup_);
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} thành công!");
+                StateHasChanged();
+            }
+            else
+            {
+                isLoadingOption = false;
+                await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} không thành công!");
+            }
+        }
     }
     #endregion
 

@@ -137,6 +137,7 @@ namespace FistWeb.Data.DTOs
 
     public class ListInfoGoiChup
     {
+        public int id { get; set; }
         public string namekh { get; set; }
         public string type { get; set; }
         public string Photograper { get; set; }
@@ -146,6 +147,7 @@ namespace FistWeb.Data.DTOs
         public DateTime? dateCuoi { get; set; }
         public string note { get; set; }
         public DateTime createdate { get; set; }
-        public long imageid { get; set; }      
+        public long imageid { get; set; }
+        public int qty { get; set; }
     }
 }

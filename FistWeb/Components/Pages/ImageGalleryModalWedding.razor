@@ -4,6 +4,9 @@
     public Data.DTOs.ListInfoGoiChup? Product { get; set; }
 
     [Parameter]
+    public bool checkAdmin { get; set; }
+
+    [Parameter]
     public EventCallback<Data.DTOs.ListInfoGoiChup> OnImageSelected { get; set; }
 
     [Parameter]
@@ -45,7 +48,11 @@
             <div class="image-info">
                 <div><strong>Tên Khách:</strong> @Product.namekh</div>
                 <div><strong>Thợ chụp:</strong> @Product.Photograper</div>
-                <div><strong>Giá gói chụp:</strong> @Product.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</div>
+                <div><strong>Số lượng khách:</strong> @Product.qty.ToString()</div>
+                @if (checkAdmin)
+                {
+                    <div><strong> Giá gói chụp:</strong> @Product.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</div>
+                }
                 <div><strong>Ngày chụp:</strong> @Product.dateChup.ToString("dd/MM/yyyy")</div>
                 <div><strong>Ngày trả File:</strong> @Product.dateTraFile.ToString("dd/MM/yyyy")</div>
                 @if (!string.IsNullOrEmpty(Product.type) && !Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))

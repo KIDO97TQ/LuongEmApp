@@ -222,7 +222,7 @@ namespace FistWeb.Data.Services
     public interface IInsertRevenueWeddingService
     {
         Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, 
-            DateTime? datecuoi, string Notes, long imageID);
+            DateTime? datecuoi, string Notes, long imageID, int qty);
     }
     
     public interface IGetListWeddingService
@@ -238,6 +238,11 @@ namespace FistWeb.Data.Services
     public interface IAddParaWeddingService
     {
         Task<int> InsertParamaterWeding(string fun, string user, string? pass, long imageid);
+    }
+
+    public interface IUpdateLichChupWedding
+    {
+        Task<int> UpdateLichChupWedding(int id);
     }
     #endregion
 }

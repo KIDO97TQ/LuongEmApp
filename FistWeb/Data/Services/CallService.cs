@@ -19,7 +19,7 @@ namespace FistWeb.Data.Services
     UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
-    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService
+    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding
     {
         private readonly AppDbContext _context;
 
@@ -1329,10 +1329,10 @@ namespace FistWeb.Data.Services
 
         #region dung
         public async Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, 
-            DateTime? datetrafile, DateTime? datecuoi, string Notes, long imageID)
+            DateTime? datetrafile, DateTime? datecuoi, string Notes, long imageID, int qty)
         {
-            var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note, imageid) 
-                                                 VALUES (@idorder, @namekh, @pricemake, @photograper, @datechup, @datetrafile, @datecuoi, @note, @imageid)");
+            var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note, imageid, qty) 
+                                                 VALUES (@idorder, @namekh, @pricemake, @photograper, @datechup, @datetrafile, @datecuoi, @note, @imageid, @qty)");
 
             var parameters = new List<NpgsqlParameter>
             {
@@ -1347,7 +1347,8 @@ namespace FistWeb.Data.Services
                     Value = (object?)datecuoi ?? DBNull.Value
                 },                
                 new NpgsqlParameter("note", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)Notes ?? "" },
-                new NpgsqlParameter("imageid", imageID)
+                new NpgsqlParameter("imageid", imageID),
+                new NpgsqlParameter("qty", qty)
             };
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
@@ -1356,13 +1357,13 @@ namespace FistWeb.Data.Services
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
-            StringBuilder sql = new StringBuilder(@" SELECT b.namekh, 
+            StringBuilder sql = new StringBuilder(@" SELECT b.id, b.namekh, 
                                                             p.item_key1 as type,
                                                             b.priremake as price,b.photograper, b.datechup, b.datetrafile, b.datecuoi, b.note,
-                                                            b.createdate, b.imageid
+                                                            b.createdate, b.imageid, b.qty
                                                         FROM clothings.revenuewedding b
-                                                        JOIN clothings.paramater p ON b.idorder = p.item_key2
-                                                        WHERE 1=1 ");
+                                                        JOIN clothings.paramater p ON b.idorder = p.item_key2 
+                                                        WHERE b.status = 'OK'  ");
             //EXTRACT(YEAR FROM b.createdate) = :year ");
             //parameters.Add(new NpgsqlParameter("year", year));
 
@@ -1410,7 +1411,7 @@ namespace FistWeb.Data.Services
                                SUM(b.priremake) AS Reverue
                            FROM clothings.revenuewedding b
                            JOIN clothings.paramater p ON b.idorder = p.item_key2
-                           WHERE EXTRACT(YEAR FROM b.createdate) = :year ");
+                           WHERE b.status = 'OK' AND EXTRACT(YEAR FROM b.createdate) = :year ");
 
                 parameters.Add(new NpgsqlParameter("year", year));
 
@@ -1422,7 +1423,7 @@ namespace FistWeb.Data.Services
 
                 if (month.HasValue)
                 {
-                    sql.Append(" AND EXTRACT(MONTH FROM b.createdate) = :month ");
+                    sql.Append(" AND EXTRACT(MONTH FROM b.datechup) = :month ");
                     parameters.Add(new NpgsqlParameter("month", month));
                 }
 
@@ -1432,7 +1433,7 @@ namespace FistWeb.Data.Services
                     parameters.Add(new NpgsqlParameter("thochup", thochup));
                 }
 
-                sql.Append(" and p.function_name= :type  GROUP BY datechup, item_key1 ORDER BY createdate");
+                sql.Append(" and p.function_name= :type  GROUP BY datechup, item_key1 ORDER BY datechup");
                 parameters.Add(new NpgsqlParameter("type", type));
 
                 return await _context.Set<RentalSummaryChup>()
@@ -1457,6 +1458,18 @@ namespace FistWeb.Data.Services
             };
 
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> UpdateLichChupWedding(int Id)
+        {
+            string sql = @"update clothings.revenuewedding set  status='CANCEL'
+                            WHERE id=@OrderId";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("OrderId", Id)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
         #endregion
     }
