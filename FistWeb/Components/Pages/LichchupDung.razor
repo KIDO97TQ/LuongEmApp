@@ -357,7 +357,6 @@
                                 <td data-label="Số lượng">@item.qty.ToString()</td>
                                 <td data-label="Giá gói chụp" class="@(IsAdminUser ? "" : "d-none")">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
-                                @* <td data-label="Trạng thái">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td> *@
                                 <td data-label="Trạng thái">
                                     <button type="button"
                                             class="btn @(item.dateChup.AddHours(2) <= DateTime.Now ? "btn-success" : "btn-warning")">
@@ -546,6 +545,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // DateTime test = DateTime.Now;
         this.month = DateTime.Now.Month.ToString();
         this.year = DateTime.Now.Year.ToString();
         this.yearFix0 = DateTime.Now.Year.ToString();

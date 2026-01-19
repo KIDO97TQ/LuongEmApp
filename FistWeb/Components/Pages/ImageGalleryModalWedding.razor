@@ -53,7 +53,7 @@
                 {
                     <div><strong> Giá gói chụp:</strong> @Product.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</div>
                 }
-                <div><strong>Ngày chụp:</strong> @Product.dateChup.ToString("dd/MM/yyyy")</div>
+                <div><strong>Ngày chụp:</strong> @Product.dateChup.ToString("dd/MM/yyyy HH:mm")</div>
                 <div><strong>Ngày trả File:</strong> @Product.dateTraFile.ToString("dd/MM/yyyy")</div>
                 @if (!string.IsNullOrEmpty(Product.type) && !Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
                 {
