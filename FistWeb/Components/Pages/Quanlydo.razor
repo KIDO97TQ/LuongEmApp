@@ -23,6 +23,7 @@
 @inject IGetParaUserService GetUserInfo
 @implements IDisposable
 @inject IGetProductIDService GetImageByProID
+@inject IGetProductID1Service GetImageByProID1
 @inject IDeleteProductService DeleteSPByID
 @inject IUpdateProductByIdService UpdateSPByID
 @inject LoadingService LoadingService
@@ -39,6 +40,10 @@
     <button class="tab-btn" data-tab="tab3">
         <img src="statistics.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Tổng hợp đồ
+    </button>
+    <button class="tab-btn" data-tab="tab4">
+        <img src="details.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Chi tiết đồ
     </button>
 </div>
 
@@ -378,6 +383,70 @@
     </div>
 </div>
 
+@* tab4 *@
+<div class="tab-content" id="tab4">
+    <div class="modal-content">
+        <div class="staff-header">
+            <div class="staff-controls">
+                <img src="details.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
+                <h3>Chi tiết sản phẩm</h3>
+            </div>
+            <div class="staff-controls">
+                <select class="control-select" value="typeSelect" @onchange="GetImageByProductID1">
+                    <option value="all">All</option>
+                    @{
+                        if (this.ListType != null && !isLoading)
+                        {
+                            foreach (var item in this.ListType)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (currentPageImages == null || !currentPageImages.Any())
+        {
+            <p>Không có ảnh để hiển thị.</p>
+        }
+        else
+        {
+            <div class="image-grid">
+                @foreach (var item in currentPageImages)
+                {
+                    <div class="image-item" style="cursor:pointer;">
+                        <img class="image1" src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@item.ImageUrl" alt="Image" />
+                        <div class="info">
+                            <div><strong>Loại sp:</strong> @item.TypeSP</div>
+                            <div><strong>Tên sp:</strong> @item.NameSP</div>
+                            <div><strong>Giá:</strong> @item.Price Vnđ</div>
+                            <div><strong>Số lượng còn:</strong> @item.SaveQTY.ToString()</div>
+                            <div><strong>Size:</strong> @item.Size</div>
+                            <div><strong>Mô tả:</strong> @item.Desc</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (totalPages > 1)
+            {
+                <div class="pagination">
+                    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">
+                        <i class="fa-solid fa-arrow-left"></i> Trước
+                    </button>
+                    <span>Trang @currentPage / @totalPages</span>
+                    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">
+                        Sau <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
 <script>
     document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -413,6 +482,45 @@
         cts.Cancel();
         cts.Dispose();
     }
+
+    #region tab4
+    private List<Data.DTOs.ProductImageDto> currentPageImages;
+    private int pageSize = 10;
+    private int currentPage = 1;
+
+    private int totalPages => (int)Math.Ceiling((double)ProductInfoShowIMG.Count / pageSize);
+
+    // protected override void OnParametersSet()
+    // {
+    //     LoadImagesForPage(1);
+    // }
+
+    private void LoadImagesForPage(int page)
+    {
+        currentPage = page;
+        currentPageImages = ProductInfoShowIMG
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            LoadImagesForPage(currentPage - 1);
+        }
+    }
+
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            LoadImagesForPage(currentPage + 1);
+        }
+    }
+    #endregion
+
     #region add SP
 
     private ValueTask OnBeforeNavigation(LocationChangingContext context)
@@ -443,6 +551,7 @@
                 {
                     isLoading = true;
                     await GetMaterialInWH(true, false);
+                    ProductInfoShowIMG = await GetImageByProID1.GetProductID1(typeSP);
                     datapara = await GetListParamater.GetParamater();
                     this.ListType = datapara.Where(x => x.KeyPara == "type").Select(x => x.keyData).OrderBy(x => x).ToList();
                     this.ListPrice = datapara.Where(x => x.KeyPara == "price")
@@ -454,6 +563,7 @@
                                          })
                                          .Select(x => x.keyData)
                                          .ToList();
+                    LoadImagesForPage(1);
                     isLoading = false;
                     if (!_disposed)
                     {
@@ -807,6 +917,17 @@
         await GetMaterialInWH(all, NotReturn);
 
     }
+
+    private async void GetImageByProductID1(ChangeEventArgs e)
+    {
+        typeSP = e.Value?.ToString() ?? "";
+        if (typeSP == "all")
+            typeSP = "";
+        ProductInfoShowIMG = await GetImageByProID1.GetProductID1(typeSP);
+        LoadImagesForPage(1);
+        StateHasChanged();
+    }
+
     private async Task TypeWHChange(ChangeEventArgs e)
     {
         typeWH = e.Value.ToString();
@@ -866,6 +987,7 @@
 
     #region Edit SP
     private List<Data.DTOs.ProductImageDto> ProductInfo = new();
+    private List<Data.DTOs.ProductImageDto> ProductInfoShowIMG = new();
     private bool showGalleryModal = false;
     private string resutlsImage = null, SelectTypeSPtab2, TextValueNameSPtab2, TextloaiSPtab2, TextValueSizeSPtab2, SelectValuePricetab2, TextValueQTYtab2, TextValueDesctab2;
 

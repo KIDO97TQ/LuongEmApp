@@ -43,6 +43,8 @@ builder.Services.AddScoped<IInsertRevenueService, CallService>();
 builder.Services.AddScoped<IGetSumRevenueService, CallService>();
 builder.Services.AddScoped<IGetListMakeupService, CallService>();
 builder.Services.AddScoped<IGetTotalDoanhThuService, CallService>();
+builder.Services.AddScoped<IGetProductID1Service, CallService>();
+
 #endregion
 
 #region Tam
@@ -61,6 +63,7 @@ builder.Services.AddScoped<IUpdateReturnAllOrderAmyService, CallService>();
 builder.Services.AddScoped<UpdateReturnAllOrder1Amy, CallService>();
 builder.Services.AddScoped<IInsertOrdersAmyService, CallService>();
 builder.Services.AddScoped<IStockQTYAmyService, CallService>();
+builder.Services.AddScoped<IGetProductID1AmyService, CallService>();
 #endregion
 
 #region dung

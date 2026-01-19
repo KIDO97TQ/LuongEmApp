@@ -58,6 +58,11 @@ namespace FistWeb.Data.Services
         Task<List<ProductImageDto>> GetProductID(string typeSP);
     }
 
+    public interface IGetProductID1Service
+    {
+        Task<List<ProductImageDto>> GetProductID1(string typeSP);
+    }
+
     public interface IStockQTYService
     {
         Task<int> GetStockQTY(long productID);
@@ -215,6 +220,10 @@ namespace FistWeb.Data.Services
     public interface IInsertOrdersAmyService
     {
         Task<int> InsertOrderAmy(long userID, List<Data.DTOs.ProductItem> ProductList);
+    }
+    public interface IGetProductID1AmyService
+    {
+        Task<List<ProductImageDto>> GetProductID1Amy(string typeSP);
     }
     #endregion
 

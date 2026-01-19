@@ -20,7 +20,8 @@ namespace FistWeb.Data.Services
     UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
-    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService
+    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService, 
+        IGetProductID1Service, IGetProductID1AmyService
     {
         private readonly AppDbContext _context;
 
@@ -372,6 +373,32 @@ namespace FistWeb.Data.Services
                 .ToListAsync();
             return products;
         }
+
+        public async Task<List<ProductImageDto>> GetProductID1(string typeProduction)
+        {
+            var products = await _context.Products
+                .Where(p =>
+                    p.saveqty > 0 &&
+                    (string.IsNullOrEmpty(typeProduction) || p.type_production == typeProduction)
+                )
+                .OrderByDescending(p => p.createdate)
+                .Select(p => new ProductImageDto
+                {
+                    ProductID = p.productid,
+                    Price = p.priceperday,
+                    Size = p.size,
+                    Desc = p.description ?? "",
+                    StockQTY = p.stockquantity,
+                    SaveQTY = p.saveqty,
+                    ImageUrl = p.productid + ".jpg",
+                    TypeSP = p.type_production,
+                    NameSP = p.productname
+                })
+                .ToListAsync();
+
+            return products;
+        }
+
 
         public async Task<int> GetStockQTY(long idproduct)
         {
@@ -887,6 +914,31 @@ namespace FistWeb.Data.Services
                     NameSP = p.productname
                 })
                 .ToListAsync();
+            return products;
+        }
+
+        public async Task<List<ProductImageDto>> GetProductID1Amy(string typeProduction)
+        {
+            var products = await _context.ProductsAmy
+                .Where(p =>
+                    p.saveqty > 0 &&
+                    (string.IsNullOrEmpty(typeProduction) || p.type_production == typeProduction)
+                )
+                .OrderByDescending(p => p.createdate)
+                .Select(p => new ProductImageDto
+                {
+                    ProductID = p.productid,
+                    Price = p.priceperday,
+                    Size = p.size,
+                    Desc = p.description ?? "",
+                    StockQTY = p.stockquantity,
+                    SaveQTY = p.saveqty,
+                    ImageUrl = p.productid + ".jpg",
+                    TypeSP = p.type_production,
+                    NameSP = p.productname
+                })
+                .ToListAsync();
+
             return products;
         }
 
