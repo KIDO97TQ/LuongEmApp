@@ -641,11 +641,15 @@
     padding: 10px;
 }
     .option-itemAdd:hover[b-yie3h92shu] {
-        background: green;
+        background: #4CAF50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
     }
-    .option-item:hover[b-yie3h92shu] {
-        background: #FFE4E1;
-    }
+.option-item:hover[b-yie3h92shu] {
+    background: #FFE4E1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
 
 .option-menu.show[b-yie3h92shu] {
     display: block;

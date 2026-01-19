@@ -138,6 +138,7 @@ namespace FistWeb.Data.DTOs
     public class ListInfoGoiChup
     {
         public int id { get; set; }
+        public string idorder { get; set; }
         public string namekh { get; set; }
         public string type { get; set; }
         public string Photograper { get; set; }

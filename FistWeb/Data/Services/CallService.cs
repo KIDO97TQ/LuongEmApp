@@ -9,6 +9,7 @@ using Npgsql;
 using System;
 using System.Data;
 using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Text;
 
 namespace FistWeb.Data.Services
@@ -19,7 +20,7 @@ namespace FistWeb.Data.Services
     UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
-    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding
+    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService
     {
         private readonly AppDbContext _context;
 
@@ -354,7 +355,7 @@ namespace FistWeb.Data.Services
         public async Task<List<ProductImageDto>> GetProductID(string typeProduction)
         {
             var products = await _context.Products
-                .Where(p => p.type_production == typeProduction)
+                .Where(p => p.type_production == typeProduction && p.saveqty > 0)
                 .OrderByDescending(p => p.createdate)
                 .Select(p => new ProductImageDto
                 {
@@ -1328,7 +1329,7 @@ namespace FistWeb.Data.Services
         #endregion
 
         #region dung
-        public async Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, 
+        public async Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup,
             DateTime? datetrafile, DateTime? datecuoi, string Notes, long imageID, int qty)
         {
             var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note, imageid, qty) 
@@ -1345,7 +1346,7 @@ namespace FistWeb.Data.Services
                 new("datecuoi", NpgsqlTypes.NpgsqlDbType.Timestamp)
                 {
                     Value = (object?)datecuoi ?? DBNull.Value
-                },                
+                },
                 new NpgsqlParameter("note", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)Notes ?? "" },
                 new NpgsqlParameter("imageid", imageID),
                 new NpgsqlParameter("qty", qty)
@@ -1357,7 +1358,7 @@ namespace FistWeb.Data.Services
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
-            StringBuilder sql = new StringBuilder(@" SELECT b.id, b.namekh, 
+            StringBuilder sql = new StringBuilder(@" SELECT b.id, b.idorder, b.namekh, 
                                                             p.item_key1 as type,
                                                             b.priremake as price,b.photograper, b.datechup, b.datetrafile, b.datecuoi, b.note,
                                                             b.createdate, b.imageid, b.qty
@@ -1468,6 +1469,29 @@ namespace FistWeb.Data.Services
             var parameters = new[]
             {
                  new NpgsqlParameter("OrderId", Id)
+            };
+            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+        public async Task<int> UpdateOrderWeddingById(ListInfoGoiChup updatedProduct)
+        {
+            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+            string sql = @"update clothings.revenuewedding set idorder=@idorder, namekh=@namekh, priremake=@prirechup, photograper=@photograper, qty=@qty,
+                            datechup=@datechup, imageid=@imageid, updatetime=@updatetime
+                            WHERE id=@productId";
+
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@productId", updatedProduct.id),
+                 new NpgsqlParameter("@idorder", updatedProduct.idorder),
+                 new NpgsqlParameter("@namekh", updatedProduct.namekh),
+                 new NpgsqlParameter("@prirechup", updatedProduct.price),
+                 new NpgsqlParameter("@photograper", updatedProduct.Photograper),
+                 new NpgsqlParameter("@qty",  updatedProduct.qty),
+                 new NpgsqlParameter("@datechup", updatedProduct.dateChup),
+                 new NpgsqlParameter("@imageid", updatedProduct.imageid),
+                 new NpgsqlParameter("@updatetime", gioVN)
             };
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }

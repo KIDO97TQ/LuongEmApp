@@ -1,0 +1,417 @@
+﻿@using System.Globalization
+@inject IJSRuntime JS
+
+@code {
+    [Parameter]
+    public Data.DTOs.ListInfoGoiChup? Product { get; set; }
+
+    [Parameter]
+    public Dictionary<string, (string, long?)> ListGoiChup { get; set; }
+
+    [Parameter]
+    public List<string> ListGiaChup { get; set; }
+
+    [Parameter]
+    public EventCallback<Data.DTOs.ListInfoGoiChup> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task ConfirmUpdate()
+    {
+        if (Product != null)
+        {
+            string Tienorder;
+            bool checkTien;
+            decimal total = 0;
+
+            Data.DTOs.ListInfoGoiChup? ProductTemp = Product;
+
+            Product.imageid = long.Parse(imageid);
+            Product.namekh = ValueNameKH;
+
+            if (!string.IsNullOrEmpty(newnameThochup))
+                Product.Photograper = newnameThochup;
+
+            if (newValueQTY > 0)
+            {
+                Product.qty = newValueQTY;
+                if (!string.IsNullOrEmpty(newValuePrice))
+                {
+                    Tienorder = newValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
+                    checkTien = decimal.TryParse(Tienorder, out decimal money);
+                    total = money * newValueQTY;
+                }
+                else
+                {
+                    Tienorder = ValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
+                    checkTien = decimal.TryParse(Tienorder, out decimal money);
+
+                    if (ValueQTY > 1)
+                        money = money / ValueQTY;
+
+                    total = money * newValueQTY;
+
+                }
+                Product.price = total;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(newValuePrice))
+                {
+                    Tienorder = newValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
+                    checkTien = decimal.TryParse(Tienorder, out decimal money);
+                    total = money * ValueQTY;
+                }
+                else
+                {
+                    Tienorder = ValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
+                    checkTien = decimal.TryParse(Tienorder, out decimal money);
+                    total = money * ValueQTY;
+
+                }
+                Product.price = total;
+            }
+
+            if (!string.IsNullOrEmpty(ngayGioChupString))
+            {
+                Product.dateChup = NewngayGioChup ?? DateTime.Now;
+            }
+
+            if (!string.IsNullOrEmpty(newValueGoichup))
+            {
+                Product.type = newValueGoichup;
+                Product.idorder = ListGoiChup[newValueGoichup].Item1;
+            }
+
+            await OnUpdate.InvokeAsync(Product);
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    private string ValueGoichup, ValueNameKH, ValuePrice, nameThochup, TextValueDesc, newValueGoichup = "", newValuePrice, newnameThochup;
+    private DateTime? ngayGioChup, ngayCuoi, ngayTraFile, NewngayCuoi, NewngayTraFile, NewngayGioChup;
+    private int ValueQTY, newValueQTY;
+
+    protected override void OnParametersSet()
+    {
+        if (Product != null)
+        {
+            ValueGoichup = Product.type;
+            ValueNameKH = Product.namekh;
+            ValuePrice = Product.price.ToString("N0", new CultureInfo("vi-VN")) + " Vnđ";
+            nameThochup = Product.Photograper;
+            ngayGioChup = Product.dateChup;
+            imageid = Product.imageid.ToString();
+            ValueQTY = Product.qty;
+
+        }
+    }
+
+    private string imageid = "";
+    private async void SelectChangeGoiChup(ChangeEventArgs e)
+    {
+        newValueGoichup = e.Value?.ToString();
+
+        var result = ListGoiChup.FirstOrDefault(x => x.Key == newValueGoichup);
+        if (result.Key != null)
+        {
+            if (!result.Equals(default(KeyValuePair<string, string>)) && result.Key.Contains("concep", StringComparison.OrdinalIgnoreCase))
+            {
+                imageid = result.Value.Item2.ToString();
+            }
+            else
+                imageid = "0";
+        }
+
+        await JS.InvokeVoidAsync("closeAllOptionMenus");
+        StateHasChanged();
+    }
+
+    private string ngayGioChupString => NewngayGioChup?.ToString("yyyy-MM-ddTHH:mm") ?? "";
+
+    private void UpdateNgayGioChup(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var dt))
+            NewngayGioChup = dt;
+    }
+}
+
+<div class="modal-backdrop" @onclick="() => OnClose.InvokeAsync()"></div>
+
+<div class="modal-content">
+
+    <h3>Update gói chụp</h3>
+
+    @if (!string.IsNullOrEmpty(imageid) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
+    {
+        <img class="image" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" alt="Ảnh Concept" />
+    }
+    @if (!string.IsNullOrEmpty(imageid) && newValueGoichup.Contains("concep", StringComparison.OrdinalIgnoreCase))
+    {
+        <img class="image" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" alt="Ảnh Concept" />
+    }
+    <div class="image-info">
+        <!-- Tên KH -->
+        <div class="form-group">
+            <label class="form-label required-label">Tên khách chụp:</label>
+            <input type="text" @bind="ValueNameKH" @bind:event="oninput" class="form-input" placeholder="Nhập tên khách chụp..." />
+            <div></div>
+        </div>
+
+        <!-- Gói chụp -->
+        <div class="form-group">
+            <label class="form-label required-label">Chọn gói chụp:</label>
+            <input class="form-label readonly-input" value="@ValueGoichup" readonly />
+
+            <div class="option-wrappertab2">
+                <select class="option-menutab2" @onchange="@SelectChangeGoiChup">
+                    <option value="">Chọn gói chụp</option>
+                    @{
+                        if (this.ListGoiChup != null)
+                        {
+                            foreach (var item in this.ListGoiChup)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Số lượng -->
+        <div class="form-group">
+            <label class="form-label required-label">Số lượng:</label>
+            <input class="form-label readonly-input" value="@ValueQTY.ToString()" readonly />
+
+            <div class="option-wrappertab2">
+                <input type="text" inputmode="numeric" pattern="[0-9]*"
+                       maxlength="2" @bind="newValueQTY" @bind:event="oninput"
+                       class="form-label" placeholder="Nhập số lượng mới..." min="1" />
+            </div>
+        </div>
+
+        <!-- Tên thợ chụp -->
+        <div class="form-group">
+            <label class="form-label required-label">Thợ chụp:</label>
+            <input class="form-label readonly-input" value="@nameThochup" readonly />
+
+            <div class="option-wrappertab2">
+                <select class="form-label" @bind="newnameThochup" @bind:event="oninput">
+                    <option value="">Chọn thợ chụp</option>
+                    <option value="@newnameThochup">Dũng</option>
+                    <option value="@newnameThochup">Long</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Giá gói chụp -->
+        <div class="form-group">
+            <label class="form-label required-label">Giá gói chụp:</label>
+            <input class="form-label readonly-input" value="@ValuePrice" readonly />
+
+            <div class="option-wrappertab2">
+                <select class="form-select" @bind="newValuePrice" @bind:event="oninput">
+                    <option value="">Chọn giá gói chụp</option>
+                    @{
+                        if (this.ListGiaChup != null)
+                        {
+                            @foreach (var item in this.ListGiaChup)
+                            {
+                                if (decimal.TryParse(item, NumberStyles.Number, new CultureInfo("vi-VN"), out var parsedValue))
+                                {
+                                    <option value="@item">@parsedValue.ToString("N0", new CultureInfo("vi-VN")) Vnđ</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Ngày Chup -->
+        <div class="form-group">
+            <label class="form-label required-label">Ngày chụp:</label>
+            <input class="form-label readonly-input" value="@ngayGioChup" readonly />
+
+            @*  <span class="readonly-text">
+                @ngayGioChup?.ToString("dd/MM/yyyy HH:mm")
+            </span> *@
+
+            <div class="option-wrappertab2">
+                <input type="datetime-local"
+                       class="form-control"
+                       value="@ngayGioChupString"
+                       @onchange="UpdateNgayGioChup" />
+            </div>
+        </div>
+    </div>
+
+    <div class="option-menu">
+        <button class="Update-button" @onclick="() => ConfirmUpdate()">Update</button>
+        <button class="close-button" @onclick="() => OnClose.InvokeAsync()">Đóng</button>
+    </div>
+</div>
+
+<style>
+    /* ================= MODAL ================= */
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+
+    .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        width: 90%;
+        max-width: 700px;
+        max-height: 90vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        z-index: 1001;
+    }
+
+    /* ================= FORM ================= */
+    .readonly-text {
+        width: 100%;
+        padding: 10px 12px;
+        background-color: #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .image-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .image {
+        margin-bottom: 15px;
+    }
+
+    /* Form group layout */
+    .form-group {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 110px 1fr 1fr;
+        gap: 10px;
+        padding-left: 4px; /* 👈 sát lề */
+        padding-right: 0;
+        margin: 0;
+        text-align: left;
+        /* align-items: center; */
+    }
+
+    /* Label */
+    .form-label {
+        font-weight: 600;
+        font-size: 14px;
+        font-style: italic;
+        color: #333;
+        text-align: left;
+    }
+
+    /* Input & Select */
+    input,
+    select,
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #f8f9fa;
+        box-sizing: border-box;
+    }
+
+    /* Readonly */
+    .readonly-input {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+    }
+
+    /* Focus */
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: #4CAF50;
+        background: white;
+    }
+
+    /* Wrapper input */
+    .option-wrappertab2 {
+        width: 100%;
+        padding: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type="datetime-local"],
+    input.readonly-input {
+        width: 100%;
+        min-width: 0; /* QUAN TRỌNG */
+        box-sizing: border-box;
+    }
+
+    /* ================= BUTTONS ================= */
+    .option-menu {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .Update-button {
+        flex: 1;
+        padding: 10px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .close-button {
+        flex: 1;
+        padding: 10px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        /* Hover */
+        .Update-button:hover,
+        .close-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+    /* ================= MOBILE ================= */
+    @@media (max-width: 576px) {
+        .form-group {
+            grid-template-columns: 1fr;
+        }
+
+        .form-label {
+            text-align: left;
+        }
+
+        .option-menu {
+            flex-direction: column;
+        }
+    }
+</style>
+

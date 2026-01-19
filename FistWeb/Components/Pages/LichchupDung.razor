@@ -23,6 +23,8 @@
 @inject IGetSumRevenueWeddingService GetSumChup
 @inject IGetListWeddingService GetListChup
 @inject IUpdateLichChupWedding UpdateLichChupWedding
+@inject IUpdateOrderWeddingByIdService UpdateOrderWedding
+
 @inject LoadingService LoadingService
 @inject HttpClient Http
 @using System.Net;
@@ -333,6 +335,7 @@
                         <th>Số lượng</th>
                         <th class="@(IsAdminUser ? "" : "d-none")">Giá gói chụp</th>
                         <th>Ngày chụp</th>
+                        <th>Trạng thái</th>
                         <th>Ngày trả File</th>
                         <th>Ngày Cưới</th>
                         <th>Ngày tạo</th>
@@ -354,6 +357,13 @@
                                 <td data-label="Số lượng">@item.qty.ToString()</td>
                                 <td data-label="Giá gói chụp" class="@(IsAdminUser ? "" : "d-none")">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
+                                @* <td data-label="Trạng thái">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td> *@
+                                <td data-label="Trạng thái">
+                                    <button type="button"
+                                            class="btn @(item.dateChup.AddHours(2) <= DateTime.Now ? "btn-success" : "btn-warning")">
+                                        @(item.dateChup.AddHours(2) <= DateTime.Now ? "Đã xong" : "Chưa xong")
+                                    </button>
+                                </td>
                                 <td data-label="Ngày trả File">@item.dateTraFile.ToString("dd/MM/yyyy")</td>
                                 <td data-label="Ngày Cưới">@(item.dateCuoi.HasValue? item.dateCuoi.Value.ToString("dd/MM/yyyy"): "")</td>
                                 <td data-label="Ngày tạo">@item.createdate.ToString("dd/MM/yyyy HH:mm")</td>
@@ -365,9 +375,19 @@
                                         {
                                             <div class="spinner"></div>
                                         }
-                                        else if (item.dateChup > DateTime.Now)
+                                        else if (item.dateChup >= DateTime.Now.AddDays(-3))
                                         {
-                                            <button class="btn btn-option" @onclick="() => CancelLichChup(item)">Cancel</button>
+                                            <div class="option-wrapper">
+                                                <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                                                <div class="option-menu option-1">
+                                                    <div class="New-price1">
+                                                        <button class="btn btn-option1" @onclick="() => UpdateLichChup(item)">♻️ Update</button>
+                                                    </div>
+                                                    <div class="New-price1">
+                                                        <button class="btn btn-option1" @onclick="() => CancelLichChup(item)">❌ Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         }
                                     </td>
                                 }
@@ -378,7 +398,7 @@
                     else if (checkNull)
                     {
                         <tr>
-                            <td colspan="13" style="text-align:center">❌ Không có dữ liệu.</td>
+                            <td colspan="13" style="text-align:center">❌ Không có dữ liệu...</td>
                         </tr>
                     }
                     else
@@ -404,6 +424,10 @@
         @if (showGalleryModal)
         {
             <ImageGalleryModalWedding Product="ProductInfo" checkAdmin="IsAdminUser" OnClose="CloseGalleryModal" OnImageSelected="HandleImageSelected" />
+        }
+        @if (showGalleryModal2)
+        {
+            <UpdateOrderWedding Product="ProductInfoUpdate" ListGoiChup="ListGoimake" ListGiaChup="ListPrice" OnClose="CloseUpdateLichChup" OnUpdate="OnUpdate" />
         }
     }
 </div>
@@ -1190,9 +1214,9 @@
         await LoadData(this.type_, selectedMonth, null, thochup_);
     }
 
-    private Data.DTOs.ListInfoGoiChup? ProductInfo;
+    private Data.DTOs.ListInfoGoiChup? ProductInfo, ProductInfoUpdate;
 
-    private bool showGalleryModal = false;
+    private bool showGalleryModal = false, showGalleryModal2 = false;
     // private List<Data.DTOs.ListInfoGoiChup> ProductInfo = new();
     private void OnRowClick(Data.DTOs.ListInfoGoiChup item)
     {
@@ -1236,6 +1260,34 @@
                 await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} không thành công!");
             }
         }
+    }
+
+    private async void UpdateLichChup(Data.DTOs.ListInfoGoiChup item)
+    {
+        ProductInfoUpdate = item;
+        showGalleryModal2 = true;
+
+    }
+    private void CloseUpdateLichChup()
+    {
+        showGalleryModal2 = false;
+        StateHasChanged();
+    }
+    private async void OnUpdate(Data.DTOs.ListInfoGoiChup Product)
+    {
+        showGalleryModal = false;
+        isLoading = true;
+
+        int checkupdate = await UpdateOrderWedding.UpdateOrderWeddingById(Product);
+        if (checkupdate > 0)
+        {
+            await LoadData(this.type_, null, null, thochup_);
+            await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} thành công!");
+        }
+        else
+            await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} không thành công!");
+        isLoading = false;
+        StateHasChanged();
     }
     #endregion
 

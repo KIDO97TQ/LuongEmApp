@@ -244,5 +244,10 @@ namespace FistWeb.Data.Services
     {
         Task<int> UpdateLichChupWedding(int id);
     }
+
+    public interface IUpdateOrderWeddingByIdService
+    {
+        Task<int> UpdateOrderWeddingById(ListInfoGoiChup updatedProduct);
+    }
     #endregion
 }

@@ -244,6 +244,16 @@ body {
         box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
     }
 
+.btn-option1[b-v0dgx4v6zf] {
+    background: #d5efce;
+    color: black;
+}
+
+    .btn-option1:hover[b-v0dgx4v6zf] {
+        background: #4CAF50;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
 .btn-primary[b-v0dgx4v6zf] {
     background: #007bff;
     color: white;
@@ -476,7 +486,7 @@ body {
     background-size: cover;
 }
 /*------------option price--------*/
-.New-price[b-v0dgx4v6zf] {
+.New-price1[b-v0dgx4v6zf] {
     display: flex;
     padding: 15px;
     width: 100%;
@@ -485,6 +495,7 @@ body {
     padding: 10px;
     justify-content: space-between;
     border-radius: 15px;
+    margin-left: 0.8rem;
 }
 
 #priceInput[b-v0dgx4v6zf] {
@@ -525,6 +536,19 @@ body {
     animation: fadeIn-b-v0dgx4v6zf 0.2s ease-in-out;
     margin-right: 0px;
 }
+    .option-menu.option-1[b-v0dgx4v6zf] {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: none;
+        z-index: 10;
+        min-width: 140px;
+        animation: fadeIn-b-v0dgx4v6zf 0.2s ease-in-out;
+        margin-right: 0px;
+    }
 #priceInput[b-v0dgx4v6zf] {
     flex: 1; /* 👈 QUAN TRỌNG */
     width: 100%;
@@ -534,6 +558,8 @@ body {
 @media (max-width: 576px) {
     .option-menu[b-v0dgx4v6zf] {
         
+    }
+    .option-menu.option-1[b-v0dgx4v6zf] {
     }
 }
 
@@ -549,6 +575,9 @@ body {
     }
 
 .option-menu.show[b-v0dgx4v6zf] {
+    display: block;
+}
+.option-menu1.show[b-v0dgx4v6zf] {
     display: block;
 }
 
