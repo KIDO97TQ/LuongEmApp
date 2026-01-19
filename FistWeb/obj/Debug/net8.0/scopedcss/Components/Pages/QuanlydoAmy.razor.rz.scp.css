@@ -817,6 +817,36 @@ body {
     }
 }
 /*-------------------*/
+
+.loading-overlay[b-e5ujpgredd] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #555;
+}
+
+.spinnerIMG[b-e5ujpgredd] {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ddd;
+    border-top: 5px solid #4e9af1;
+    border-radius: 50%;
+    animation: spin-b-e5ujpgredd 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin-b-e5ujpgredd {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /*end tab4 */
 
 

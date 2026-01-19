@@ -413,34 +413,44 @@
         }
         else
         {
-            <div class="image-grid">
-                @foreach (var item in currentPageImages)
-                {
-                    <div class="image-item" style="cursor:pointer;">
-                        <img class="image1" src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@item.ImageUrl" alt="Image" />
-                        <div class="info">
-                            <div><strong>Loại sp:</strong> @item.TypeSP</div>
-                            <div><strong>Tên sp:</strong> @item.NameSP</div>
-                            <div><strong>Giá:</strong> @item.Price Vnđ</div>
-                            <div><strong>Số lượng còn:</strong> @item.SaveQTY.ToString()</div>
-                            <div><strong>Size:</strong> @item.Size</div>
-                            <div><strong>Mô tả:</strong> @item.Desc</div>
+            @if (isLoadingImages)
+            {
+                <div class="loading-overlay">
+                    <div class="spinnerIMG"></div>
+                    <p>Đang tải ảnh...</p>
+                </div>
+            }
+            else
+            {
+                <div class="image-grid">
+                    @foreach (var item in currentPageImages)
+                    {
+                        <div class="image-item" style="cursor:pointer;">
+                            <img loading="lazy" class="image1" src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@item.ImageUrl" alt="Image" />
+                            <div class="info">
+                                <div><strong>Loại sp:</strong> @item.TypeSP</div>
+                                <div><strong>Tên sp:</strong> @item.NameSP</div>
+                                <div><strong>Giá:</strong> @item.Price Vnđ</div>
+                                <div><strong>Số lượng còn:</strong> @item.SaveQTY.ToString()</div>
+                                <div><strong>Size:</strong> @item.Size</div>
+                                <div><strong>Mô tả:</strong> @item.Desc</div>
+                            </div>
                         </div>
+                    }
+                </div>
+
+                @if (totalPages > 1)
+                {
+                    <div class="pagination">
+                        <button @onclick="PreviousPage" disabled="@(currentPage == 1)">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </button>
+                        <span>Trang @currentPage / @totalPages</span>
+                        <button @onclick="NextPage" disabled="@(currentPage == totalPages)">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </div>
                 }
-            </div>
-
-            @if (totalPages > 1)
-            {
-                <div class="pagination">
-                    <button @onclick="PreviousPage" disabled="@(currentPage == 1)">
-                        <i class="fa-solid fa-arrow-left"></i> Trước
-                    </button>
-                    <span>Trang @currentPage / @totalPages</span>
-                    <button @onclick="NextPage" disabled="@(currentPage == totalPages)">
-                        Sau <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
             }
         }
     </div>
@@ -487,6 +497,7 @@
     private List<Data.DTOs.ProductImageDto> currentPageImages;
     private int pageSize = 10;
     private int currentPage = 1;
+    private bool isLoadingImages = false;
 
     private int totalPages => (int)Math.Ceiling((double)ProductInfoShowIMG.Count / pageSize);
 
@@ -497,11 +508,14 @@
 
     private void LoadImagesForPage(int page)
     {
+        isLoadingImages = true;
+        StateHasChanged();
         currentPage = page;
         currentPageImages = ProductInfoShowIMG
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();
+        isLoadingImages = false;
     }
 
     private void PreviousPage()
