@@ -43,7 +43,7 @@
         <div class="single-image-container" @onclick="SelectImage">
             @if (!string.IsNullOrEmpty(Product.type) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
             {
-                <img src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" />
+                <img loading="lazy" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" />
             }
             <div class="image-info">
                 <div><strong>Tên Khách:</strong> @Product.namekh</div>

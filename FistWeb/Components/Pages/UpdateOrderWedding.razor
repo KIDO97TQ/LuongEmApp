@@ -143,7 +143,7 @@
 
     <h3>Update gói chụp</h3>
 
-    @if (!string.IsNullOrEmpty(imageid) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
+    @if (!string.IsNullOrEmpty(imageid) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(newValueGoichup))
     {
         <img class="image" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" alt="Ảnh Concept" />
     }
