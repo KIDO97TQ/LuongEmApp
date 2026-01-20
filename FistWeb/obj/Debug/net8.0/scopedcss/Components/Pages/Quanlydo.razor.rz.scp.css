@@ -572,12 +572,44 @@ body {
     }
 }
 
-.option-itemAdd[b-auhx5faxoe],
-.option-itemAdd:focus[b-auhx5faxoe],
-.option-itemAdd:active[b-auhx5faxoe] {
+/*.option-itemAdd,
+.option-itemAdd:focus,
+.option-itemAdd:active {
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
+}*/
+
+.option-itemAdd button[b-auhx5faxoe] {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 25px; /* bo tròn */
+    background: linear-gradient(135deg, #4e9af1, #1f78d1);
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+    .option-itemAdd button:hover:not(:disabled)[b-auhx5faxoe] {
+        transform: translateY(-2px) scale(1.05);
+        background: linear-gradient(135deg, #1f78d1, #1257a0);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .option-itemAdd button:disabled[b-auhx5faxoe] {
+        background: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+.option-itemAdd span[b-auhx5faxoe] {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }
 
 /*--------biểu đồ---------------*/

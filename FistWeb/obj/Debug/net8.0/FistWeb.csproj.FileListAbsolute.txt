@@ -141,3 +141,4 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Co
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\TotalDoanhThuAmy.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\ListOrderAmy.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\LichchupDung.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\WEB\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Test.razor.rz.scp.css
