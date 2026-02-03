@@ -73,122 +73,6 @@ article.dashboard-page[b-p5kccdou21] {
     align-items: center;
     gap: 10px;
 }
-
-/* 2 biểu đồ trên */
-.chart-container[b-p5kccdou21] {
-    position: relative;
-    height: calc(100vh / 3); /*300px;*/
-    margin-bottom: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr));
-}
-
-.dashboard-row[b-p5kccdou21] {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 30px;
-    padding-right: 20px;
-    padding-left: 10px;
-}
-
-    .dashboard-row .chart-card[b-p5kccdou21] {
-        flex: 1 1 50%; /* mỗi card chiếm 50% chiều ngang */
-        min-width: 310px; /* để khi màn hình nhỏ thì xuống hàng */
-    }
-
-/* text doanh thu */
-.chart-legend[b-p5kccdou21] {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-/* Staff Statistics */
-.staff-section[b-p5kccdou21] {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-    .staff-section[b-p5kccdou21]::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-    }
-
-.staff-header[b-p5kccdou21] {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.staff-controls[b-p5kccdou21] {
-    display: flex;
-    gap: 10px;
-}
-
-.control-select[b-p5kccdou21] {
-    padding: 8px 12px;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    background: #e0cfcf;
-    color: #666;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-    .control-select:focus[b-p5kccdou21], .control-select:hover[b-p5kccdou21] {
-        border-color: #667eea;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-/* biểu đồ dưới */
-.staff-chart[b-p5kccdou21] {
-    height: calc(100vh / 3); /*400px;*/
-    position: relative;
-}
-
-/* Responsive */
-@media (max-width: 1200px) {
-    .dashboard-grid[b-p5kccdou21] {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .container[b-p5kccdou21] {
-        flex-direction: column;
-    }
-
-    .sidebar[b-p5kccdou21] {
-        width: 100%;
-        height: auto;
-    }
-
-    .content[b-p5kccdou21] {
-        padding: 20px;
-    }
-
-    .header[b-p5kccdou21] {
-        padding: 15px 20px;
-    }
 }
 
 /* Animations */
@@ -242,4 +126,5 @@ article.dashboard-page[b-p5kccdou21] {
     align-items: center;
     gap: 10px;
 }
+
 </style[b-p5kccdou21] >

@@ -331,16 +331,19 @@
 
             </div>
             <!-- Right side - Image -->
-            <div class="form-section-right">
-                <label class="image-upload-area">
-                    @{
-                        if (!string.IsNullOrEmpty(@resutlsImage))
-                        {
+            @{
+                if (!string.IsNullOrEmpty(@resutlsImage))
+                {
+                    <div class="form-section-right">
+                        <label class="image-upload-area">
+
                             <img src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@resutlsImage" alt="Image" style="max-width: 100%; border: 1px solid white; margin-top: 10px;" />
-                        }
-                    }
-                </label>
-            </div>
+
+                        </label>
+                    </div>
+                }
+            }
+
         </div>
         <!-- ds list đồ thuê-->
         if (ProductList.Count > 0)

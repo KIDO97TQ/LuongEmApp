@@ -1,11 +1,11 @@
-﻿﻿<style >
-* {
+﻿<style >
+*[b-pm3x1it03h] {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
+body[b-pm3x1it03h] {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
@@ -20,26 +20,26 @@ body {
 }*/
 
 /* Main Content */
-.main-content {
+.main-content[b-pm3x1it03h] {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-article.dashboard-page {
+article.dashboard-page[b-pm3x1it03h] {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
 
 /* Dashboard Grid */
-.dashboard-grid {
+.dashboard-grid[b-pm3x1it03h] {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: 30px;
 }
 
-.chart-card {
+.chart-card[b-pm3x1it03h] {
     background: white;
     border-radius: 20px;
     padding: 25px;
@@ -49,7 +49,7 @@ article.dashboard-page {
     overflow: hidden;
 }
 
-    .chart-card::before {
+    .chart-card[b-pm3x1it03h]::before {
         content: "";
         position: absolute;
         top: 0;
@@ -59,12 +59,12 @@ article.dashboard-page {
         background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
-    .chart-card:hover {
+    .chart-card:hover[b-pm3x1it03h] {
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
 
-.card-title {
+.card-title[b-pm3x1it03h] {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -75,14 +75,14 @@ article.dashboard-page {
 }
 
 /* 2 biểu đồ trên */
-.chart-container {
+.chart-container[b-pm3x1it03h] {
     position: relative;
     height: calc(100vh / 3); /*300px;*/
     margin-bottom: 20px;
     grid-template-columns: repeat(auto-fit, minmax(calc(50% - 1rem), 1fr));
 }
 
-.dashboard-row {
+.dashboard-row[b-pm3x1it03h] {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1rem;
@@ -93,13 +93,13 @@ article.dashboard-page {
     padding-left: 10px;
 }
 
-    .dashboard-row .chart-card {
+    .dashboard-row .chart-card[b-pm3x1it03h] {
         flex: 1 1 50%; /* mỗi card chiếm 50% chiều ngang */
         min-width: 310px; /* để khi màn hình nhỏ thì xuống hàng */
     }
 
 /* text doanh thu */
-.chart-legend {
+.chart-legend[b-pm3x1it03h] {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -111,7 +111,7 @@ article.dashboard-page {
 }
 
 /* Staff Statistics */
-.staff-section {
+.staff-section[b-pm3x1it03h] {
     background: white;
     border-radius: 20px;
     padding: 25px;
@@ -120,7 +120,7 @@ article.dashboard-page {
     overflow: hidden;
 }
 
-    .staff-section::before {
+    .staff-section[b-pm3x1it03h]::before {
         content: "";
         position: absolute;
         top: 0;
@@ -130,19 +130,19 @@ article.dashboard-page {
         background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
-.staff-header {
+.staff-header[b-pm3x1it03h] {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.staff-controls {
+.staff-controls[b-pm3x1it03h] {
     display: flex;
     gap: 10px;
 }
 
-.control-select {
+.control-select[b-pm3x1it03h] {
     padding: 8px 12px;
     border: 2px solid #e9ecef;
     border-radius: 10px;
@@ -153,46 +153,46 @@ article.dashboard-page {
     transition: all 0.3s ease;
 }
 
-    .control-select:focus, .control-select:hover {
+    .control-select:focus[b-pm3x1it03h], .control-select:hover[b-pm3x1it03h] {
         border-color: #667eea;
         outline: none;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
 /* biểu đồ dưới */
-.staff-chart {
+.staff-chart[b-pm3x1it03h] {
     height: calc(100vh / 3); /*400px;*/
     position: relative;
 }
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .dashboard-grid {
+    .dashboard-grid[b-pm3x1it03h] {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .container {
+    .container[b-pm3x1it03h] {
         flex-direction: column;
     }
 
-    .sidebar {
+    .sidebar[b-pm3x1it03h] {
         width: 100%;
         height: auto;
     }
 
-    .content {
+    .content[b-pm3x1it03h] {
         padding: 20px;
     }
 
-    .header {
+    .header[b-pm3x1it03h] {
         padding: 15px 20px;
     }
 }
 
 /* Animations */
-@keyframes fadeInUp {
+@keyframes fadeInUp-b-pm3x1it03h {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -204,37 +204,37 @@ article.dashboard-page {
     }
 }
 
-.chart-card, .staff-section {
-    animation: fadeInUp 0.6s ease-out;
+.chart-card[b-pm3x1it03h], .staff-section[b-pm3x1it03h] {
+    animation: fadeInUp-b-pm3x1it03h 0.6s ease-out;
 }
 
-    .chart-card:nth-child(2) {
+    .chart-card:nth-child(2)[b-pm3x1it03h] {
         animation-delay: 0.1s;
     }
 
-.staff-section {
+.staff-section[b-pm3x1it03h] {
     animation-delay: 0.2s;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
+[b-pm3x1it03h]::-webkit-scrollbar {
     width: 8px;
 }
 
-::-webkit-scrollbar-track {
+[b-pm3x1it03h]::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-::-webkit-scrollbar-thumb {
+[b-pm3x1it03h]::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #667eea, #764ba2);
     border-radius: 4px;
 }
 
-    ::-webkit-scrollbar-thumb:hover {
+    [b-pm3x1it03h]::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(135deg, #5a6fd8, #6a4190);
     }
 
-.label-ca {
+.label-ca[b-pm3x1it03h] {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -242,5 +242,4 @@ article.dashboard-page {
     align-items: center;
     gap: 10px;
 }
-
-</style >
+</style[b-pm3x1it03h] >

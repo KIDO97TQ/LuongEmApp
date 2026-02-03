@@ -329,16 +329,19 @@
 
             </div>
             <!-- Right side - Image -->
-            <div class="form-section-right">
-                <label class="image-upload-area">
-                    @{
-                        if (!string.IsNullOrEmpty(@resutlsImage))
-                        {
+            @{
+                if (!string.IsNullOrEmpty(@resutlsImage))
+                {
+                    <div class="form-section-right">
+                        <label class="image-upload-area">
+
                             <img src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@resutlsImage" alt="Image" style="max-width: 100%; border: 1px solid white; margin-top: 10px;" />
-                        }
-                    }
-                </label>
-            </div>
+
+                        </label>
+                    </div>
+                }
+            }
+
         </div>
         <!-- ds list đồ thuê-->
         if (ProductList.Count > 0)
@@ -1044,14 +1047,14 @@
     #region thanhtoan
     private decimal TotalAmount => ProductList.Sum(item => item.TongTienThue);
     private string bankCode = "MB";
-    private string accountNumber = "0002308199999";
+    private string accountNumber = "VQRQAGRAK5586";
     private string accountName = "BANG THI LUONG";
 
     private string GetVietQrUrl()
     {
 
         string total = TotalAmount.ToString().Replace(".", "");
-        string message = $"THUE-{TextSdtKH}";
+        string message = "KHACHTHUE:" + TextNameKH;
         return $"https://img.vietqr.io/image/{bankCode}-{accountNumber}-compact2.png?amount={total}&addInfo={message}&accountName={accountName}";
     }
 

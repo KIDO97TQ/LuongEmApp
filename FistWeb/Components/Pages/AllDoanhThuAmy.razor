@@ -3,16 +3,16 @@
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 @inject IJSRuntime JS
-@page "/totaldoanhthuAmy1"
+@page "/totaldoanhthuAmy"
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
+@inject IThongKeService ThongKeService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @implements IDisposable
 @inject LoadingService LoadingService
 @inject IGetTotalDoanhThuAmyService TotalDoanhThuService
-
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -43,7 +43,7 @@
         <div class="chart-wrapper">
             <div class="chart-container">
                 <canvas id="Doanhthuthang"></canvas>
-                <h4 class="chart-legend">Tổng doanh thu tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
+                <h4 class="chart-legend">Tổng doanh thu thuê đồ tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
         </div>
         <div class="chart-container">
             <canvas id="Doanhthunam"></canvas>
-            <h4 class="chart-legend">Tổng doanh thu năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
+            <h4 class="chart-legend">Tổng doanh thu thuê đồ năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                Tổng doanh thu theo mục trong năm @year
+                Tổng doanh thu theo sản phẩm trong năm @year
             </h3>
         </div>
         <div class="staff-chart">
@@ -143,8 +143,9 @@
         {
             int thang = int.Parse(this.month);
             int nam = int.Parse(this.year);
+            int day = int.Parse(DateTime.Now.Day.ToString());
 
-            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0);
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, day);
             var dataDoanhthunam = await Getdoanhthunam(nam);
             var dataDoanhthunamtheoSP = await GetdoanhthunamTheoSP(nam);
 

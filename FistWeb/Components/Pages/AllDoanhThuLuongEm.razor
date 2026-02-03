@@ -3,16 +3,16 @@
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 @inject IJSRuntime JS
-@page "/totaldoanhthuAmy1"
+@page "/totaldoanhthu"
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject NavigationManager Navigation
 @inject ProtectedSessionStorage sessionStorage
+@inject IThongKeService ThongKeService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @implements IDisposable
 @inject LoadingService LoadingService
-@inject IGetTotalDoanhThuAmyService TotalDoanhThuService
-
+@inject IGetTotalDoanhThuService TotalDoanhThuService
 
 <div class="dashboard-row">
     <div class="chart-card">
@@ -43,7 +43,7 @@
         <div class="chart-wrapper">
             <div class="chart-container">
                 <canvas id="Doanhthuthang"></canvas>
-                <h4 class="chart-legend">Tổng doanh thu tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
+                <h4 class="chart-legend">Tổng doanh thu thuê đồ tháng @month: @tongdoanhthuthang.ToString("N0") Vnđ</h4>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
         </div>
         <div class="chart-container">
             <canvas id="Doanhthunam"></canvas>
-            <h4 class="chart-legend">Tổng doanh thu năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
+            <h4 class="chart-legend">Tổng doanh thu thuê đồ năm @year: @tongDoanhThuNam.ToString("N0") Vnđ</h4>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@
         <div class="staff-header">
             <h3 class="card-title">
                 <img src="statistics.png" alt="icon" style="width: 35px; height: 35px; margin-right: 6px;">
-                Tổng doanh thu theo mục trong năm @year
+                Tổng doanh thu theo sản phẩm trong năm @year
             </h3>
         </div>
         <div class="staff-chart">
@@ -165,7 +165,7 @@
 
     public async Task<object> Getdoanhthunam(int nam)
     {
-        Doanhthunam = await TotalDoanhThuService.TotalDoanhThuAmy(nam);
+        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(nam);
         tongDoanhThuNam = (double)Doanhthunam.Sum(x => x.Reverue);
 
         // Lấy danh sách tháng có dữ liệu
@@ -210,7 +210,7 @@
     public async Task<object> GetdoanhthunamTheoSP(int year_)
     {
         year = year_.ToString();
-        Doanhthunam = await TotalDoanhThuService.TotalDoanhThuAmy(int.Parse(year));
+        Doanhthunam = await TotalDoanhThuService.TotalDoanhThu(int.Parse(year));
 
         var labels = Doanhthunam
             .Select(x => x.Date.Date.ToString("MM/yyyy"))
@@ -253,9 +253,9 @@
     public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay)
     {
         if (ngay == 0)
-            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThuAmy(nam, thang);
+            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThu(nam, thang);
         else
-            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThuAmy(nam, thang, ngay);
+            Doanhthuthang = await TotalDoanhThuService.TotalDoanhThu(nam, thang, ngay);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 
