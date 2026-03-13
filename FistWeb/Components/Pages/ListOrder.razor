@@ -120,7 +120,13 @@
                                 }
                                 <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
-                                <td data-label="Trạng thái">@item.status</td>
+                                @* <td data-label="Trạng thái">@item.status</td> *@
+                                <td data-label="Trạng thái">
+                                    @(item.status == "BORROW" ? "Đang thuê" :
+                                      item.status == "RETURN" ? "Đã trả" :
+                                      item.status == "CANCEL" ? "Đã hủy" :
+                                      item.status == "SOLD" ? "Đã bán" : item.status)
+                                </td>
                                 <td style="display: none;" data-label="Order">@item.orderid</td>
                                 <td style="display: none;" data-label="productid">@item.productid</td>
                                 @if (item.status == "BORROW")
@@ -844,7 +850,7 @@
         results = selectedImage;
         resutlsImage = results.ImageUrl;
         SelectSizeSP = results.Size;
-        SelectGiaTheoNgay = results.Price.ToString() + " vnđ";
+        SelectGiaTheoNgay = results.Price.ToString("#,##0").Replace(",", ".") + " vnđ";
         SelectTienCoc = "0.000 vnđ";
         MotaSP = results.Desc;
         productid = results.ProductID.ToString();

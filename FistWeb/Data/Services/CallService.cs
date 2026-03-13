@@ -20,8 +20,8 @@ namespace FistWeb.Data.Services
     UpdateReturnAllOrder1, IGetParamaterMakeupService, IInsertRevenueService, IGetSumRevenueService, IGetListMakeupService, IGetTotalDoanhThuService, IGetSumWHAmyService,
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
-    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService, 
-        IGetProductID1Service, IGetProductID1AmyService
+    IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService,
+        IGetProductID1Service, IGetProductID1AmyService, GetQTYListThueDoAmy
     {
         private readonly AppDbContext _context;
 
@@ -1183,6 +1183,45 @@ namespace FistWeb.Data.Services
                     .ToListAsync();
         }
 
+        public async Task<int> GetQTYListThueDoAmy(string status, int year, int? month = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+
+            StringBuilder sql = new StringBuilder(@" SELECT COUNT(*)
+                                                     FROM (
+                                                         SELECT b.userid, b.sumpay
+                                                         FROM clothings.ordersamy b
+                                                         JOIN clothings.productsamy p ON b.productid = p.productid
+                                                         JOIN clothings.users u ON u.userid = b.userid
+                                                         WHERE EXTRACT(YEAR FROM b.borrowdate) = @year ");
+
+            parameters.Add(new NpgsqlParameter("year", year));
+
+            if (month != null)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.borrowdate) = @month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+
+            if (status != "ALL")
+            {
+                sql.Append(" AND b.status = @status ");
+                parameters.Add(new NpgsqlParameter("status", status));
+            }
+            sql.Append(" AND b.sumpay != '0' GROUP BY b.userid, b.sumpay ) t ");
+            using var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = sql.ToString();
+
+            foreach (var p in parameters)
+                cmd.Parameters.Add(p);
+
+            await _context.Database.OpenConnectionAsync();
+
+            var result = await cmd.ExecuteScalarAsync();
+
+            return Convert.ToInt32(result);
+        }
+
         public async Task<int> UpdateReturnOrderAmy(long orderId, decimal? lastmoney, long productid, int QTYThue, string status)
         {
             TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
@@ -1330,29 +1369,47 @@ namespace FistWeb.Data.Services
             return stock;
         }
 
-        public async Task<int> InsertOrderAmy(long UserID, List<Data.DTOs.ProductItem> products)
+        public async Task<int> InsertOrderAmy(long UserID, List<Data.DTOs.ProductItem> products, string username, string action)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 int totalInserted = 0;
+                string status = "BORROW", sql = "";
 
                 TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
                 DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
 
-                string sql = @"INSERT INTO clothings.ordersamy
-                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+                if (action == "MUA")
+                {
+                    status = "SOLD";
+                    sql = @"INSERT INTO clothings.ordersamy
+                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate,sumpay) 
                                VALUES 
-                                   (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+                                   (@orderid, @userid, @totalamount, @status, @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate, @sumpay);
+
+                               UPDATE clothings.productsamy
+                               SET stockquantity = stockquantity - @qty 
+                               WHERE productid = @productid;";
+                }
+                else
+                {
+                    sql = @"INSERT INTO clothings.ordersamy
+                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate,sumpay) 
+                               VALUES 
+                                   (@orderid, @userid, @totalamount, @status, @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate, @sumpay);
 
                                UPDATE clothings.productsamy
                                SET saveqty = saveqty - @qty 
                                WHERE productid = @productid;";
+                }
 
+                long PayId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+                if (username.ToUpper() != "NHANVIENTHUEDO")
+                    PayId = 0;
                 foreach (var order in products)
                 {
                     long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
-
                     var parameters = new[]
                     {
                         new NpgsqlParameter("@orderid", orderId),
@@ -1363,11 +1420,14 @@ namespace FistWeb.Data.Services
                         new NpgsqlParameter("@qty", order.QTYThue),
                         new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)order.Notes ?? "" },
                         new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
-                        new NpgsqlParameter("@borrowdate", gioVN)
+                        new NpgsqlParameter("@borrowdate", gioVN),
+                        new NpgsqlParameter("@sumpay", PayId),
+                        new NpgsqlParameter("@status", status),
                     };
 
                     totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
                 }
+
 
                 await transaction.CommitAsync();
                 return totalInserted;

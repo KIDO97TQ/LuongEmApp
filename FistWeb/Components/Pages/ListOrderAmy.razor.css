@@ -20,6 +20,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+
 }
 
 .table-custom {
@@ -470,7 +471,7 @@
 /*----------button ok------*/
 .button-add {
     margin-top: 25px;
-    margin-bottom: 45px;
+    margin: 45px 45px 45px 45px;
     padding: 8px 16px;
     border: 1px solid #ccc;
     background: #f5f5f5;
@@ -584,22 +585,6 @@
     line-height: 1.4;
 }
 
-/* Responsive: cho màn nhỏ hơn 768px */
-@media (max-width: 768px) {
-    .store-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .button-add {
-        width: 100%;
-    }
-
-    .qr-payment-section {
-        width: 100%;
-        max-width: none;
-    }
-}
 /*-----------------------css option--------------------*/
 .option-wrapper {
     position: relative;
@@ -725,5 +710,51 @@
     align-items: center;
     gap: 10px;
     font-size: 18px;
+}
+
+/* Responsive: cho màn nhỏ hơn 768px */
+@media (max-width: 768px) {
+    .store-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-add {
+        width: 100%;
+        margin: 15px 20px 20px 0px;
+    }
+
+    .qr-payment-section {
+        width: 100%;
+        max-width: none;
+        margin-top: 0px;
+    }
+
+    .header-controls {
+        /*flex-wrap: wrap;*/
+    }
+
+    .controls-left {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .controls-left > * {
+        flex: 1;
+    }
+
+    .UserModify {
+        flex: 1;
+        margin-left:20px;
+        max-width:100px;
+    }
+    .control-select {
+        margin: 8px 0px 20px 0px;
+    }
+
+    .control-item.qty {
+        min-width: 90px;
+        font-size: 18px;
+    }
 }
 </style >

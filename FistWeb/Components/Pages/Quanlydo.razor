@@ -1060,7 +1060,7 @@
     private async void UpdateModifySP()
     {
         UpdateisLoading2 = true;
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa sản phẩm này không?");
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn sửa sản phẩm này không?");
         if (confirmed)
         {
             bool checkGia = decimal.TryParse(SelectValuePricetab2.ToString().Replace(".", "").Replace("Vnđ", "").Trim(), out decimal Price1);

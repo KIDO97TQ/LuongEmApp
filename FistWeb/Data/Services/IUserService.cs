@@ -197,6 +197,11 @@ namespace FistWeb.Data.Services
         Task<List<InfoThueDoDto>> GetListThueDoAmy(string status, int year, int? month = null);
     }
 
+    public interface GetQTYListThueDoAmy
+    {
+        Task<int> GetQTYListThueDoAmy(string status, int year, int? month = null);
+    }
+
     public interface IUpdateReturnOderAmyService
     {
         Task<int> UpdateReturnOrderAmy(long orderId, decimal? lastmoney, long productid, int QTYThue, string status);
@@ -219,7 +224,7 @@ namespace FistWeb.Data.Services
 
     public interface IInsertOrdersAmyService
     {
-        Task<int> InsertOrderAmy(long userID, List<Data.DTOs.ProductItem> ProductList);
+        Task<int> InsertOrderAmy(long userID, List<Data.DTOs.ProductItem> ProductList, string username, string action);
     }
     public interface IGetProductID1AmyService
     {

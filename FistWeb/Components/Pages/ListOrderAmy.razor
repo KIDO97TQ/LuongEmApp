@@ -23,6 +23,7 @@
 @inject UpdateReturnAllOrder1Amy UpdateReturnAllOrder1
 @inject IGetUserInfo1Service GetUserInfo1
 @inject IUpdateUserService UpdateUserInfo
+@inject GetQTYListThueDoAmy GetQTYListThuedo
 @implements IDisposable
 @inject LoadingService LoadingService
 
@@ -54,23 +55,33 @@
     {
         <h3 class="header-controls">
             <div class="controls-left">
-                Trạng Thái
-                <select class="control-select" value="type" @onchange="OnTypeChanged">
-                    <option>All</option>
-                    <option>Đã trả</option>
-                    <option>Chưa trả</option>
-                    <option>Bị hủy</option>
-                </select>
-                Tháng
-                <select class="control-select" value="month" @onchange="OnMonthChanged">
-                    @for (int i = 1; i <= 12; i++)
-                    {
-                        <option value="@i.ToString("D2")">@i.ToString("D2")</option>
-                    }
-                </select>
+                <div class="control-item">
+                    Trạng Thái
+                    <select class="control-select" value="type" @onchange="OnTypeChanged">
+                        <option>All</option>
+                        <option>Đã trả</option>
+                        <option>Chưa trả</option>
+                        <option>Đã bán</option>
+                        <option>Bị hủy</option>
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    Tháng
+                    <select class="control-select" value="month" @onchange="OnMonthChanged">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                        }
+                    </select>
+                </div>
             </div>
+            <div class="control-item qty">
+                QTY: @qty
+            </div>
+
             <button class="UserModify" type="button" @onclick="ReturnAllOrder">
-                <img src="return.png" alt="icon" style="width: 37px; height: 33px;">
+                <img src="return.png" alt="icon" style="width:37px;height:33px;">
             </button>
         </h3>
         <div class="chart-order">
@@ -120,7 +131,13 @@
                                 }
                                 <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
-                                <td data-label="Trạng thái">@item.status</td>
+                                @* <td data-label="Trạng thái">@item.status</td> *@
+                                <td data-label="Trạng thái">
+                                    @(item.status == "BORROW" ? "Đang thuê" :
+                                      item.status == "RETURN" ? "Đã trả" :
+                                      item.status == "CANCEL" ? "Đã hủy" :
+                                      item.status == "SOLD" ? "Đã bán" : item.status)
+                                </td>
                                 <td style="display: none;" data-label="Order">@item.orderid</td>
                                 <td style="display: none;" data-label="productid">@item.productid</td>
                                 @if (item.status == "BORROW")
@@ -401,6 +418,7 @@
             else
             {
                 <button class="button-add" type="button" @onclick="UpdateThueDo"><i class="bi bi-check2-circle"></i>Thuê</button>
+                <button class="button-add" type="button" @onclick="UpdateMuaDo"><i class="bi bi-check2-circle"></i>Bán</button>
             }
         </div>
 
@@ -412,9 +430,7 @@
 </div>
 
 <!-- tab3 -->
-<div class="tab-content" id="tab3">
-    @* nếu muốn làm thêm *@
-</div>
+
 
 <script>
     window.screenHelper = {
@@ -450,7 +466,7 @@
     private List<Data.DTOs.UserOrderDto> UserInfo = new();
 
     private string type = "ALL";
-    private int month;
+    private int month, qty = 0;
     private int year, Tonkho;
     private bool checkNull = false, isLoadingOption = false;
     private DotNetObjectReference<ListOrderAmy> objRef;
@@ -526,7 +542,7 @@
     private async Task LoadData()
     {
         allData = await GetListThueDo.GetListThueDoAmy(type, year, month);
-
+        qty = await GetQTYListThuedo.GetQTYListThueDoAmy(type, year, month);
         checkNull = !(allData != null && allData.Any());
 
         currentPage = 1;
@@ -541,6 +557,7 @@
             "All" => "ALL",
             "Đã trả" => "RETURN",
             "Chưa trả" => "BORROW",
+            "Đã bán" => "SOLD",
             "Bị hủy" => "CANCEL",
             _ => "ALL"
         };
@@ -684,6 +701,7 @@
     #endregion
 
     #region tab2
+    private string username = "";
     List<string> ListType;
     [Inject] private IJSRuntime JSx { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -697,8 +715,7 @@
                 bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
                 if (isLoggedIn)
                 {
-                    //int height = await JS.InvokeAsync<int>("screenHelper.getHeight");
-                    //UpdateRowsPerPage(height);
+                    username = await localStorage.GetItemAsync<string>("username");
                     objRef = DotNetObjectReference.Create(this);
                     await JS.InvokeVoidAsync("screenHelper.registerResizeHandler", objRef);
                     await LoadData();
@@ -846,7 +863,7 @@
         results = selectedImage;
         resutlsImage = results.ImageUrl;
         SelectSizeSP = results.Size;
-        SelectGiaTheoNgay = results.Price.ToString() + " vnđ";
+        SelectGiaTheoNgay = results.Price.ToString("#,##0").Replace(",", ".") + " vnđ";
         SelectTienCoc = "0.000 vnđ";
         MotaSP = results.Desc;
         productid = results.ProductID.ToString();
@@ -950,8 +967,15 @@
         SelectTypeSP = "";
         StateHasChanged();
     }
-
     private async Task UpdateThueDo()
+    {
+        await Update("THUE");
+    }
+    private async Task UpdateMuaDo()
+    {
+        await Update("MUA");
+    }
+    private async Task Update(string action)
     {
         int checkupdate = 0;
         if (ProductList.Count == 0)
@@ -960,6 +984,12 @@
             return;
         }
 
+        if (action == "MUA")
+        {
+            bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có muốn bán đơn này không?");
+            if (!confirmed)
+            { return; }
+        }
         UpdateisLoading = true;
         var random = new Random();
         long Usserid = 0;
@@ -986,7 +1016,7 @@
 
             if (Usserid != 0 && checkupdate > 0)
             {
-                checkupdate = await InsertOrder.InsertOrderAmy(Usserid, ProductList);
+                checkupdate = await InsertOrder.InsertOrderAmy(Usserid, ProductList, username, action);
                 if (checkupdate > 0)
                 {
                     UserInfo = new();
@@ -997,7 +1027,10 @@
                     TextSdtKH = "";
                     TextNote = "";
                     SelectTypeSP = "";
-                    JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
+                    if (action == "MUA")
+                        JSx.InvokeVoidAsync("alert", "Thêm đơn bán hàng thành công");
+                    else
+                        JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
                 }
             }
             else

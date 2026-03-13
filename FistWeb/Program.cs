@@ -64,6 +64,7 @@ builder.Services.AddScoped<UpdateReturnAllOrder1Amy, CallService>();
 builder.Services.AddScoped<IInsertOrdersAmyService, CallService>();
 builder.Services.AddScoped<IStockQTYAmyService, CallService>();
 builder.Services.AddScoped<IGetProductID1AmyService, CallService>();
+builder.Services.AddScoped<GetQTYListThueDoAmy, CallService>();
 #endregion
 
 #region dung

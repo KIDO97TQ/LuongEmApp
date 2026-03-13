@@ -65,7 +65,7 @@
                 <div class="image-item" @onclick="() => SelectImage(item)">
                     <img loading="lazy" src="https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/@item.ImageUrl" />
                     <div class="info">
-                        <div><strong>Giá:</strong> @item.Price Vnđ</div>
+                        <div><strong>Giá:</strong> @item.Price.ToString("#,##0").Replace(",", ".") vnđ</div>
                         <div><strong>Số lượng còn:</strong> @item.SaveQTY</div>
                         <div><strong>Size:</strong> @item.Size</div>
                         <div><strong>Mô tả:</strong> @item.Desc</div>
