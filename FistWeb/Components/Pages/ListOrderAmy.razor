@@ -113,7 +113,7 @@
                         int count = (currentPage - 1) * rowsPerPage + 1;
                         foreach (var item in currentPageData)
                         {
-                            <tr>
+                            <tr @onclick="() => OnRowClick(item)" style="cursor:pointer">
                                 <td data-label="STT">@count</td>
                                 <td data-label="Họ tên">@item.fullname</td>
                                 <td data-label="SĐT/Facebook">@item.facebookphone</td>
@@ -129,18 +129,18 @@
                                     item.priceperday = pricePerDay;
                                     <td data-label="Giá/ngày">@item.priceperday.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 }
-                                <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
-                                @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
-                                @* <td data-label="Trạng thái">@item.status</td> *@
-                                <td data-label="Trạng thái">
-                                    @(item.status == "BORROW" ? "Đang thuê" :
-                                      item.status == "RETURN" ? "Đã trả" :
-                                      item.status == "CANCEL" ? "Đã hủy" :
-                                      item.status == "SOLD" ? "Đã bán" : item.status)
-                                </td>
-                                <td style="display: none;" data-label="Order">@item.orderid</td>
-                                <td style="display: none;" data-label="productid">@item.productid</td>
-                                @if (item.status == "BORROW")
+                    <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                    @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
+                    @* <td data-label="Trạng thái">@item.status</td> *@
+                    <td data-label="Trạng thái">
+                        @(item.status == "BORROW" ? "Đang thuê" :
+                                                item.status == "RETURN" ? "Đã trả" :
+                                                item.status == "CANCEL" ? "Đã hủy" :
+                                                item.status == "SOLD" ? "Đã bán" : item.status)
+                    </td>
+                    <td style="display: none;" data-label="Order">@item.orderid</td>
+                    <td style="display: none;" data-label="productid">@item.productid</td>
+                    @if (item.status == "BORROW")
                                 {
                                     @if (isLoadingOption)
                                     {
@@ -150,7 +150,7 @@
                                     {
                                         <td data-label="Hành động">
                                             <div class="option-wrapper">
-                                                <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+                                                <button class="btn btn-option" @onclick:stopPropagation="true" onclick="toggleOptionMenu(this) "><span>...</span> Option</button>
                                                 <div class="option-menu">
                                                     <div class="New-price">
                                                         <button class="option-itemAdd" type="button" @onclick="() => ReturnOrder(item)">♻️ Trả đồ</button>
@@ -194,6 +194,11 @@
                 Sau <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
+
+        @if (showGalleryModalOrder)
+        {
+            <ImageGalleryModalDetailOrder Product="OrderInfo" OnClose="CloseGalleryModalOrder" />
+        }
     }
 </div>
 
@@ -208,6 +213,21 @@
         <div class="form-container">
             <!-- Left side - Form -->
             <div class="form-section-left">
+
+                @* <input class="button-add" type="radio" name="type" value="thue" @onchange="OnMethordByChanged" /> <label>Thuê</label>
+                <input class="button-add" type="radio" name="type" value="mua" @onchange="OnMethordByChanged" /> <label>Bán</label> *@
+
+                <div class="radio-group">
+                    <label class="btn-radio">
+                        <input type="radio" name="type" value="thue" checked @onchange="OnMethordByChanged" />
+                        <span>Thuê</span>
+                    </label>
+
+                    <label class="btn-radio">
+                        <input type="radio" name="type" value="mua" @onchange="OnMethordByChanged" />
+                        <span>Bán</span>
+                    </label>
+                </div>
                 <!-- sđt, cccd ....  -->
                 <div class="form-group">
                     <label class="form-label required-label">Sđt/CCCD:</label>
@@ -268,9 +288,18 @@
 
                 <!-- Gía thê theo ngày-->
                 <div class="form-group">
-                    <label class="form-label required-label">Giá thuê 1 ngày:</label>
-                    <input type="text" value="@SelectGiaTheoNgay" class="form-input readonly-input" readonly />
+                    @if (MethordBuy)
+                    {
+                        <label class="form-label required-label">Giá bán:</label>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" value="@DisplayGia" @oninput="OnGiaChanged" class="form-input"/>
+                    }
+                    else
+                    {
+                        <label class="form-label required-label">Giá thuê 1 ngày:</label>
+                        <input type="text" value="@SelectGiaTheoNgay" class="form-input readonly-input" readonly />
+                    }
                 </div>
+
 
                 <!-- Số lượng -->
                 <div class="form-group">
@@ -288,6 +317,8 @@
                 </div>
 
                 <!-- tiền cọc -->
+                @if (!MethordBuy)
+                {
                 <div class="form-group">
                     <label class="form-label">Tiền cọc:</label>
                     <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
@@ -314,6 +345,7 @@
                         }
                     </select>
                 </div>
+                }
 
                 <!-- Mô tả thêm về SP -->
                 <div class="form-group">
@@ -372,8 +404,15 @@
                             <th>STT</th>
                             <th>TypeSP</th>
                             <th>Số lượng</th>
-                            <th>Giá thuê</th>
-                            <th>Tiền cọc</th>
+                            @if (MethordBuy)
+                            {
+                                <th>Giá bán</th>
+                            }
+                            else
+                            {
+                                <th>Giá thuê</th>                          
+                                <th>Tiền cọc</th>
+                            }
                             <th>Note</th>
                             <th>Size</th>
                             <th>ProductID</th>
@@ -391,8 +430,15 @@
                                     <td data-label="STT">@count</td>
                                     <td data-label="TypeSP">@item.TypeSP</td>
                                     <td data-label="Số lượng">@item.QTYThue</td>
-                                    <td data-label="Giá thuê">@item.PricePerDay.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
-                                    <td data-label="Tiền cọc">@item.TienCoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    @if (MethordBuy)
+                                    {
+                                        <td data-label="Giá bán">@item.PricePerDay.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    }
+                                    else
+                                    {
+                                        <td data-label="Giá thuê">@item.PricePerDay.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>                                  
+                                        <td data-label="Tiền cọc">@item.TienCoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                                    }
                                     <td data-label="Note">@item.Notes</td>
                                     <td data-label="Size">@item.Size</td>
                                     <td data-label="ProductID">@item.ProductID</td>
@@ -417,8 +463,8 @@
             }
             else
             {
-                <button class="button-add" type="button" @onclick="UpdateThueDo"><i class="bi bi-check2-circle"></i>Thuê</button>
-                <button class="button-add" type="button" @onclick="UpdateMuaDo"><i class="bi bi-check2-circle"></i>Bán</button>
+                <button class="button-add" type="button" @onclick="UpdateOrder"><i class="bi bi-check2-circle"></i>Chốt đơn</button>
+                @* <button class="button-add" type="button" @onclick="UpdateMuaDo"><i class="bi bi-check2-circle"></i>Bán</button> *@
             }
         </div>
 
@@ -698,6 +744,19 @@
             }
         }
     }
+
+    private void CloseGalleryModalOrder()
+    {
+        showGalleryModalOrder = false;
+        StateHasChanged();
+    }
+
+    private Data.DTOs.InfoThueDoDto OrderInfo;
+    private void OnRowClick(Data.DTOs.InfoThueDoDto item)
+    {
+        OrderInfo = item;
+        showGalleryModalOrder = true;
+    }
     #endregion
 
     #region tab2
@@ -750,6 +809,53 @@
     private bool ShowSuggestions = false;
     private bool Khachquen = false;
     private List<Data.DTOs.ProductImageDto> ProductInfo = new();
+    private bool MethordBuy = false;
+
+    void OnMethordByChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (value == "mua")
+            MethordBuy = true;
+        else
+            MethordBuy = false;
+
+        resutlsImage = null;
+        SelectSizeSP = null;
+        SelectGiaTheoNgay = null;
+        SelectTienCoc = null;
+        MotaSP = null;
+        productid = null;
+        typeSP = null;
+        TextQTY = null;
+        Tonkho = 0;
+        results = new();
+        SelectTypeSP = "";
+        ProductList = new();
+        TextNote = "";
+    }
+
+    string DisplayGia = "";
+    void OnGiaChanged(ChangeEventArgs e)
+    {
+        if (!MethordBuy) return;
+
+        var input = e.Value?.ToString() ?? "";
+
+        // chỉ giữ số
+        var numeric = new string(input.Where(char.IsDigit).ToArray());
+
+        if (decimal.TryParse(numeric, out decimal value))
+        {
+            SelectGiaTheoNgay = value.ToString();
+
+            DisplayGia = value.ToString("N0", new CultureInfo("vi-VN"));
+        }
+        else
+        {
+            DisplayGia = "";
+        }
+    }
 
     #region load sdt khách
     private string _textSdtKH;
@@ -844,7 +950,7 @@
         }
     }
 
-    private bool showGalleryModal = false;
+    private bool showGalleryModal = false, showGalleryModalOrder = false;
     private async void GetImageByProductID()
     {
         typeSP = SelectTypeSP;
@@ -863,7 +969,10 @@
         results = selectedImage;
         resutlsImage = results.ImageUrl;
         SelectSizeSP = results.Size;
-        SelectGiaTheoNgay = results.Price.ToString("#,##0").Replace(",", ".") + " vnđ";
+        if (MethordBuy)
+            SelectGiaTheoNgay = "";
+        else
+            SelectGiaTheoNgay = results.Price.ToString("#,##0").Replace(",", ".") + " vnđ";
         SelectTienCoc = "0.000 vnđ";
         MotaSP = results.Desc;
         productid = results.ProductID.ToString();
@@ -925,6 +1034,12 @@
             return;
         }
 
+        if (string.IsNullOrEmpty(giaTheoNgay) && (MethordBuy))
+        {
+            JSx.InvokeVoidAsync("alert", "Vui lòng điền giá bán");
+            return;
+        }
+
         string cleanedGiaTheoNgay = giaTheoNgay.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
         string cleanedTienCoc = tienCoc.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
 
@@ -958,6 +1073,7 @@
         SelectSizeSP = null;
         SelectGiaTheoNgay = null;
         SelectTienCoc = null;
+        DisplayGia = null;
         MotaSP = null;
         productid = null;
         typeSP = null;
@@ -967,22 +1083,21 @@
         SelectTypeSP = "";
         StateHasChanged();
     }
-    private async Task UpdateThueDo()
+
+    private async Task UpdateOrder()
     {
-        await Update("THUE");
-    }
-    private async Task UpdateMuaDo()
-    {
-        await Update("MUA");
-    }
-    private async Task Update(string action)
-    {
+        string action;
         int checkupdate = 0;
         if (ProductList.Count == 0)
         {
             JSx.InvokeVoidAsync("alert", "❗ Không có đơn nào cần thuê");
             return;
         }
+
+        if (MethordBuy)
+            action = "MUA";
+        else
+            action = "THUE";
 
         if (action == "MUA")
         {

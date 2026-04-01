@@ -67,7 +67,7 @@ else if (!isLoggedIn)
                         if (!CheckforgotPW)
                         {
                             <h2>Admin Login</h2>
-                            <form @onsubmit:preventDefault="true">
+                            <form @onsubmit="LoginDB" @onsubmit:preventDefault="true">
                                 <div class="box">
                                     <input type="text" @bind="username" placeholder="Nhập tên đăng nhập..." />
                                     <i class="fa fa-user"></i>
@@ -89,7 +89,7 @@ else if (!isLoggedIn)
                                 }
                                 else
                                 {
-                                    <button type="button" @onclick="LoginDB">Submit</button>
+                                    <button type="submit" @onclick="LoginDB">Submit</button>
                                 }
                             </form>
 

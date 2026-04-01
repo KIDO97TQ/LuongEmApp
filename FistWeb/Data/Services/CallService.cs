@@ -1187,13 +1187,19 @@ namespace FistWeb.Data.Services
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
-            StringBuilder sql = new StringBuilder(@" SELECT COUNT(*)
-                                                     FROM (
-                                                         SELECT b.userid, b.sumpay
+            //StringBuilder sql = new StringBuilder(@" SELECT COUNT(*)
+            //                                         FROM (
+            //                                             SELECT b.userid, b.sumpay
+            //                                             FROM clothings.ordersamy b
+            //                                             JOIN clothings.productsamy p ON b.productid = p.productid
+            //                                             JOIN clothings.users u ON u.userid = b.userid
+            //                                             WHERE EXTRACT(YEAR FROM b.borrowdate) = @year ");
+
+            StringBuilder sql = new StringBuilder(@"  SELECT CAST(COALESCE(SUM(b.qty), 0) AS INT)
                                                          FROM clothings.ordersamy b
                                                          JOIN clothings.productsamy p ON b.productid = p.productid
                                                          JOIN clothings.users u ON u.userid = b.userid
-                                                         WHERE EXTRACT(YEAR FROM b.borrowdate) = @year ");
+                                                         WHERE EXTRACT(YEAR FROM b.borrowdate) = @year AND b.sumpay != '0' ");
 
             parameters.Add(new NpgsqlParameter("year", year));
 
@@ -1208,7 +1214,7 @@ namespace FistWeb.Data.Services
                 sql.Append(" AND b.status = @status ");
                 parameters.Add(new NpgsqlParameter("status", status));
             }
-            sql.Append(" AND b.sumpay != '0' GROUP BY b.userid, b.sumpay ) t ");
+            //sql.Append(" AND b.sumpay != '0' GROUP BY b.userid, b.sumpay ) t ");
             using var cmd = _context.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql.ToString();
 
