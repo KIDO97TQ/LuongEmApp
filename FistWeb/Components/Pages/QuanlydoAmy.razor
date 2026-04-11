@@ -825,7 +825,7 @@
             UpdateisLoading = true;
 
             long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-            Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
+            decimal PriceSP = decimal.Parse(Regex.Replace(SelectValuePrice, @"[^\d]", ""));
             int QtySP = int.Parse(TextValueQTY);
 
             string contentType = GetFileExtension(uploadedFile.ContentType);
