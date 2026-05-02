@@ -25,14 +25,8 @@
 <div class="modal-backdrop" @onclick="() => OnClose.InvokeAsync()"></div>
 
 <div class="modal-content">
-    @if (!string.IsNullOrEmpty(Product.type) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
-    {
-        <h3>Ảnh và thông tin Concept</h3>
-    }
-    else
-    {
-        <h3>Thông tin gói chụp</h3>
-    }
+
+    <h3>Ảnh và thông tin Concept</h3>
 
     @if (Product == null)
     {
@@ -41,13 +35,13 @@
     else
     {
         <div class="single-image-container" @onclick="SelectImage">
-            @if (!string.IsNullOrEmpty(Product.type) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
-            {
-                <img loading="lazy" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" />
-            }
+
+            <img loading="lazy" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" />
+
             <div class="image-info">
                 <div><strong>Tên Khách:</strong> @Product.namekh</div>
-                <div><strong>Thợ chụp:</strong> @Product.Photograper</div>
+                <div><strong>Tên thợ Make:</strong> @Product.NameThoMake</div>
+                <div><strong>Tên thợ Tóc:</strong> @Product.NameThoToc</div>
                 <div><strong>Số lượng khách:</strong> @Product.qty.ToString()</div>
                 @if (checkAdmin)
                 {
@@ -55,10 +49,6 @@
                 }
                 <div><strong>Ngày chụp:</strong> @Product.dateChup.ToString("dd/MM/yyyy HH:mm")</div>
                 <div><strong>Ngày trả File:</strong> @Product.dateTraFile.ToString("dd/MM/yyyy")</div>
-                @if (!string.IsNullOrEmpty(Product.type) && !Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase))
-                {
-                    <div><strong>Ngày cưới:</strong> @(Product.dateCuoi.HasValue? Product.dateCuoi.Value.ToString("dd/MM/yyyy"): "")</div>
-                }
                 <div><strong>Lưu ý:</strong> @(Product?.note ?? "")</div>
             </div>
         </div>

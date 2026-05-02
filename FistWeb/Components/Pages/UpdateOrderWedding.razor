@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using FistWeb.Data.DTOs
 @inject IJSRuntime JS
 
 @code {
@@ -6,13 +7,13 @@
     public Data.DTOs.ListInfoGoiChup? Product { get; set; }
 
     [Parameter]
-    public Dictionary<string, (string, long?)> ListGoiChup { get; set; }
+    public EventCallback<UpdateProductWithImage> OnUpdate { get; set; }
+
+    [Parameter]
+    public Dictionary<string, (string, long?)> ListNv { get; set; }
 
     [Parameter]
     public List<string> ListGiaChup { get; set; }
-
-    [Parameter]
-    public EventCallback<Data.DTOs.ListInfoGoiChup> OnUpdate { get; set; }
 
     [Parameter]
     public EventCallback OnClose { get; set; }
@@ -29,9 +30,8 @@
 
             Product.imageid = long.Parse(imageid);
             Product.namekh = ValueNameKH;
-
-            if (!string.IsNullOrEmpty(newnameThochup))
-                Product.Photograper = newnameThochup;
+            Product.NameThoMake = newValueNVMake;
+            Product.NameThoToc = newValueNVToc;
 
             if (newValueQTY > 0)
             {
@@ -67,7 +67,7 @@
                 {
                     Tienorder = ValuePrice.Replace(".", "").Replace(",", "").Replace(" Vnđ", "").Trim();
                     checkTien = decimal.TryParse(Tienorder, out decimal money);
-                    total = money * ValueQTY;
+                    total = money;
 
                 }
                 Product.price = total;
@@ -78,18 +78,18 @@
                 Product.dateChup = NewngayGioChup ?? DateTime.Now;
             }
 
-            if (!string.IsNullOrEmpty(newValueGoichup))
+            var data = new UpdateProductWithImage
             {
-                Product.type = newValueGoichup;
-                Product.idorder = ListGoiChup[newValueGoichup].Item1;
-            }
+                Product = Product,
+                FileBytes = fileBytes
+            };
 
-            await OnUpdate.InvokeAsync(Product);
+            await OnUpdate.InvokeAsync(data);
             await OnClose.InvokeAsync();
         }
     }
 
-    private string ValueGoichup, ValueNameKH, ValuePrice, nameThochup, TextValueDesc, newValueGoichup = "", newValuePrice, newnameThochup;
+    private string ValueNameKH, ValuePrice, nameThochup, TextValueDesc, ValueNVMake, ValueNVToc, newValuePrice, newValueNVMake, newValueNVToc;
     private DateTime? ngayGioChup, ngayCuoi, ngayTraFile, NewngayCuoi, NewngayTraFile, NewngayGioChup;
     private int ValueQTY, newValueQTY;
 
@@ -97,32 +97,29 @@
     {
         if (Product != null)
         {
-            ValueGoichup = Product.type;
             ValueNameKH = Product.namekh;
             ValuePrice = Product.price.ToString("N0", new CultureInfo("vi-VN")) + " Vnđ";
-            nameThochup = Product.Photograper;
+            nameThochup = "Dũng";
             ngayGioChup = Product.dateChup;
             imageid = Product.imageid.ToString();
             ValueQTY = Product.qty;
 
+            ValueNVMake = Product.NameThoMake;
+            ValueNVToc = Product.NameThoToc;
         }
     }
 
     private string imageid = "";
-    private async void SelectChangeGoiChup(ChangeEventArgs e)
+    private async void SelectChangeNVMake(ChangeEventArgs e)
     {
-        newValueGoichup = e.Value?.ToString();
+        newValueNVMake = e.Value?.ToString();
 
-        var result = ListGoiChup.FirstOrDefault(x => x.Key == newValueGoichup);
-        if (result.Key != null)
-        {
-            if (!result.Equals(default(KeyValuePair<string, string>)) && result.Key.Contains("concep", StringComparison.OrdinalIgnoreCase))
-            {
-                imageid = result.Value.Item2.ToString();
-            }
-            else
-                imageid = "0";
-        }
+        await JS.InvokeVoidAsync("closeAllOptionMenus");
+        StateHasChanged();
+    }
+    private async void SelectChangeNVToc(ChangeEventArgs e)
+    {
+        newValueNVToc = e.Value?.ToString();
 
         await JS.InvokeVoidAsync("closeAllOptionMenus");
         StateHasChanged();
@@ -135,6 +132,23 @@
         if (DateTime.TryParse(e.Value?.ToString(), out var dt))
             NewngayGioChup = dt;
     }
+
+    private byte[] fileBytes;
+    private string previewImageUrl;
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        using var stream = file.OpenReadStream(10 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        fileBytes = ms.ToArray();
+
+        previewImageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(fileBytes)}";
+    }
+
 }
 
 <div class="modal-backdrop" @onclick="() => OnClose.InvokeAsync()"></div>
@@ -143,13 +157,38 @@
 
     <h3>Update gói chụp</h3>
 
-    @if (!string.IsNullOrEmpty(imageid) && Product.type.Contains("concep", StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(newValueGoichup))
+    @if (!string.IsNullOrEmpty(imageid))
     {
-        <img class="image" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" alt="Ảnh Concept" />
-    }
-    @if (!string.IsNullOrEmpty(imageid) && newValueGoichup.Contains("concep", StringComparison.OrdinalIgnoreCase))
-    {
-        <img class="image" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" alt="Ảnh Concept" />
+        <div style="position:relative; width:100%; height:100%;object-fit:cover;">
+        @if (string.IsNullOrEmpty(previewImageUrl))
+        {
+            <!-- ẢNH CŨ -->
+            <img class="image"
+                 src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")"
+                 style="width:100%; height:100%; object-fit:cover;" />
+        }
+        else
+        {
+            <!-- ẢNH MỚI (PREVIEW) -->
+            <img class="image"
+                 src="@previewImageUrl"
+                 style="width:100%; height:100%; object-fit:cover;" />
+        }
+
+        <!-- INPUT FILE -->
+        
+            <InputFile OnChange="OnFileSelected"
+                       accept="image/*"
+                       style="
+                           position:absolute;
+                           top:0;
+                           left:0;
+                           width:100%;
+                           height:100%;
+                           opacity:0;
+                           cursor:pointer;
+                       " />
+        </div>
     }
     <div class="image-info">
         <!-- Tên KH -->
@@ -159,18 +198,39 @@
             <div></div>
         </div>
 
-        <!-- Gói chụp -->
+        <!-- Chọn nv Make -->
         <div class="form-group">
-            <label class="form-label required-label">Chọn gói chụp:</label>
-            <input class="form-label readonly-input" value="@ValueGoichup" readonly />
+            <label class="form-label required-label">Chọn Thợ Make:</label>
+            <input class="form-label readonly-input" value="@ValueNVMake" readonly />
 
             <div class="option-wrappertab2">
-                <select class="option-menutab2" @onchange="@SelectChangeGoiChup">
-                    <option value="">Chọn gói chụp</option>
+                <select class="option-menutab2" @onchange="@SelectChangeNVMake">
+                    <option value="">Chọn Thợ Make</option>
                     @{
-                        if (this.ListGoiChup != null)
+                        if (this.ListNv != null)
                         {
-                            foreach (var item in this.ListGoiChup)
+                            foreach (var item in this.ListNv)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Chọn nv Toc -->
+        <div class="form-group">
+            <label class="form-label required-label">Chọn Thợ Tóc:</label>
+            <input class="form-label readonly-input" value="@ValueNVToc" readonly />
+
+            <div class="option-wrappertab2">
+                <select class="option-menutab2" @onchange="@SelectChangeNVToc">
+                    <option value="">Chọn Thợ Tóc</option>
+                    @{
+                        if (this.ListNv != null)
+                        {
+                            foreach (var item in this.ListNv)
                             {
                                 <option value="@item.Key">@item.Key</option>
                             }
@@ -193,7 +253,7 @@
         </div>
 
         <!-- Tên thợ chụp -->
-        <div class="form-group">
+        @* <div class="form-group">
             <label class="form-label required-label">Thợ chụp:</label>
             <input class="form-label readonly-input" value="@nameThochup" readonly />
 
@@ -204,7 +264,7 @@
                     <option value="@newnameThochup">Long</option>
                 </select>
             </div>
-        </div>
+        </div> *@
 
         <!-- Giá gói chụp -->
         <div class="form-group">

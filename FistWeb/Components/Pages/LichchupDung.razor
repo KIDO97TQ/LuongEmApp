@@ -1,4 +1,5 @@
 ﻿@page "/Lichchup"
+@using FistWeb.Data.DTOs
 @using Microsoft.EntityFrameworkCore
 @using System.Data
 @using System.Text.Json
@@ -49,14 +50,26 @@
 <div class="tab-content active" id="tab1">
     <div class="form-container">
         <div class="form-content">
-            @if (!string.IsNullOrEmpty(imageid) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
+
+            <div class="form-section-right">
+                <label for="fileInput" class="image-upload-area">
+                    @if (!openImage)
+                    {
+                        <div class="image-upload-icon">📷</div>
+                        <div class="image-upload-text">Click để tải ảnh lên</div>
+                    }
+                    <img src="@previewImageUrl" style="max-width: 100%; margin-top: 10px;" />
+                </label>
+                <InputFile id="fileInput" OnChange="OnFileSelected" accept="image/*" style="display:none" />
+            </div>
+            @* @if (!string.IsNullOrEmpty(imageid))
             {
                 <div class="form-section-right">
                     <label for="fileInput" class="image-upload-area">
                         <img src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")" style="max-width: 100%; margin-top: 10px;" />
                     </label>
                 </div>
-            }
+            } *@
             <div class="form-section-left">
                 <!-- Tên KH -->
                 <div class="form-group">
@@ -65,70 +78,55 @@
                     <div></div>
                 </div>
 
-                <!-- Gói chụp -->
+                <!-- NV MAKE -->
                 <div class="form-group">
-                    <label class="form-label required-label">Chọn gói chụp:</label>
+                    <label class="form-label required-label">Chọn nhân viên Make:</label>
 
                     <select class="form-select"
-                            value="@SelectValueSP"
-                            @onchange="OnChangeHandler">
-                        <option value="">Chọn gói chụp</option>
-                        @if (ListGoimake != null && !isLoading)
+                            value="@SelectValueThoMake"
+                            @onchange="OnChangeHandlerNVmake">
+                        <option value="">Chọn nhân viên Make</option>
+                        @if (ListNv != null && !isLoading)
                         {
-                            foreach (var item in ListGoimake)
+                            foreach (var item in ListNv)
                             {
                                 <option value="@item.Key">@item.Key</option>
                             }
                         }
                     </select>
-                    @if (isLoading)
-                    {
-                        <div class="spinner" style="margin-top:10px;"></div>
-                    }
-                    else
-                    {
-                        <div class="option-wrapper">
-                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
-                            <div class="option-menu">
 
-                                @if (showUploadImage)
+                    @* @if (!isLoading)
+                    {
+                        <div class="form-section-right">
+                            <label for="fileInput" class="image-upload-area">
+                                @if (!openImage)
                                 {
-                                    <div class="form-section-right">
-                                        <label for="fileInput" class="image-upload-area">
-                                            @if (!openImage)
-                                            {
-                                                <div class="image-upload-icon">📷</div>
-                                                <div class="image-upload-text">Click để tải ảnh lên</div>
-                                            }
-                                            <img src="@previewImageUrl" style="max-width: 100%; margin-top: 10px;" />
-                                        </label>
-                                        <InputFile id="fileInput" OnChange="OnFileSelected" accept="image/*" style="display:none" />
-                                    </div>
+                                    <div class="image-upload-icon">📷</div>
+                                    <div class="image-upload-text">Click để tải ảnh lên</div>
                                 }
-                                <div class="New-price">
-
-                                    <input id="priceInput" type="text"
-                                           @bind="newValueSP"
-                                           @bind:event="oninput"
-                                           @bind:after="OnTextChanged"
-                                           placeholder="Thêm mới gói chụp..." />
-
-                                    @if (isLoading)
-                                    {
-                                        <div class="spinner" style="margin-top:10px;"></div>
-                                    }
-                                    else
-                                    {
-                                        <button class="option-itemAdd" type="button" @onclick="addGoiChupClick">
-                                            <i class="bi-option bi-plus-circle-fill"></i>
-                                        </button>
-                                    }
-                                </div>
-                                <div class="option-item" @onclick="XoaGoiChupClick">🗑️ Xóa gói chụp đang chọn</div>
-
-                            </div>
+                                <img src="@previewImageUrl" style="max-width: 100%; margin-top: 10px;" />
+                            </label>
+                            <InputFile id="fileInput" OnChange="OnFileSelected" accept="image/*" style="display:none" />
                         </div>
-                    }
+                    } *@
+                </div>
+
+                <!-- NV TOC -->
+                <div class="form-group">
+                    <label class="form-label required-label">Chọn nhân viên làm tóc:</label>
+
+                    <select class="form-select"
+                            value="@SelectValueThoToc"
+                            @onchange="OnChangeHandlerNVtoc">
+                        <option value="">Chọn nhân viên làm tóc </option>
+                        @if (ListNv != null && !isLoading)
+                        {
+                            foreach (var item in ListNv)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    </select>
                 </div>
 
                 <!-- Số lượng -->
@@ -141,14 +139,14 @@
                 </div>
 
                 <!-- Tên thợ chụp -->
-                <div class="form-group">
+                @* <div class="form-group">
                     <label class="form-label required-label">Thợ chụp:</label>
                     <select class="form-select" @bind="nameThochup" @bind:event="oninput">
                         <option value="">Chọn thợ chụp</option>
                         <option value="@nameThochup">Dũng</option>
                         <option value="@nameThochup">Long</option>
                     </select>
-                </div>
+                </div> *@
 
                 <!-- Giá gói chụp -->
                 <div class="form-group">
@@ -219,22 +217,6 @@
                            @bind-value:format="yyyy-MM-dd" />
                 </div>
 
-                <!-- Ngày cưới -->
-                @if (!string.IsNullOrEmpty(SelectValueSP) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
-                {
-
-                }
-                else
-                {
-                    <div class="form-group">
-                        <label class="form-label required-label">Ngày Cưới:</label>
-                        <input type="date"
-                               class="form-control"
-                               @bind-value="ngayCuoi"
-                               @bind-value:format="yyyy-MM-dd" />
-                    </div>
-                }
-
                 <!-- Mô tả thêm -->
                 <div class="form-group">
                     <label class="form-label">Note:</label>
@@ -267,25 +249,25 @@
     {
         <h3 class="header-controls">
             <div class="controls-left">
-                Gói chụp
-                <select class="control-select" value="type" @onchange="OnTypeChanged">
+                Nhân Viên
+                  <select class="control-select" value="type" @onchange="OnTypeChanged">
                     @{
-                        if (this.ListGoimake != null && !isLoading)
+                        if (this.ListNv != null && !isLoading)
                         {
                             <option value="All">All</option>
-                            foreach (var item in this.ListGoimake)
+                            foreach (var item in this.ListNv)
                             {
                                 <option value="@item.Key">@item.Key</option>
                             }
                         }
                     }
                 </select>
-                Thợ chụp
+                List Job
                 <select class="control-select" value="type" @onchange="OnThoChupChanged">
                     @{
                         <option value="All">All</option>
-                        <option value="Dũng">Dũng</option>
-                        <option value="Long">Long</option>
+                        <option value="MAKE-UP">MAKE-UP</option>
+                        <option value="LÀM TÓC">LÀM TÓC</option>
                     }
                 </select>
                 Tháng
@@ -329,15 +311,15 @@
                 <thead>
                     <tr>
                         <th>Stt</th>
-                        <th>Tên thợ</th>
-                        <th>Tên khách</th>
-                        <th>Gói chụp</th>
+                        <th>Tên Khách</th>
+                        <th>Thợ Make</th>
+                        <th>Thợ làm Tóc</th>
                         <th>Số lượng</th>
                         <th class="@(IsAdminUser ? "" : "d-none")">Giá gói chụp</th>
                         <th>Ngày chụp</th>
                         <th>Trạng thái</th>
                         <th>Ngày trả File</th>
-                        <th>Ngày Cưới</th>
+                        @*  <th>Ngày Cưới</th> *@
                         <th>Ngày tạo</th>
                         <th style="display: none;">imageid</th>
                         <th class="@(IsAdminUser ? "" : "d-none")">Action</th>
@@ -351,9 +333,9 @@
                         {
                             <tr @onclick="() => OnRowClick(item)" style="cursor:pointer">
                                 <td data-label="STT">@count</td>
-                                <td data-label="Thợ chụp">@item.Photograper</td>
                                 <td data-label="Tên khách">@item.namekh</td>
-                                <td data-label="Gói chụp">@item.type</td>
+                                <td data-label="Thợ Make">@item.NameThoMake</td>
+                                <td data-label="Thợ làm Tóc">@item.NameThoToc</td>
                                 <td data-label="Số lượng">@item.qty.ToString()</td>
                                 <td data-label="Giá gói chụp" class="@(IsAdminUser ? "" : "d-none")">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
@@ -364,7 +346,7 @@
                                     </button>
                                 </td>
                                 <td data-label="Ngày trả File">@item.dateTraFile.ToString("dd/MM/yyyy")</td>
-                                <td data-label="Ngày Cưới">@(item.dateCuoi.HasValue? item.dateCuoi.Value.ToString("dd/MM/yyyy"): "")</td>
+                                @* <td data-label="Ngày Cưới">@(item.dateCuoi.HasValue? item.dateCuoi.Value.ToString("dd/MM/yyyy"): "")</td> *@
                                 <td data-label="Ngày tạo">@item.createdate.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td style="display: none;" data-label="imageid">@item.imageid</td>
                                 @if (IsAdminUser)
@@ -426,7 +408,7 @@
         }
         @if (showGalleryModal2)
         {
-            <UpdateOrderWedding Product="ProductInfoUpdate" ListGoiChup="ListGoimake" ListGiaChup="ListPrice" OnClose="CloseUpdateLichChup" OnUpdate="OnUpdate" />
+            <UpdateOrderWedding Product="ProductInfoUpdate" ListNv="ListNv" ListGiaChup="ListPrice" OnClose="CloseUpdateLichChup" OnUpdate="OnUpdate" />
         }
     }
 </div>
@@ -512,15 +494,15 @@
 
 
 @code {
-    private DateTime? ngayGioChup, ngayCuoi, ngayTraFile;
+    private DateTime? ngayGioChup, ngayTraFile;
     private string month;
     private string year;
     private List<Data.DTOs.ListParamaterMakeup> datapara = new();
     private List<Data.DTOs.ProductStock> dataWH = new();
-    Dictionary<string, (string, long?)> ListGoimake;
+    Dictionary<string, (string, long?)> ListNv;
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
-    private string SelectValueSP, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, nameThochup, TextValueDesc;
+    private string SelectValueThoMake, SelectValueThoToc, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, TextValueDesc;
     private int TextValueQTY = 1;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
@@ -582,7 +564,8 @@
                     usernameLogin = await localStorage.GetItemAsync<string>("username");
                     await TimKiem();
                     datapara = await GetListParamaterMakeup.GetParamaterMakeUp();
-                    this.ListGoimake = datapara.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+                    this.ListNv = datapara.Where(x => x.KeyPara == "nvAmy").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+
                     this.ListPrice = datapara.Where(x => x.KeyPara == "priceGoiChup")
                                          .OrderBy(x =>
                                          {
@@ -621,7 +604,7 @@
     }
 
     #region tab1
-    private async Task addGoiChupClick()
+    private async Task addGoiChupClick() //CANCEL
     {
         if (string.IsNullOrEmpty(newValueSP))
         { return; }
@@ -673,7 +656,7 @@
             if (checkInsert > 0)
             {
                 List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+                //this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
                 isLoading = false;
                 await JS.InvokeVoidAsync("closeAllOptionMenus");
                 await JS.InvokeVoidAsync("alert", $"Thêm gói chụp ({newValueSP}) thành công!");
@@ -687,7 +670,6 @@
                     previewImageUrl = null;
                     uploadedFile = null;
                 }
-                imageid = "";
                 StateHasChanged();
             }
             else
@@ -698,64 +680,64 @@
         }
     }
 
-    private async Task XoaGoiChupClick()
+    private async Task XoaGoiChupClick() // CANCEL
     {
-        if (string.IsNullOrEmpty(SelectValueSP))
-        {
-            await JS.InvokeVoidAsync("alert", "Vui lòng chọn gói chụp cần xóa trước");
-            await JS.InvokeVoidAsync("closeAllOptionMenus");
-            return;
-        }
-        bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa gói chụp này không?");
+        // if (string.IsNullOrEmpty(SelectValueSP))
+        // {
+        //     await JS.InvokeVoidAsync("alert", "Vui lòng chọn gói chụp cần xóa trước");
+        //     await JS.InvokeVoidAsync("closeAllOptionMenus");
+        //     return;
+        // }
+        // bool confirmed = await JSx.InvokeAsync<bool>("confirm", "Bạn có chắc chắn muốn xóa gói chụp này không?");
 
-        if (confirmed)
-        {
-            UpdateisLoading2 = true;
-            isLoading = true;
-            showUploadImage = !string.IsNullOrWhiteSpace(imageid) && SelectValueSP.Contains("concept", StringComparison.OrdinalIgnoreCase);
-            if (showUploadImage)
-            {
-                var fileName = imageid + ".jpg";
-                List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
-                string tokennnn = datapara[0].keyUsername;
-                string owner = "kido1997";
-                string repo = "ImageLuongEm";
-                string pathInRepo = $"ImageLuongEm/{fileName}";
-                string commitMessage = $"Upload {fileName}";
+        // if (confirmed)
+        // {
+        //     UpdateisLoading2 = true;
+        //     isLoading = true;
+        //     showUploadImage = !string.IsNullOrWhiteSpace(imageid) && SelectValueSP.Contains("concept", StringComparison.OrdinalIgnoreCase);
+        //     if (showUploadImage)
+        //     {
+        //         var fileName = imageid + ".jpg";
+        //         List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+        //         string tokennnn = datapara[0].keyUsername;
+        //         string owner = "kido1997";
+        //         string repo = "ImageLuongEm";
+        //         string pathInRepo = $"ImageLuongEm/{fileName}";
+        //         string commitMessage = $"Upload {fileName}";
 
-                var result = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
-                if (result)
-                {
-                    //xóa Git ok
-                }
-                else
-                {
-                    UpdateisLoading2 = false;
-                    await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp trên Git lỗi!");
-                    return;
-                }
-            }
+        //         var result = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
+        //         if (result)
+        //         {
+        //             //xóa Git ok
+        //         }
+        //         else
+        //         {
+        //             UpdateisLoading2 = false;
+        //             await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp trên Git lỗi!");
+        //             return;
+        //         }
+        //     }
 
 
-            int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiChupWedding", SelectValueSP, null);
-            if (checkInsert > 0)
-            {
-                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
-                this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
-                isLoading = false;
-                await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({SelectValueSP}) thành công!");
-                newValueSP = "";
-                imageid = "";
-                showUploadImage = false;
-                StateHasChanged();
-            }
-            else
-            {
-                isLoading = false;
-                await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({newValueSP}) không thành công!");
-            }
-        }
+        //     int checkInsert = await DeletePara.DeleteParamaterRawAsync("goiChupWedding", SelectValueSP, null);
+        //     if (checkInsert > 0)
+        //     {
+        //         List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+        //         this.ListGoimake = data.Where(x => x.KeyPara == "goiChupWedding").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+        //         isLoading = false;
+        //         await JS.InvokeVoidAsync("closeAllOptionMenus");
+        //         await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({SelectValueSP}) thành công!");
+        //         newValueSP = "";
+        //         imageid = "";
+        //         showUploadImage = false;
+        //         StateHasChanged();
+        //     }
+        //     else
+        //     {
+        //         isLoading = false;
+        //         await JS.InvokeVoidAsync("alert", $"Delete gói chụp ({newValueSP}) không thành công!");
+        //     }
+        // }
     }
 
     private async Task addPriceClick()
@@ -917,67 +899,72 @@
                 return;
             }
 
-            bool checkupdateImage = false;
-            if (!string.IsNullOrEmpty(SelectValueSP) && SelectValueSP.Contains("concep", StringComparison.OrdinalIgnoreCase))
-            { checkupdateImage = true; }
-
-            if (checkupdateImage)
+            if (string.IsNullOrEmpty(SelectValueThoMake) || string.IsNullOrEmpty(SelectValueThoToc) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH)
+            || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
             {
-                if (string.IsNullOrEmpty(SelectValueSP) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || string.IsNullOrEmpty(nameThochup)
-                || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
-                {
-                    await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
-                    return;
-                }
+                await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+                return;
+            }
+
+            UpdateisLoading = true;
+
+
+            long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+            #region update image
+            if (fileStream == null || uploadedFile == null)
+            {
+                await JS.InvokeVoidAsync("alert", "Chưa chọn ảnh");
+                isLoading = false;
+                return;
+            }
+            fileStream.Position = 0;
+            string contentType = GetFileExtension(uploadedFile.ContentType);
+            var fileName = productID.ToString() + contentType;
+            await fileStream.CopyToAsync(fileStream);
+            var base64Data = Convert.ToBase64String(fileStream.ToArray());
+            var success = await UploadToGitHubAsync(base64Data.ToString(), fileName.ToString());
+            if (success)
+            {
+                //update ảnh ok
             }
             else
             {
-                if (string.IsNullOrEmpty(SelectValueSP) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || string.IsNullOrEmpty(nameThochup)
-                || !ngayGioChup.HasValue || !ngayTraFile.HasValue || !ngayCuoi.HasValue)
-                {
-                    await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
-                    return;
-                }
+                UpdateisLoading = false;
+                isLoading = false;
+                await JS.InvokeVoidAsync("alert", "Upload ảnh thất bại, có thể do dung lượng ảnh quá lớn");
+                return;
             }
-            UpdateisLoading = true;
+            #endregion
 
-            string id = ListGoimake[SelectValueSP].Item1;
+            // string id = ListGoimake[SelectValueSP].Item1;
 
             string Tienorder = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
             bool checkTien = decimal.TryParse(Tienorder, out decimal money);
             total = money * TextValueQTY;
 
-            long imageid_ = 0;
+            long imageid_ = productID;
 
-            if (long.TryParse(imageid, out long value))
-            {
-                imageid_ = value;
-            }
-            else
-            {
-                imageid_ = 0;
-            }
-
-
-            int checkInsert = 0;
-            if (checkupdateImage)
-                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, total, nameThochup, ngayGioChup, ngayTraFile, null, TextValueDesc, imageid_, TextValueQTY);
-            else
-                checkInsert = await AddOrderChup.InsertRevenueWedding(id, TextValueNameKH, total, nameThochup, ngayGioChup, ngayTraFile, ngayCuoi, TextValueDesc, imageid_, TextValueQTY);
+            int checkInsert = await AddOrderChup.InsertRevenueWedding(productID.ToString(), TextValueNameKH, total, "Dũng", ngayGioChup, ngayTraFile, null,
+            TextValueDesc, imageid_, TextValueQTY, SelectValueThoMake, SelectValueThoToc);
             if (checkInsert > 0)
             {
-                imageid = "";
                 SelectValuePrice = null;
-                SelectValueSP = null;
+                SelectValueThoMake = null;
+                SelectValueThoToc = null;
                 TextValueNameKH = null;
-                nameThochup = null;
                 ngayGioChup = null;
                 ngayTraFile = null;
-                ngayCuoi = null;
                 TextValueDesc = null;
                 TextValueQTY = 0;
+
+                fileStream.Dispose();
+                fileStream = null;
+                openImage = false;
+                previewImageUrl = null;
+                uploadedFile = null;
+
                 await TimKiem();
-                allData = await GetListChup.GetListChupWedding("goiChupWedding", null, null, null, "");
+                allData = await GetListChup.GetListChupWedding(null, null, null);
                 await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
                 LoadPage();
             }
@@ -1057,20 +1044,28 @@
         _ => "bin" // mặc định nếu không biết
     };
 
-    string imageid = "";
-    private void OnChangeHandler(ChangeEventArgs e)
+    string IDnvMake = "";
+    private void OnChangeHandlerNVmake(ChangeEventArgs e)
     {
-        SelectValueSP = e.Value?.ToString();
+        SelectValueThoMake = e.Value?.ToString();
 
-        var result = ListGoimake.FirstOrDefault(x => x.Key == SelectValueSP);
+        var result = ListNv.FirstOrDefault(x => x.Key == SelectValueThoMake);
         if (result.Key != null)
         {
-            if (!result.Equals(default(KeyValuePair<string, string>)) && result.Key.Contains("concep", StringComparison.OrdinalIgnoreCase))
-            {
-                imageid = result.Value.Item2.ToString();
-            }
-            else
-                imageid = "";
+            IDnvMake = result.Value.Item2.ToString();
+        }
+        StateHasChanged();
+    }
+
+    string IDnvToc = "";
+    private void OnChangeHandlerNVtoc(ChangeEventArgs e)
+    {
+        SelectValueThoToc = e.Value?.ToString();
+
+        var result = ListNv.FirstOrDefault(x => x.Key == SelectValueThoToc);
+        if (result.Key != null)
+        {
+            IDnvToc = result.Value.Item2.ToString();
         }
         StateHasChanged();
     }
@@ -1091,23 +1086,6 @@
 
         var base64 = Convert.ToBase64String(fileStream.ToArray());
         previewImageUrl = $"data:{uploadedFile.ContentType};base64,{base64}";
-    }
-
-    private bool showUploadImage = false;
-    private void OnTextChanged()
-    {
-        showUploadImage = !string.IsNullOrWhiteSpace(newValueSP) && newValueSP.Contains("concept", StringComparison.OrdinalIgnoreCase);
-        if (!showUploadImage)
-        {
-            if (fileStream != null)
-            {
-                fileStream.Dispose();
-                fileStream = null;
-            }
-            openImage = false;
-            previewImageUrl = null;
-            uploadedFile = null;
-        }
     }
 
     #endregion
@@ -1152,7 +1130,7 @@
 
     private async Task LoadData(string type, int? month, int? day, string? thochup)
     {
-        allData = await GetListChup.GetListChupWedding("goiChupWedding", int.Parse(this.year), month, day, type, thochup);
+        allData = await GetListChup.GetListChupWedding(int.Parse(this.year), month, day);
 
         checkNull = !(allData != null && allData.Any());
 
@@ -1274,10 +1252,56 @@
         showGalleryModal2 = false;
         StateHasChanged();
     }
-    private async void OnUpdate(Data.DTOs.ListInfoGoiChup Product)
+    private async Task OnUpdate(Data.DTOs.UpdateProductWithImage data)
     {
         showGalleryModal = false;
         isLoading = true;
+
+        var Product = data.Product;
+        long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+        try
+        {
+            if (data.FileBytes != null)
+            {
+                var namefile = Product.imageid + ".jpg";
+
+                List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+                string tokennnn = datapara[0].keyUsername;
+
+                string owner = "kido1997";
+                string repo = "ImageLuongEm";
+                string pathInRepo = $"ImageLuongEm/{namefile}";
+                string commitMessage = $"Upload {namefile}";
+
+                var result = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
+
+                if (result)
+                {
+                    var base64 = Convert.ToBase64String(data.FileBytes);
+
+                    var fileName = productID + ".jpg";
+
+                    Product.imageid = productID;
+
+                    await UploadToGitHubAsync(base64, fileName);
+                }
+                else
+                {
+                    isLoading = false;
+                    UpdateisLoading2 = false;
+                    await JS.InvokeVoidAsync("alert", "Xóa ảnh Sp trên Git lỗi!");
+                    return;
+                }
+            }
+        }
+        catch (Exception)
+        {
+
+            await JS.InvokeVoidAsync("alert", $"Update ảnh lỗi");
+            return;
+        }
+        data.FileBytes = null;
 
         int checkupdate = await UpdateOrderWedding.UpdateOrderWeddingById(Product);
         if (checkupdate > 0)

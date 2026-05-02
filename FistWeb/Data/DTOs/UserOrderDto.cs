@@ -1,4 +1,5 @@
 ﻿using FistWeb.Data.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json.Linq;
 
 namespace FistWeb.Data.DTOs
@@ -140,15 +141,30 @@ namespace FistWeb.Data.DTOs
         public int id { get; set; }
         public string idorder { get; set; }
         public string namekh { get; set; }
-        public string type { get; set; }
-        public string Photograper { get; set; }
+        //public string type { get; set; }
+        //public string Photograper { get; set; }
         public decimal price { get; set; }
         public DateTime dateChup { get; set; }
         public DateTime dateTraFile { get; set; }
-        public DateTime? dateCuoi { get; set; }
+        //public DateTime? dateCuoi { get; set; }
         public string note { get; set; }
         public DateTime createdate { get; set; }
         public long imageid { get; set; }
         public int qty { get; set; }
+        public string? NameThoMake { get; set; }
+        public string? NameThoToc { get; set; }
+    }
+
+    public class ImageUploadResult
+    {
+        public IBrowserFile File { get; set; }
+        public string Base64 { get; set; }
+        public string PreviewUrl { get; set; }
+    }
+
+    public class UpdateProductWithImage
+    {
+        public Data.DTOs.ListInfoGoiChup? Product { get; set; }
+        public byte[] FileBytes { get; set; }
     }
 }

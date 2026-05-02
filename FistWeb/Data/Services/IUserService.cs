@@ -236,12 +236,12 @@ namespace FistWeb.Data.Services
     public interface IInsertRevenueWeddingService
     {
         Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, 
-            DateTime? datecuoi, string Notes, long imageID, int qty);
+            DateTime? datecuoi, string Notes, long imageID, int qty, string NameThoMake, string NameThoToc);
     }
     
     public interface IGetListWeddingService
     {
-        Task<List<ListInfoGoiChup>> GetListChupWedding(string fun, int? year = null, int? month = null, int? day = null, string type = null, string thochup = null);
+        Task<List<ListInfoGoiChup>> GetListChupWedding(int? year = null, int? month = null, int? day = null);
     }
 
     public interface IGetSumRevenueWeddingService
