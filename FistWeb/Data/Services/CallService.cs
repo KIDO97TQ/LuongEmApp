@@ -1587,13 +1587,24 @@ namespace FistWeb.Data.Services
                     .FromSqlRaw(sql.ToString(), parameters.ToArray())
                     .ToListAsync();
 
+            bool isAll = string.IsNullOrEmpty(NameNV) || NameNV == "All";
+
             var response = new WeddingDataResponse
             {
                 Items = listData,
-                CountMakeup = listData.Count(x => x.NameThoMake == NameNV),
-                CountHair = listData.Count(x => x.NameThoToc == NameNV),
+                CountMakeup = listData.Where(x => isAll || x.NameThoMake == NameNV).Sum(x => x.qty),
+                CountHair = listData.Where(x => isAll || x.NameThoToc == NameNV).Sum(x => x.qty ),
+                //CountJob = listData.Where(x => isAll || x.NVNhanJob == NameNV).Sum(x => x.qty)
                 CountJob = listData.Count(x => x.NVNhanJob == NameNV)
             };
+
+            //var response = new WeddingDataResponse
+            //{
+            //    Items = listData,
+            //    CountMakeup = listData.Count(x => x.NameThoMake == NameNV),
+            //    CountHair = listData.Count(x => x.NameThoToc == NameNV),
+            //    CountJob = listData.Count(x => x.NVNhanJob == NameNV)
+            //};
 
             return response;
         }
