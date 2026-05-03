@@ -325,9 +325,9 @@
             @for (int day = 1; day <= DaysofMonth(selectedYear, selectedMonth); day++)
             {
                 var currentDay = day;
-                bool isToday = (currentDay == DateTime.Now.Day &&
-                selectedMonth == DateTime.Now.Month &&
-                selectedYear == DateTime.Now.Year);
+                bool isToday = (currentDay == gioVN.Day &&
+                selectedMonth == gioVN.Month &&
+                selectedYear == gioVN.Year);
 
                 <div class="day-cell @(HasEventOnDay(currentDay, 0) ? "has-event" : "") @(isToday ? "is-today" : "")"
                      @onclick="() => OnDayClicked(currentDay)">
