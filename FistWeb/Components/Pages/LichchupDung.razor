@@ -129,6 +129,24 @@
                     </select>
                 </div>
 
+                <!-- NV nhận job -->
+                <div class="form-group">
+                    <label class="form-label required-label">Chọn nhân viên nhận Job:</label>
+
+                    <select class="form-select"
+                            value="@SelectValueNhanJob"
+                            @onchange="OnChangeHandlerIDnvNhanJob">
+                        <option value="">Chọn nhân viên nhận Job </option>
+                        @if (ListNv != null && !isLoading)
+                        {
+                            foreach (var item in ListNv)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    </select>
+                </div>
+
                 <!-- Số lượng -->
                 <div class="form-group">
                     <label class="form-label required-label">Số lượng:</label>
@@ -137,6 +155,7 @@
                            class="form-input" placeholder="Nhập số lượng..." min="1" />
                     <div></div>
                 </div>
+
 
                 <!-- Tên thợ chụp -->
                 @* <div class="form-group">
@@ -250,7 +269,7 @@
         <h3 class="header-controls">
             <div class="controls-left">
                 Nhân Viên
-                  <select class="control-select" value="type" @onchange="OnTypeChanged">
+                <select class="control-select" value="type" @onchange="OnNVChanged">
                     @{
                         if (this.ListNv != null && !isLoading)
                         {
@@ -263,11 +282,12 @@
                     }
                 </select>
                 List Job
-                <select class="control-select" value="type" @onchange="OnThoChupChanged">
+                <select class="control-select" value="type" @onchange="OnJobChanged">
                     @{
                         <option value="All">All</option>
-                        <option value="MAKE-UP">MAKE-UP</option>
-                        <option value="LÀM TÓC">LÀM TÓC</option>
+                        <option value="Make-up">Make-up</option>
+                        <option value="Hair">Làm tóc</option>
+                        <option value="Job">Nhận Job</option>
                     }
                 </select>
                 Tháng
@@ -277,6 +297,19 @@
                         <option value="@i.ToString("D2")">@i.ToString("D2")</option>
                     }
                 </select>
+
+                <div class="control-item qty">
+                    All Job: @qty
+                </div>
+                <div class="control-item qty">
+                    Make-up: @qtyMake
+                </div>
+                <div class="control-item qty">
+                    Tóc: @qtyToc
+                </div>
+                <div class="control-item qty">
+                    Job nhận: @qtyJob
+                </div>
 
                 <button class="Reset" type="button" @onclick="Reset">
                     <img src="return.png" alt="icon" style="width: 37px; height: 33px;">
@@ -289,20 +322,15 @@
             @for (int day = 1; day <= DaysofMonth(selectedYear, selectedMonth); day++)
             {
                 var currentDay = day;
+                bool isToday = (currentDay == DateTime.Now.Day &&
+                selectedMonth == DateTime.Now.Month &&
+                selectedYear == DateTime.Now.Year);
 
-                <div class="day-cell @(HasEventOnDay(currentDay) ? "has-event" : "")"
+                <div class="day-cell @(HasEventOnDay(currentDay, 0) ? "has-event" : "") @(isToday ? "is-today" : "")"
                      @onclick="() => OnDayClicked(currentDay)">
                     @currentDay
                 </div>
             }
-
-            @* @for (int day = 1; day <= DaysofMonth(selectedYear, selectedMonth); day++)
-            {
-                <div class="day-cell @(HasEventOnDay(day) ? "has-event" : "")"
-                     @onclick="() => OnDayClicked(day)">
-                    @day
-                </div>
-            } *@
         </div>
 
         <div class="chart-order">
@@ -314,6 +342,7 @@
                         <th>Tên Khách</th>
                         <th>Thợ Make</th>
                         <th>Thợ làm Tóc</th>
+                        <th>NV nhận Job</th>
                         <th>Số lượng</th>
                         <th class="@(IsAdminUser ? "" : "d-none")">Giá gói chụp</th>
                         <th>Ngày chụp</th>
@@ -336,6 +365,7 @@
                                 <td data-label="Tên khách">@item.namekh</td>
                                 <td data-label="Thợ Make">@item.NameThoMake</td>
                                 <td data-label="Thợ làm Tóc">@item.NameThoToc</td>
+                                <td data-label="NV nhận Job">@item.NVNhanJob</td>
                                 <td data-label="Số lượng">@item.qty.ToString()</td>
                                 <td data-label="Giá gói chụp" class="@(IsAdminUser ? "" : "d-none")">@item.price.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 <td data-label="Ngày chụp">@item.dateChup.ToString("dd/MM/yyyy HH:mm")</td>
@@ -356,7 +386,7 @@
                                         {
                                             <div class="spinner"></div>
                                         }
-                                        else if (item.dateChup >= gioVN.AddDays(-3))
+                                        else if (item.dateChup >= gioVN.AddDays(-10))
                                         {
                                             <div class="option-wrapper">
                                                 <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
@@ -502,7 +532,7 @@
     Dictionary<string, (string, long?)> ListNv;
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
-    private string SelectValueThoMake, SelectValueThoToc, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, TextValueDesc;
+    private string SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, TextValueDesc;
     private int TextValueQTY = 1;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
@@ -575,7 +605,7 @@
                                          })
                                          .Select(x => x.keyData1)
                                          .ToList();
-                    await LoadData(this.type_, null, null, thochup_);
+                    await LoadData(this.NameNV_, null, null, NameJob_);
                     isLoading = false;
                     if (!_disposed)
                     {
@@ -631,7 +661,7 @@
                     return;
                 }
                 fileStream.Position = 0;
-                string contentType = GetFileExtension(uploadedFile.ContentType);
+                string contentType = ".jpg";//GetFileExtension(uploadedFile.ContentType);
                 var fileName = productID.ToString() + contentType;
                 await fileStream.CopyToAsync(fileStream);
                 var base64Data = Convert.ToBase64String(fileStream.ToArray());
@@ -899,15 +929,13 @@
                 return;
             }
 
-            if (string.IsNullOrEmpty(SelectValueThoMake) || string.IsNullOrEmpty(SelectValueThoToc) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH)
-            || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
+            if (string.IsNullOrEmpty(SelectValueNhanJob) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
             {
                 await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
                 return;
             }
 
             UpdateisLoading = true;
-
 
             long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
             #region update image
@@ -918,7 +946,7 @@
                 return;
             }
             fileStream.Position = 0;
-            string contentType = GetFileExtension(uploadedFile.ContentType);
+            string contentType = ".jpg";//GetFileExtension(uploadedFile.ContentType);
             var fileName = productID.ToString() + contentType;
             await fileStream.CopyToAsync(fileStream);
             var base64Data = Convert.ToBase64String(fileStream.ToArray());
@@ -945,7 +973,7 @@
             long imageid_ = productID;
 
             int checkInsert = await AddOrderChup.InsertRevenueWedding(productID.ToString(), TextValueNameKH, total, "Dũng", ngayGioChup, ngayTraFile, null,
-            TextValueDesc, imageid_, TextValueQTY, SelectValueThoMake, SelectValueThoToc);
+            TextValueDesc, imageid_, TextValueQTY, SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob);
             if (checkInsert > 0)
             {
                 SelectValuePrice = null;
@@ -964,7 +992,8 @@
                 uploadedFile = null;
 
                 await TimKiem();
-                allData = await GetListChup.GetListChupWedding(null, null, null);
+                var dataResponse = await GetListChup.GetListChupWedding(null, null, null);
+                allData = dataResponse.Items;
                 await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
                 LoadPage();
             }
@@ -1070,6 +1099,19 @@
         StateHasChanged();
     }
 
+    string IDnvNhanJob = "";
+    private void OnChangeHandlerIDnvNhanJob(ChangeEventArgs e)
+    {
+        SelectValueNhanJob = e.Value?.ToString();
+
+        var result = ListNv.FirstOrDefault(x => x.Key == SelectValueNhanJob);
+        if (result.Key != null)
+        {
+            IDnvNhanJob = result.Value.Item2.ToString();
+        }
+        StateHasChanged();
+    }
+
     private IBrowserFile uploadedFile;
     private string previewImageUrl;
     private bool openImage = false;
@@ -1094,7 +1136,7 @@
     private List<Data.DTOs.ListInfoGoiChup> allData = new();
     private List<Data.DTOs.ListInfoGoiChup> currentPageData = new();
     private bool checkNull = false, isLoadingOption = false;
-    private int currentPage = 1;
+    private int currentPage = 1, qty = 0, qtyMake = 0, qtyToc = 0, qtyJob = 0;
     private int rowsPerPage = 10;
     private bool CanPrev => currentPage > 1;
     private bool CanNext => currentPage < totalPages;
@@ -1128,9 +1170,14 @@
         }
     }
 
-    private async Task LoadData(string type, int? month, int? day, string? thochup)
+    private async Task LoadData(string NameNV, int? month, int? day, string? NameJob)
     {
-        allData = await GetListChup.GetListChupWedding(int.Parse(this.year), month, day);
+        var dataResponse = await GetListChup.GetListChupWedding(NameNV, NameJob, int.Parse(this.year), month, day);
+        allData = dataResponse.Items;
+        qty = allData.Count;
+        qtyMake = dataResponse.CountMakeup;
+        qtyToc = dataResponse.CountHair;
+        qtyJob = dataResponse.CountJob;
 
         checkNull = !(allData != null && allData.Any());
 
@@ -1138,22 +1185,22 @@
         LoadPage();
     }
 
-    private async Task OnTypeChanged(ChangeEventArgs e)
+    private async Task OnNVChanged(ChangeEventArgs e)
     {
-        string type = e.Value?.ToString() ?? "";
-        this.type_ = type;
+        string nv = e.Value?.ToString() ?? "";
+        this.NameNV_ = nv;
         int moth = int.Parse(this.month);
-        await LoadData(type, moth, null, thochup_);
+        await LoadData(nv, moth, null, NameJob_);
     }
-    private async Task OnThoChupChanged(ChangeEventArgs e)
+    private async Task OnJobChanged(ChangeEventArgs e)
     {
-        string Thochup = e.Value?.ToString() ?? "";
-        this.thochup_ = Thochup;
+        string NameJob = e.Value?.ToString() ?? "";
+        this.NameJob_ = NameJob;
         int moth = int.Parse(this.month);
-        await LoadData(type_, moth, null, Thochup);
+        await LoadData(NameNV_, moth, null, NameJob);
     }
 
-    private string type_ = "", thochup_ = "";
+    private string NameNV_ = "", NameJob_ = "";
     private async Task OnMonthChanged1(ChangeEventArgs e)
     {
         int thang = int.Parse(e.Value.ToString());
@@ -1161,12 +1208,17 @@
         {
             selectedMonth = month;
         }
-        await LoadData(this.type_, thang, null, thochup_);
+        await LoadData(this.NameNV_, thang, null, NameJob_);
     }
 
+    private bool checkClicked = false;
     private async Task OnDayClicked(int day)
     {
-        await LoadData(this.type_, selectedMonth, day, thochup_);
+        if (!HasEventOnDay(day, 1)|| checkClicked) return;
+
+        checkClicked = true;
+        await LoadData(this.NameNV_, selectedMonth, day, NameJob_);
+        checkClicked = false;
     }
 
     private int selectedMonth = DateTime.Now.Month;
@@ -1178,19 +1230,29 @@
         return DateTime.DaysInMonth(year, month);
     }
 
-    private bool HasEventOnDay(int day)
+    private bool HasEventOnDay(int day, int check)
     {
         if (currentPageData == null) return false;
         // Kiểm tra xem ngày có dữ liệu trong tháng hiện tại
-        return currentPageData.Any(x =>
+        if (check == 0)
+            return currentPageData.Any(x =>
+                x.dateChup.Day == day &&
+                x.dateChup.Month == selectedMonth &&
+                x.dateChup.Year == selectedYear && x.dateChup.AddHours(2) >= gioVN);
+        else
+            return currentPageData.Any(x =>
             x.dateChup.Day == day &&
             x.dateChup.Month == selectedMonth &&
             x.dateChup.Year == selectedYear);
     }
 
+    private bool check1 = false;
     private async Task Reset()
     {
-        await LoadData(this.type_, selectedMonth, null, thochup_);
+        if (check1) return;
+        check1 = true;
+        await LoadData("All", selectedMonth, null, NameJob_);
+        check1 = false;
     }
 
     private Data.DTOs.ListInfoGoiChup? ProductInfo, ProductInfoUpdate;
@@ -1224,19 +1286,41 @@
         if (confirmed)
         {
             isLoadingOption = true;
-            int checkupdate = await UpdateLichChupWedding.UpdateLichChupWedding(item.id);
-            if (checkupdate > 0)
+
+            var namefile = item.imageid + ".jpg";
+
+            List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+            string tokennnn = datapara[0].keyUsername;
+
+            string owner = "kido1997";
+            string repo = "ImageLuongEm";
+            string pathInRepo = $"ImageLuongEm/{namefile}";
+            string commitMessage = $"Upload {namefile}";
+
+            var result = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
+
+            if (result)
             {
-                await LoadData(this.type_, null, null, thochup_);
-                isLoadingOption = false;
-                await JS.InvokeVoidAsync("closeAllOptionMenus");
-                await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} thành công!");
-                StateHasChanged();
+
+                int checkupdate = await UpdateLichChupWedding.UpdateLichChupWedding(item.id);
+                if (checkupdate > 0)
+                {
+                    await LoadData(this.NameNV_, null, null, NameJob_);
+                    isLoadingOption = false;
+                    await JS.InvokeVoidAsync("closeAllOptionMenus");
+                    await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} thành công!");
+                    StateHasChanged();
+                }
+                else
+                {
+                    isLoadingOption = false;
+                    await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} không thành công!");
+                }
             }
             else
             {
                 isLoadingOption = false;
-                await JS.InvokeVoidAsync("alert", $"Hủy lịch chụp của bạn {item.namekh} không thành công!");
+                await JS.InvokeVoidAsync("alert", $"Delete ảnh Github lỗi, hãy thử lại!");
             }
         }
     }
@@ -1252,6 +1336,7 @@
         showGalleryModal2 = false;
         StateHasChanged();
     }
+
     private async Task OnUpdate(Data.DTOs.UpdateProductWithImage data)
     {
         showGalleryModal = false;
@@ -1260,6 +1345,7 @@
         var Product = data.Product;
         long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
 
+        #region Github process
         try
         {
             if (data.FileBytes != null)
@@ -1301,12 +1387,14 @@
             await JS.InvokeVoidAsync("alert", $"Update ảnh lỗi");
             return;
         }
+        #endregion
+
         data.FileBytes = null;
 
         int checkupdate = await UpdateOrderWedding.UpdateOrderWeddingById(Product);
         if (checkupdate > 0)
         {
-            await LoadData(this.type_, null, null, thochup_);
+            await LoadData(this.NameNV_, null, null, NameJob_);
             await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} thành công!");
         }
         else

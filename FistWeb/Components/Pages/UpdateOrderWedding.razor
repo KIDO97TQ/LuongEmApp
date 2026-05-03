@@ -30,8 +30,12 @@
 
             Product.imageid = long.Parse(imageid);
             Product.namekh = ValueNameKH;
-            Product.NameThoMake = newValueNVMake;
-            Product.NameThoToc = newValueNVToc;
+            if (!string.IsNullOrEmpty(newValueNVMake))
+                Product.NameThoMake = newValueNVMake;
+            if (!string.IsNullOrEmpty(newValueNVToc))
+                Product.NameThoToc = newValueNVToc;
+            if (!string.IsNullOrEmpty(newValueNVnhanJob))
+                Product.NVNhanJob = newValueNVnhanJob;
 
             if (newValueQTY > 0)
             {
@@ -89,7 +93,7 @@
         }
     }
 
-    private string ValueNameKH, ValuePrice, nameThochup, TextValueDesc, ValueNVMake, ValueNVToc, newValuePrice, newValueNVMake, newValueNVToc;
+    private string ValueNameKH, ValuePrice, nameThochup, TextValueDesc, ValueNVMake, ValueNVToc, ValueNVnhanJob, newValuePrice, newValueNVMake, newValueNVToc, newValueNVnhanJob;
     private DateTime? ngayGioChup, ngayCuoi, ngayTraFile, NewngayCuoi, NewngayTraFile, NewngayGioChup;
     private int ValueQTY, newValueQTY;
 
@@ -106,6 +110,7 @@
 
             ValueNVMake = Product.NameThoMake;
             ValueNVToc = Product.NameThoToc;
+            ValueNVnhanJob = Product.NVNhanJob;
         }
     }
 
@@ -120,6 +125,13 @@
     private async void SelectChangeNVToc(ChangeEventArgs e)
     {
         newValueNVToc = e.Value?.ToString();
+
+        await JS.InvokeVoidAsync("closeAllOptionMenus");
+        StateHasChanged();
+    }
+    private async void SelectChangeNVnhanJob(ChangeEventArgs e)
+    {
+        newValueNVnhanJob = e.Value?.ToString();
 
         await JS.InvokeVoidAsync("closeAllOptionMenus");
         StateHasChanged();
@@ -160,34 +172,34 @@
     @if (!string.IsNullOrEmpty(imageid))
     {
         <div style="position:relative; width:100%; height:100%;object-fit:cover;">
-        @if (string.IsNullOrEmpty(previewImageUrl))
-        {
-            <!-- ẢNH CŨ -->
-            <img class="image"
-                 src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")"
-                 style="width:100%; height:100%; object-fit:cover;" />
-        }
-        else
-        {
-            <!-- ẢNH MỚI (PREVIEW) -->
-            <img class="image"
-                 src="@previewImageUrl"
-                 style="width:100%; height:100%; object-fit:cover;" />
-        }
+            @if (string.IsNullOrEmpty(previewImageUrl))
+            {
+                <!-- ẢNH CŨ -->
+                <img class="image"
+                     src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")"
+                     style="width:100%; height:100%; object-fit:cover;" />
+            }
+            else
+            {
+                <!-- ẢNH MỚI (PREVIEW) -->
+                <img class="image"
+                     src="@previewImageUrl"
+                     style="width:100%; height:100%; object-fit:cover;" />
+            }
 
-        <!-- INPUT FILE -->
-        
+            <!-- INPUT FILE -->
+
             <InputFile OnChange="OnFileSelected"
                        accept="image/*"
                        style="
-                           position:absolute;
-                           top:0;
-                           left:0;
-                           width:100%;
-                           height:100%;
-                           opacity:0;
-                           cursor:pointer;
-                       " />
+                                   position:absolute;
+                                   top:0;
+                                   left:0;
+                                   width:100%;
+                                   height:100%;
+                                   opacity:0;
+                                   cursor:pointer;
+                               " />
         </div>
     }
     <div class="image-info">
@@ -227,6 +239,27 @@
             <div class="option-wrappertab2">
                 <select class="option-menutab2" @onchange="@SelectChangeNVToc">
                     <option value="">Chọn Thợ Tóc</option>
+                    @{
+                        if (this.ListNv != null)
+                        {
+                            foreach (var item in this.ListNv)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Chọn nv nhan job -->
+        <div class="form-group">
+            <label class="form-label required-label">Chọn NV nhận Job:</label>
+            <input class="form-label readonly-input" value="@ValueNVnhanJob" readonly />
+
+            <div class="option-wrappertab2">
+                <select class="option-menutab2" @onchange="@SelectChangeNVnhanJob">
+                    <option value="">Chọn NV nhận Job</option>
                     @{
                         if (this.ListNv != null)
                         {

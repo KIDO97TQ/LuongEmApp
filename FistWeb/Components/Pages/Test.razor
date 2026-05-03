@@ -820,7 +820,7 @@
             Decimal PriceSP = decimal.Parse(Regex.Match(SelectValuePrice.Trim(), @"\d+(\.\d+)?").Value);
             int QtySP = int.Parse(TextValueQTY);
 
-            string contentType = GetFileExtension(uploadedFile.ContentType);
+            string contentType = ".jpg"; // GetFileExtension(uploadedFile.ContentType);
             var fileName = productID.ToString() + contentType;
             await fileStream.CopyToAsync(fileStream);
             var base64Data = Convert.ToBase64String(fileStream.ToArray());

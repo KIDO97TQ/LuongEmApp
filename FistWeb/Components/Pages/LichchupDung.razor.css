@@ -1096,6 +1096,20 @@ body {
         font-weight: bold;
     }
 
+    .day-cell.is-today {
+        border: 2px solid #ff0000;
+        font-weight: bold;
+        position: relative; /* Để có thể thêm hiệu ứng nếu cần */
+    }
+.control-item.qty {
+    display: inline-block; 
+    padding: 5px 15px; 
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
 @media (max-width: 768px) {
     .day-cell {
         width: 30px;

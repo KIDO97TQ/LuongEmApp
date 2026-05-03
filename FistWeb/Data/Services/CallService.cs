@@ -1448,10 +1448,10 @@ namespace FistWeb.Data.Services
 
         #region dung
         public async Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup,
-            DateTime? datetrafile, DateTime? datecuoi, string Notes, long imageID, int qty, string NameThoMake, string NameThoToc)
+            DateTime? datetrafile, DateTime? datecuoi, string Notes, long imageID, int qty, string NameThoMake, string NameThoToc, string NameNVnhanJob)
         {
-            var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note, imageid, qty, tho_make, tho_toc) 
-                                                 VALUES (@idorder, @namekh, @pricemake, @photograper, @datechup, @datetrafile, @datecuoi, @note, @imageid, @qty, @NameThoMake, @NameThoToc)");
+            var sql = new StringBuilder(@"INSERT INTO clothings.revenuewedding (idorder, namekh, priremake, photograper, datechup, datetrafile, datecuoi, note, imageid, qty, tho_make, tho_toc, nv_nhanjob) 
+                                                 VALUES (@idorder, @namekh, @pricemake, @photograper, @datechup, @datetrafile, @datecuoi, @note, @imageid, @qty, @NameThoMake, @NameThoToc, @NameNVnhanJob)");
 
             var parameters = new List<NpgsqlParameter>
             {
@@ -1468,29 +1468,20 @@ namespace FistWeb.Data.Services
                 new NpgsqlParameter("note", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)Notes ?? "" },
                 new NpgsqlParameter("imageid", imageID),
                 new NpgsqlParameter("qty", qty),
-                new NpgsqlParameter("NameThoMake", NameThoMake),
-                new NpgsqlParameter("NameThoToc", NameThoToc)
+                new NpgsqlParameter("NameThoMake", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)NameThoMake ?? "" },
+                new NpgsqlParameter("NameThoToc", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)NameThoToc ?? "" },
+                new NpgsqlParameter("NameNVnhanJob", NameNVnhanJob)
             };
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
-        public async Task<List<ListInfoGoiChup>> GetListChupWedding(int? year = null, int? month = null, int? day = null)
+        public async Task<List<ListInfoGoiChup>> GetListChupWedding1(string NameNV, string NameJob, int? year = null, int? month = null, int? day = null)
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
 
-            //StringBuilder sql = new StringBuilder(@" SELECT b.id, b.idorder, b.namekh, 
-            //                                                p.item_key1 as type,
-            //                                                b.priremake as price,b.photograper, b.datechup, b.datetrafile, b.datecuoi, b.note,
-            //                                                b.createdate, b.imageid, b.qty, b.tho_make as NameThoMake, b.tho_toc as NameThoToc
-            //                                            FROM clothings.revenuewedding b
-            //                                            JOIN clothings.paramater p ON b.idorder = p.item_key2 
-            //                                            WHERE b.status = 'OK'  ");
-            //EXTRACT(YEAR FROM b.createdate) = :year ");
-            //parameters.Add(new NpgsqlParameter("year", year));
-
             StringBuilder sql = new StringBuilder(@" SELECT b.id, b.idorder, b.namekh, 
                                                             b.priremake as price, b.datechup, b.datetrafile, b.datecuoi, b.note,
-                                                            b.createdate, b.imageid, b.qty, b.tho_make as NameThoMake, b.tho_toc as NameThoToc
+                                                            b.createdate, b.imageid, b.qty, b.tho_make as NameThoMake, b.tho_toc as NameThoToc, b.nv_nhanjob as NVNhanJob
                                                         FROM clothings.revenuewedding b
                                                         WHERE b.status = 'OK'  ");
 
@@ -1506,22 +1497,105 @@ namespace FistWeb.Data.Services
                 parameters.Add(new NpgsqlParameter("month", month));
             }
 
-            //if (!string.IsNullOrEmpty(type) && type != "All")
-            //{
-            //    sql.Append(" and p.item_key1= :type ");
-            //    parameters.Add(new NpgsqlParameter("type", type));
-            //}
-
-            //if (!string.IsNullOrEmpty(thochup) && thochup != "All")
-            //{
-            //    sql.Append(" and b.photograper= :thochup ");
-            //    parameters.Add(new NpgsqlParameter("thochup", thochup));
-            //}
+            if (!string.IsNullOrEmpty(NameNV) && NameNV != "All")
+            {
+                if (!string.IsNullOrEmpty(NameJob) && NameJob != "All")
+                {
+                    if (NameJob == "Make-up")
+                    {
+                        sql.Append(" and b.tho_make= :NameNV ");
+                        parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                    }
+                    else if (NameJob == "Hair")
+                    {
+                        sql.Append(" and b.tho_toc= :NameNV ");
+                        parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                    }
+                    else if (NameJob == "Job")
+                    {
+                        sql.Append(" and b.nv_nhanjob= :NameNV ");
+                        parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                    }
+                }
+                else
+                {
+                    sql.Append(" and ( b.nv_nhanjob= :NameNV or b.tho_toc= :NameNV or b.tho_make= :NameNV )");
+                    parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                }
+            }
 
             sql.Append(" ORDER BY createdate desc ");
             return await _context.Set<ListInfoGoiChup>()
                     .FromSqlRaw(sql.ToString(), parameters.ToArray())
                     .ToListAsync();
+        }
+
+        public async Task<WeddingDataResponse> GetListChupWedding(string NameNV, string NameJob, int? year = null, int? month = null, int? day = null)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder(@" 
+        SELECT b.id, b.idorder, b.namekh, b.priremake as price, b.datechup, 
+               b.datetrafile, b.datecuoi, b.note, b.createdate, b.imageid, 
+               b.qty, b.tho_make as NameThoMake, b.tho_toc as NameThoToc, b.nv_nhanjob as NVNhanJob
+        FROM clothings.revenuewedding b
+        WHERE b.status = 'OK' ");
+
+            if (year.HasValue)
+            {
+                sql.Append(" AND EXTRACT(YEAR FROM b.datechup) = :year ");
+                parameters.Add(new NpgsqlParameter("year", year));
+            }
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM b.datechup) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+            if (day.HasValue)
+            {
+                sql.Append(" AND EXTRACT(DAY FROM b.datechup) = :day ");
+                parameters.Add(new NpgsqlParameter("day", day));
+            }
+
+            if (!string.IsNullOrEmpty(NameNV) && NameNV != "All")
+            {
+                if (!string.IsNullOrEmpty(NameJob) && NameJob != "All")
+                {
+                    if (NameJob == "Make-up")
+                    {
+                        sql.Append(" AND b.tho_make = :NameNV ");
+                    }
+                    else if (NameJob == "Hair")
+                    {
+                        sql.Append(" AND b.tho_toc = :NameNV ");
+                    }
+                    else if (NameJob == "Job")
+                    {
+                        sql.Append(" AND b.nv_nhanjob = :NameNV ");
+                    }
+                    parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                }
+                else
+                {
+                    sql.Append(" AND (b.nv_nhanjob = :NameNV OR b.tho_toc = :NameNV OR b.tho_make = :NameNV) ");
+                    parameters.Add(new NpgsqlParameter("NameNV", NameNV));
+                }
+            }
+
+            sql.Append(" ORDER BY b.createdate DESC ");
+
+            var listData = await _context.Set<ListInfoGoiChup>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .ToListAsync();
+
+            var response = new WeddingDataResponse
+            {
+                Items = listData,
+                CountMakeup = listData.Count(x => x.NameThoMake == NameNV),
+                CountHair = listData.Count(x => x.NameThoToc == NameNV),
+                CountJob = listData.Count(x => x.NVNhanJob == NameNV)
+            };
+
+            return response;
         }
 
         public async Task<List<RentalSummaryChup>> SumGetListWedding(string type, int year, int? month = null, int? day = null, string thochup = null)
@@ -1600,15 +1674,17 @@ namespace FistWeb.Data.Services
 
         public async Task<int> UpdateOrderWeddingById(ListInfoGoiChup updatedProduct)
         {
-            TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-            DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
-            string sql = @"update clothings.revenuewedding set idorder=@idorder, namekh=@namekh, priremake=@prirechup, photograper=@photograper, qty=@qty,
-                            datechup=@datechup, imageid=@imageid, updatetime=@updatetime, tho_make=@tho_make, tho_toc=@tho_toc
+            try
+            {
+                TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
+                string sql = @"update clothings.revenuewedding set idorder=@idorder, namekh=@namekh, priremake=@prirechup, photograper=@photograper, qty=@qty,
+                            datechup=@datechup, imageid=@imageid, updatetime=@updatetime, tho_make=@tho_make, tho_toc=@tho_toc, nv_nhanjob =@NVNhanJob
                             WHERE id=@productId";
 
-            var parameters = new[]
-            {
-                new NpgsqlParameter("@productId", updatedProduct.id),
+                var parameters = new[]
+                {
+                 new NpgsqlParameter("@productId", updatedProduct.id),
                  new NpgsqlParameter("@idorder", updatedProduct.idorder),
                  new NpgsqlParameter("@namekh", updatedProduct.namekh),
                  new NpgsqlParameter("@prirechup", updatedProduct.price),
@@ -1618,9 +1694,16 @@ namespace FistWeb.Data.Services
                  new NpgsqlParameter("@imageid", updatedProduct.imageid),
                  new NpgsqlParameter("@updatetime", gioVN),
                  new NpgsqlParameter("@tho_make", updatedProduct.NameThoMake),
-                 new NpgsqlParameter("@tho_toc", updatedProduct.NameThoToc)
-            };
-            return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+                 new NpgsqlParameter("@tho_toc", updatedProduct.NameThoToc),
+                 new NpgsqlParameter("@NVNhanJob", updatedProduct.NVNhanJob)
+                };
+                return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return 0;
         }
         #endregion
     }

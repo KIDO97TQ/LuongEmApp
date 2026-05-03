@@ -2231,6 +2231,20 @@ body {
         font-weight: bold;
     }
 
+    .day-cell.is-today[b-v0dgx4v6zf] {
+        border: 2px solid #ff0000;
+        font-weight: bold;
+        position: relative; /* Để có thể thêm hiệu ứng nếu cần */
+    }
+.control-item.qty[b-v0dgx4v6zf] {
+    display: inline-block; 
+    padding: 5px 15px; 
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
 @media (max-width: 768px) {
     .day-cell[b-v0dgx4v6zf] {
         width: 30px;

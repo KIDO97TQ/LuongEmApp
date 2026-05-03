@@ -153,6 +153,7 @@ namespace FistWeb.Data.DTOs
         public int qty { get; set; }
         public string? NameThoMake { get; set; }
         public string? NameThoToc { get; set; }
+        public string? NVNhanJob { get; set; }
     }
 
     public class ImageUploadResult
@@ -166,5 +167,13 @@ namespace FistWeb.Data.DTOs
     {
         public Data.DTOs.ListInfoGoiChup? Product { get; set; }
         public byte[] FileBytes { get; set; }
+    }
+
+    public class WeddingDataResponse
+    {
+        public List<ListInfoGoiChup> Items { get; set; } = new();
+        public int CountMakeup { get; set; }
+        public int CountHair { get; set; }
+        public int CountJob { get; set; }
     }
 }
