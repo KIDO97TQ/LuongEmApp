@@ -220,3 +220,4 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\FistWeb.
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\ref\FistWeb.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\AllDoanhThuAmy.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\AllDoanhThuLuongEm.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\bin\Debug\net8.0\SixLabors.ImageSharp.dll

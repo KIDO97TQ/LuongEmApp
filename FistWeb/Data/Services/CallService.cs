@@ -1593,7 +1593,7 @@ namespace FistWeb.Data.Services
             {
                 Items = listData,
                 CountMakeup = listData.Where(x => isAll || x.NameThoMake == NameNV).Sum(x => x.qty),
-                CountHair = listData.Where(x => isAll || x.NameThoToc == NameNV).Sum(x => x.qty ),
+                CountHair = listData.Where(x => isAll || x.NameThoToc == NameNV).Sum(x => x.qty),
                 //CountJob = listData.Where(x => isAll || x.NVNhanJob == NameNV).Sum(x => x.qty)
                 CountJob = listData.Count(x => x.NVNhanJob == NameNV)
             };
@@ -1673,7 +1673,7 @@ namespace FistWeb.Data.Services
 
         public async Task<int> UpdateLichChupWedding(int Id)
         {
-            string sql = @"update clothings.revenuewedding set  status='CANCEL'
+            string sql = @"update clothings.revenuewedding set  status='CANCEL', imageid = '0'
                             WHERE id=@OrderId";
 
             var parameters = new[]
@@ -1715,6 +1715,22 @@ namespace FistWeb.Data.Services
 
             }
             return 0;
+        }
+
+        public async Task<List<long>> GetRecentImageIds()
+        {
+            string sql = @"
+        SELECT b.imageid
+        FROM clothings.revenuewedding b
+        WHERE b.status = 'OK' 
+          AND b.datechup >= CURRENT_DATE - INTERVAL '30 days'
+          AND b.imageid IS NOT NULL 
+          AND b.imageid <> '0' ";
+
+            return await _context.Set<ListInfoGoiChup>()
+                    .FromSqlRaw(sql)
+                    .Select(x => x.imageid)
+                    .ToListAsync();
         }
         #endregion
     }

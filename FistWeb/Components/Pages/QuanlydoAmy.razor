@@ -27,6 +27,9 @@
 @inject IUpdateProductByIdAmyService UpdateSPByID
 @inject IGetProductID1AmyService GetImageByProID1
 @inject LoadingService LoadingService
+@using SixLabors.ImageSharp;
+@using SixLabors.ImageSharp.Processing;
+@using SixLabors.ImageSharp.Formats.Jpeg;
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">
@@ -810,37 +813,65 @@
     {
         try
         {
+            // 1. Kiểm tra đầu vào
             if (string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(SelectValueSP)
-            || string.IsNullOrEmpty(TextValueNameSP) || string.IsNullOrEmpty(TextValueSizeSP) || string.IsNullOrEmpty(TextValueQTY))
+                || string.IsNullOrEmpty(TextValueNameSP) || string.IsNullOrEmpty(TextValueSizeSP) || string.IsNullOrEmpty(TextValueQTY))
             {
-                await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+                await JS.InvokeVoidAsync("alert", "Vui lòng điền đầy đủ thông tin trước!");
                 return;
             }
+
             if (fileStream == null || uploadedFile == null)
             {
                 await JS.InvokeVoidAsync("alert", "Chưa chọn ảnh");
                 return;
             }
-            fileStream.Position = 0;
-            UpdateisLoading = true;
 
+            UpdateisLoading = true;
+            StateHasChanged(); // Cập nhật để hiển thị loading ngay lập tức
+
+            // 2. Chuẩn bị thông tin sản phẩm
             long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
             decimal PriceSP = decimal.Parse(Regex.Replace(SelectValuePrice, @"[^\d]", ""));
             int QtySP = int.Parse(TextValueQTY);
+            string fileName = productID.ToString() + ".jpg";
 
-            string contentType = ".jpg"; // GetFileExtension(uploadedFile.ContentType);
-            var fileName = productID.ToString() + contentType;
-            await fileStream.CopyToAsync(fileStream);
-            var base64Data = Convert.ToBase64String(fileStream.ToArray());
+            #region Xử lý nén ảnh bằng ImageSharp
+            string base64Data = "";
+            fileStream.Position = 0; // Reset vị trí con trỏ stream
 
-            var success = await UploadToGitHubAsync(base64Data.ToString(), fileName.ToString());
+            using (var outputStream = new MemoryStream())
+            {
+                using (var image = await Image.LoadAsync(fileStream))
+                {
+                    // Resize: Giới hạn chiều rộng 1200px (đảm bảo ảnh nhẹ mà vẫn nét)
+                    if (image.Width > 1200)
+                    {
+                        image.Mutate(x => x.Resize(1200, 0));
+                    }
+
+                    // Nén: Quality 75% giúp dung lượng về mức lý tưởng (~145KB)
+                    var encoder = new JpegEncoder { Quality = 75 };
+                    await image.SaveAsJpegAsync(outputStream, encoder);
+                }
+                // Lấy Base64 từ ảnh đã nén
+                base64Data = Convert.ToBase64String(outputStream.ToArray());
+            }
+            #endregion
+
+            // 3. Upload lên GitHub
+            var success = await UploadToGitHubAsync(base64Data, fileName);
+
             if (success)
             {
+                // 4. Lưu thông tin vào Database (Dùng hàm InserProductAmy của bạn)
                 int checkInsert = await InserSP.InserProductAmy(productID, TextValueNameSP, TextValueDesc, PriceSP, QtySP, TextValueSizeSP, SelectValueSP);
+
                 if (checkInsert > 0)
                 {
-                    fileStream.Dispose();
-                    fileStream = null;
+                    // Giải phóng bộ nhớ và Reset Form
+                    if (fileStream != null) { fileStream.Dispose(); fileStream = null; }
+
                     openImage = false;
                     previewImageUrl = null;
                     uploadedFile = null;
@@ -851,23 +882,26 @@
                     TextValueQTY = null;
                     TextValueDesc = null;
 
-                    await JS.InvokeVoidAsync("alert", "Thêm Sp mới ok!");
+                    await JS.InvokeVoidAsync("alert", "Thêm sản phẩm mới thành công!");
                 }
                 else
                 {
-                    await JS.InvokeVoidAsync("alert", "Thêm Sp mới lỗi!");
+                    await JS.InvokeVoidAsync("alert", "Lưu thông tin vào Database thất bại!");
                 }
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", "Upload thất bại");
+                await JS.InvokeVoidAsync("alert", "Upload ảnh lên GitHub thất bại!");
             }
+
             UpdateisLoading = false;
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload ảnh: {ex.Message}");
+            UpdateisLoading = false;
+            await JS.InvokeVoidAsync("alert", $"Lỗi hệ thống: {ex.Message}");
+            StateHasChanged();
         }
     }
 

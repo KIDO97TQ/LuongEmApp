@@ -25,6 +25,9 @@
 @inject IGetListWeddingService GetListChup
 @inject IUpdateLichChupWedding UpdateLichChupWedding
 @inject IUpdateOrderWeddingByIdService UpdateOrderWedding
+@using SixLabors.ImageSharp;
+@using SixLabors.ImageSharp.Processing;
+@using SixLabors.ImageSharp.Formats.Jpeg;
 
 @inject LoadingService LoadingService
 @inject HttpClient Http
@@ -918,99 +921,195 @@
             newValuePrice = "";
     }
 
+    // private async Task AddLichChup()
+    // {
+    //     try
+    //     {
+    //         decimal total = 0;
+    //         if (TextValueQTY == 0 || string.IsNullOrEmpty(TextValueQTY.ToString()))
+    //         {
+    //             await JS.InvokeVoidAsync("alert", $"Vui lòng điền số lượng trước!");
+    //             return;
+    //         }
+
+    //         if (string.IsNullOrEmpty(SelectValueNhanJob) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
+    //         {
+    //             await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
+    //             return;
+    //         }
+
+    //         UpdateisLoading = true;
+
+    //         long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+    //         #region update image
+    //         if (fileStream == null || uploadedFile == null)
+    //         {
+    //             await JS.InvokeVoidAsync("alert", "Chưa chọn ảnh");
+    //             isLoading = false;
+    //             return;
+    //         }
+    //         fileStream.Position = 0;
+    //         string contentType = ".jpg";//GetFileExtension(uploadedFile.ContentType);
+    //         var fileName = productID.ToString() + contentType;
+    //         await fileStream.CopyToAsync(fileStream);
+    //         var base64Data = Convert.ToBase64String(fileStream.ToArray());
+    //         var success = await UploadToGitHubAsync(base64Data.ToString(), fileName.ToString());
+    //         if (success)
+    //         {
+    //             //update ảnh ok
+    //         }
+    //         else
+    //         {
+    //             UpdateisLoading = false;
+    //             isLoading = false;
+    //             await JS.InvokeVoidAsync("alert", "Upload ảnh thất bại, có thể do dung lượng ảnh quá lớn");
+    //             return;
+    //         }
+    //         #endregion
+
+    //         // string id = ListGoimake[SelectValueSP].Item1;
+
+    //         string Tienorder = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
+    //         bool checkTien = decimal.TryParse(Tienorder, out decimal money);
+    //         total = money * TextValueQTY;
+
+    //         long imageid_ = productID;
+
+    //         int checkInsert = await AddOrderChup.InsertRevenueWedding(productID.ToString(), TextValueNameKH, total, "Dũng", ngayGioChup, ngayTraFile, null,
+    //         TextValueDesc, imageid_, TextValueQTY, SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob);
+    //         if (checkInsert > 0)
+    //         {
+    //             SelectValuePrice = null;
+    //             SelectValueThoMake = null;
+    //             SelectValueThoToc = null;
+    //             TextValueNameKH = null;
+    //             ngayGioChup = null;
+    //             ngayTraFile = null;
+    //             TextValueDesc = null;
+    //             TextValueQTY = 0;
+
+    //             fileStream.Dispose();
+    //             fileStream = null;
+    //             openImage = false;
+    //             previewImageUrl = null;
+    //             uploadedFile = null;
+
+    //             await TimKiem();
+    //             var dataResponse = await GetListChup.GetListChupWedding(null, null, null);
+    //             allData = dataResponse.Items;
+    //             await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
+    //             LoadPage();
+    //         }
+    //         else
+    //         {
+    //             await JS.InvokeVoidAsync("alert", "Upload thất bại");
+    //         }
+
+    //         UpdateisLoading = false;
+    //         StateHasChanged();
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         UpdateisLoading = false;
+    //         await JS.InvokeVoidAsync("alert", $"Lỗi khi upload: {ex.Message}");
+    //         StateHasChanged();
+    //     }
+    // }
+
     private async Task AddLichChup()
     {
         try
         {
-            decimal total = 0;
-            if (TextValueQTY == 0 || string.IsNullOrEmpty(TextValueQTY.ToString()))
-            {
-                await JS.InvokeVoidAsync("alert", $"Vui lòng điền số lượng trước!");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(SelectValueNhanJob) || string.IsNullOrEmpty(SelectValuePrice) || string.IsNullOrEmpty(TextValueNameKH) || !ngayGioChup.HasValue || !ngayTraFile.HasValue)
-            {
-                await JS.InvokeVoidAsync("alert", $"Vui lòng điền đầy đủ thông tin trước!");
-                return;
-            }
+            if (TextValueQTY <= 0) { await JS.InvokeVoidAsync("alert", "Vui lòng điền số lượng!"); return; }
+            if (string.IsNullOrEmpty(SelectValueNhanJob) || string.IsNullOrEmpty(TextValueNameKH) || !ngayGioChup.HasValue)
+            { await JS.InvokeVoidAsync("alert", "Vui lòng điền đầy đủ thông tin!"); return; }
 
             UpdateisLoading = true;
-
             long productID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
-            #region update image
+
+            #region Xử lý nén ảnh và Upload
             if (fileStream == null || uploadedFile == null)
             {
                 await JS.InvokeVoidAsync("alert", "Chưa chọn ảnh");
-                isLoading = false;
+                UpdateisLoading = false;
                 return;
             }
+
+            string base64Data = "";
+            string fileName = productID.ToString() + ".jpg";
+
+            // Thực hiện nén ảnh trước khi upload
             fileStream.Position = 0;
-            string contentType = ".jpg";//GetFileExtension(uploadedFile.ContentType);
-            var fileName = productID.ToString() + contentType;
-            await fileStream.CopyToAsync(fileStream);
-            var base64Data = Convert.ToBase64String(fileStream.ToArray());
-            var success = await UploadToGitHubAsync(base64Data.ToString(), fileName.ToString());
-            if (success)
+            using (var outputStream = new MemoryStream())
             {
-                //update ảnh ok
+                using (var image = await Image.LoadAsync(fileStream))
+                {
+                    int maxWidth = 1200;
+                    if (image.Width > maxWidth)
+                    {
+                        image.Mutate(x => x.Resize(maxWidth, 0));
+                    }
+
+                    // 2. Nén chất lượng JPEG xuống 75% (Dung lượng giảm cực nhiều)
+                    var encoder = new JpegEncoder { Quality = 75 };
+                    await image.SaveAsJpegAsync(outputStream, encoder);
+                }
+                base64Data = Convert.ToBase64String(outputStream.ToArray());
             }
-            else
+
+            var success = await UploadToGitHubAsync(base64Data, fileName);
+
+            if (!success)
             {
                 UpdateisLoading = false;
-                isLoading = false;
-                await JS.InvokeVoidAsync("alert", "Upload ảnh thất bại, có thể do dung lượng ảnh quá lớn");
+                await JS.InvokeVoidAsync("alert", "Upload ảnh thất bại!");
                 return;
             }
             #endregion
 
-            // string id = ListGoimake[SelectValueSP].Item1;
-
+            // ... (Giữ nguyên đoạn tính toán tiền của bạn) ...
             string Tienorder = SelectValuePrice.Replace(".", "").Replace(",", "").Replace(" vnđ", "").Trim();
-            bool checkTien = decimal.TryParse(Tienorder, out decimal money);
-            total = money * TextValueQTY;
+            decimal money = decimal.TryParse(Tienorder, out decimal m) ? m : 0;
+            decimal total = money * TextValueQTY;
 
-            long imageid_ = productID;
+            // Lưu Database
+            int checkInsert = await AddOrderChup.InsertRevenueWedding(
+                productID.ToString(), TextValueNameKH, total, "Dũng", ngayGioChup, ngayTraFile, null,
+                TextValueDesc, productID, TextValueQTY, SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob);
 
-            int checkInsert = await AddOrderChup.InsertRevenueWedding(productID.ToString(), TextValueNameKH, total, "Dũng", ngayGioChup, ngayTraFile, null,
-            TextValueDesc, imageid_, TextValueQTY, SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob);
             if (checkInsert > 0)
             {
-                SelectValuePrice = null;
-                SelectValueThoMake = null;
-                SelectValueThoToc = null;
-                TextValueNameKH = null;
-                ngayGioChup = null;
-                ngayTraFile = null;
-                TextValueDesc = null;
-                TextValueQTY = 0;
-
-                fileStream.Dispose();
-                fileStream = null;
-                openImage = false;
-                previewImageUrl = null;
-                uploadedFile = null;
-
+                // Reset form
+                await ResetForm();
                 await TimKiem();
+
                 var dataResponse = await GetListChup.GetListChupWedding(null, null, null);
                 allData = dataResponse.Items;
-                await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới ok!");
-                LoadPage();
+
+                await JS.InvokeVoidAsync("alert", "Thêm lịch chụp mới thành công!");
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", "Upload thất bại");
+                await JS.InvokeVoidAsync("alert", "Lưu thông tin thất bại!");
             }
 
             UpdateisLoading = false;
-            StateHasChanged();
         }
         catch (Exception ex)
         {
             UpdateisLoading = false;
-            await JS.InvokeVoidAsync("alert", $"Lỗi khi upload: {ex.Message}");
-            StateHasChanged();
+            await JS.InvokeVoidAsync("alert", $"Lỗi hệ thống: {ex.Message}");
         }
+    }
+
+    private async Task ResetForm()
+    {
+        SelectValuePrice = null; SelectValueThoMake = null; SelectValueThoToc = null;
+        TextValueNameKH = null; ngayGioChup = null; ngayTraFile = null;
+        TextValueDesc = null; TextValueQTY = 0;
+
+        if (fileStream != null) { fileStream.Dispose(); fileStream = null; }
+        openImage = false; previewImageUrl = null; uploadedFile = null;
     }
 
     private async Task<bool> UploadToGitHubAsync(string base64Content, string fileName)
@@ -1116,13 +1215,26 @@
     private string previewImageUrl;
     private bool openImage = false;
     private MemoryStream? fileStream;
+    // private async Task OnFileSelected(InputFileChangeEventArgs e)
+    // {
+    //     openImage = true;
+    //     uploadedFile = e.File;
+
+    //     using var stream = uploadedFile.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024); // 5MB
+
+    //     fileStream = new MemoryStream();
+    //     await stream.CopyToAsync(fileStream);
+
+    //     var base64 = Convert.ToBase64String(fileStream.ToArray());
+    //     previewImageUrl = $"data:{uploadedFile.ContentType};base64,{base64}";
+    // }
+
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
         openImage = true;
         uploadedFile = e.File;
 
-        using var stream = uploadedFile.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024); // 5MB
-
+        using var stream = uploadedFile.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024);
         fileStream = new MemoryStream();
         await stream.CopyToAsync(fileStream);
 
@@ -1214,7 +1326,7 @@
     private bool checkClicked = false;
     private async Task OnDayClicked(int day)
     {
-        if (!HasEventOnDay(day, 1)|| checkClicked) return;
+        if (!HasEventOnDay(day, 1) || checkClicked) return;
 
         checkClicked = true;
         await LoadData(this.NameNV_, selectedMonth, day, NameJob_);
@@ -1337,7 +1449,7 @@
         StateHasChanged();
     }
 
-    private async Task OnUpdate(Data.DTOs.UpdateProductWithImage data)
+    private async Task OnUpdate1(Data.DTOs.UpdateProductWithImage data)
     {
         showGalleryModal = false;
         isLoading = true;
@@ -1399,6 +1511,91 @@
         }
         else
             await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} không thành công!");
+        isLoading = false;
+        StateHasChanged();
+    }
+
+
+    private async Task OnUpdate(Data.DTOs.UpdateProductWithImage data)
+    {
+        showGalleryModal = false;
+        isLoading = true;
+
+        var Product = data.Product;
+        long newProductID = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+        #region Github process
+        try
+        {
+            if (data.FileBytes != null)
+            {
+                var oldFileName = Product.imageid + ".jpg";
+
+                List<Data.DTOs.ListParaUser> datapara = await GetUserInfo.GetLoginUser("tocken", null, null);
+                string tokennnn = datapara[0].keyUsername;
+
+                string owner = "kido1997";
+                string repo = "ImageLuongEm";
+                string pathInRepo = $"ImageLuongEm/{oldFileName}";
+                string commitMessage = $"Delete old image {oldFileName}";
+
+                var deleteResult = await DeleteImageFromGitHubAsync(tokennnn, owner, repo, pathInRepo, commitMessage);
+
+                // Nén ảnh mới từ data.FileBytes
+                string base64Compressed = "";
+                using (var inputStream = new MemoryStream(data.FileBytes))
+                using (var outputStream = new MemoryStream())
+                {
+                    using (var image = await Image.LoadAsync(inputStream))
+                    {
+                        if (image.Width > 1200)
+                        {
+                            image.Mutate(x => x.Resize(1200, 0));
+                        }
+
+                        var encoder = new JpegEncoder { Quality = 75 };
+                        await image.SaveAsJpegAsync(outputStream, encoder);
+                    }
+                    base64Compressed = Convert.ToBase64String(outputStream.ToArray());
+                }
+
+                var newFileName = newProductID + ".jpg";
+                var uploadSuccess = await UploadToGitHubAsync(base64Compressed, newFileName);
+
+                if (uploadSuccess)
+                {
+                    Product.imageid = newProductID;
+                }
+                else
+                {
+                    isLoading = false;
+                    await JS.InvokeVoidAsync("alert", "Upload ảnh mới lên Git lỗi!");
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            isLoading = false;
+            await JS.InvokeVoidAsync("alert", $"Update ảnh lỗi: {ex.Message}");
+            return;
+        }
+        #endregion
+
+        data.FileBytes = null;
+
+        int checkupdate = await UpdateOrderWedding.UpdateOrderWeddingById(Product);
+
+        if (checkupdate > 0)
+        {
+            await LoadData(this.NameNV_, null, null, NameJob_);
+            await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} thành công!");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", $"Update lịch chụp của bạn {Product.namekh} không thành công!");
+        }
+
         isLoading = false;
         StateHasChanged();
     }
