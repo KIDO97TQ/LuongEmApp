@@ -1088,14 +1088,14 @@
     {
         string nv = e.Value?.ToString() ?? "";
         this.NameNV_ = nv;
-        int moth = int.Parse(this.month);
+        int moth = selectedMonth;
         await LoadData(nv, moth, null, NameJob_);
     }
     private async Task OnJobChanged(ChangeEventArgs e)
     {
         string NameJob = e.Value?.ToString() ?? "";
         this.NameJob_ = NameJob;
-        int moth = int.Parse(this.month);
+        int moth = selectedMonth;
         await LoadData(NameNV_, moth, null, NameJob);
     }
 
