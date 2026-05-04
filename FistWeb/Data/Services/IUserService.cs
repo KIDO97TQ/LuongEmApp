@@ -235,13 +235,13 @@ namespace FistWeb.Data.Services
     #region dung
     public interface IInsertRevenueWeddingService
     {
-        Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile, 
-            DateTime? datecuoi, string Notes, long imageID, int qty, string NameThoMake, string NameThoToc, string NameNVnhanJob);
+        Task<int> InsertRevenueWedding(string id, string NameKach, decimal price, string photograper, DateTime? datechup, DateTime? datetrafile,
+            DateTime? datecuoi, string Notes, long imageID, int qty, string NameThoMake, string NameThoToc, string NameNVnhanJob, string imageURL);
     }
-    
+
     public interface IGetListWeddingService
     {
-        Task <WeddingDataResponse> GetListChupWedding(string NameNV, string NameJob, int? year = null, int? month = null, int? day = null);
+        Task<WeddingDataResponse> GetListChupWedding(string NameNV, string NameJob, int? year = null, int? month = null, int? day = null);
     }
 
     public interface IGetSumRevenueWeddingService

@@ -154,6 +154,7 @@ namespace FistWeb.Data.DTOs
         public string? NameThoMake { get; set; }
         public string? NameThoToc { get; set; }
         public string? NVNhanJob { get; set; }
+        public string? ImageUrl { get; set; }
     }
 
     public class ImageUploadResult

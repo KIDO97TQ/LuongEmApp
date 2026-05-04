@@ -35,9 +35,8 @@
     else
     {
         <div class="single-image-container" @onclick="SelectImage">
-
-            <img loading="lazy" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" />
-
+            @* <img loading="lazy" src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{Product.imageid}.jpg")" alt="Ảnh Concept" /> *@
+            <img loading="lazy" src="@(Product.ImageUrl)" alt="Ảnh Concept" />
             <div class="image-info">
                 <div><strong>Tên Khách:</strong> @Product.namekh</div>
                 <div><strong>Tên thợ Make:</strong> @Product.NameThoMake</div>

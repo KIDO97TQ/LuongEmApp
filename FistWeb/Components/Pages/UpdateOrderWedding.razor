@@ -175,31 +175,15 @@
             @if (string.IsNullOrEmpty(previewImageUrl))
             {
                 <!-- ẢNH CŨ -->
-                <img class="image"
-                     src="@($"https://raw.githubusercontent.com/kido1997/ImageLuongEm/main/ImageLuongEm/{imageid}.jpg")"
-                     style="width:100%; height:100%; object-fit:cover;" />
+                <img class="image" src="@(Product.ImageUrl)" style="width:100%; height:100%; object-fit:cover;" />
             }
             else
             {
                 <!-- ẢNH MỚI (PREVIEW) -->
-                <img class="image"
-                     src="@previewImageUrl"
-                     style="width:100%; height:100%; object-fit:cover;" />
+                <img class="image" src="@previewImageUrl" style="width:100%; height:100%; object-fit:cover;" />
             }
-
             <!-- INPUT FILE -->
-
-            <InputFile OnChange="OnFileSelected"
-                       accept="image/*"
-                       style="
-                                   position:absolute;
-                                   top:0;
-                                   left:0;
-                                   width:100%;
-                                   height:100%;
-                                   opacity:0;
-                                   cursor:pointer;
-                               " />
+            <InputFile OnChange="OnFileSelected" accept="image/*" style="position:absolute; top:0; left:0;  width:100%; height:100%; opacity:0; cursor:pointer;" />
         </div>
     }
     <div class="image-info">
