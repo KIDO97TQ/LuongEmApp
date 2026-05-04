@@ -648,7 +648,7 @@
                                          })
                                          .Select(x => x.keyData1)
                                          .ToList();
-                    await LoadData(this.NameNV_, null, null, NameJob_);
+                    await LoadData(this.NameNV_, int.Parse(this.month), null, NameJob_);
                     isLoading = false;
                     if (!_disposed)
                     {
