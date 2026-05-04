@@ -1616,12 +1616,19 @@ namespace FistWeb.Data.Services
 
             try
             {
+                //sql.Append(@" SELECT 
+                //               DATE(b.datechup) AS Date,
+                //               p.item_key1 as Type,
+                //               SUM(b.priremake) AS Reverue
+                //           FROM clothings.revenuewedding b
+                //           JOIN clothings.paramater p ON b.idorder = p.item_key2
+                //           WHERE b.status = 'OK' AND EXTRACT(YEAR FROM b.createdate) = :year ");
+
                 sql.Append(@" SELECT 
                                DATE(b.datechup) AS Date,
-                               p.item_key1 as Type,
+                               'Ảnh' as Type,
                                SUM(b.priremake) AS Reverue
                            FROM clothings.revenuewedding b
-                           JOIN clothings.paramater p ON b.idorder = p.item_key2
                            WHERE b.status = 'OK' AND EXTRACT(YEAR FROM b.createdate) = :year ");
 
                 parameters.Add(new NpgsqlParameter("year", year));
@@ -1638,14 +1645,15 @@ namespace FistWeb.Data.Services
                     parameters.Add(new NpgsqlParameter("month", month));
                 }
 
-                if (!string.IsNullOrEmpty(thochup) && thochup != "All")
-                {
-                    sql.Append(" and b.photograper= :thochup ");
-                    parameters.Add(new NpgsqlParameter("thochup", thochup));
-                }
+                //if (!string.IsNullOrEmpty(thochup) && thochup != "All")
+                //{
+                //    sql.Append(" and b.photograper= :thochup ");
+                //    parameters.Add(new NpgsqlParameter("thochup", thochup));
+                //}
 
-                sql.Append(" and p.function_name= :type  GROUP BY datechup, item_key1 ORDER BY datechup");
-                parameters.Add(new NpgsqlParameter("type", type));
+                //sql.Append(" and p.function_name= :type  GROUP BY datechup, item_key1 ORDER BY datechup");
+                sql.Append(" GROUP BY datechup ORDER BY datechup");
+                //parameters.Add(new NpgsqlParameter("type", type));
 
                 return await _context.Set<RentalSummaryChup>()
                         .FromSqlRaw(sql.ToString(), parameters.ToArray())

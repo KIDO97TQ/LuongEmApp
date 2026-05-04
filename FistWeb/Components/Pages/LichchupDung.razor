@@ -97,6 +97,36 @@
                             }
                         }
                     </select>
+                    @if (isLoading)
+                    {
+                        <div class="spinner" style="margin-top:10px;"></div>
+                    }
+                    else
+                    {
+                        <div class="option-wrapper">
+                            <button class="btn btn-option" onclick="toggleOptionMenu(this)"><span>...</span> Option</button>
+
+                            <div class="option-menu">
+                                <div class="New-price">
+                                    <input id="priceInput" type="text"
+                                           @bind="newValueNV"
+                                           @bind:event="oninput"
+                                           placeholder="Thêm mới Nhân viên..." />
+                                    @if (isLoading)
+                                    {
+                                        <div class="spinner" style="margin-top:10px;"></div>
+                                    }
+                                    else
+                                    {
+                                        <button class="option-itemAdd" type="button" @onclick="addNVClick">
+                                            <i class="bi-option bi-plus-circle-fill"></i>
+                                        </button>
+                                    }
+                                </div>
+                                <div class="option-item" @onclick="XoaNVClick">🗑️ Xóa nhân viên đang chọn</div>
+                            </div>
+                        </div>
+                    }
 
                     @* @if (!isLoading)
                     {
@@ -456,11 +486,18 @@
                     Tổng doanh thu chụp tháng @month
                 </h3>
                 <div class="staff-controls">
-                    <label class="label-ca">Thợ: </label>
+                    <label class="label-ca">NV: </label>
                     <select class="control-select" @onchange="OnThoChanged">
-                        <option value="All">All</option>
-                        <option value="Dũng">Dũng</option>
-                        <option value="Long">Long</option>
+                        @{
+                            if (this.ListNv != null && !isLoading)
+                            {
+                                <option value="All">All</option>
+                                foreach (var item in this.ListNv)
+                                {
+                                    <option value="@item.Key">@item.Key</option>
+                                }
+                            }
+                        }
                     </select>
                 </div>
                 <div class="staff-controls">
@@ -535,7 +572,7 @@
     Dictionary<string, (string, long?)> ListNv;
     List<string> ListPrice;
     private bool isLoading = true, UpdateisLoading = false, UpdateisLoading2 = false;
-    private string SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, TextValueDesc;
+    private string SelectValueThoMake, SelectValueThoToc, SelectValueNhanJob, TextValueNameKH, SelectValuePrice, newValueSP, newValuePrice, TextValueDesc, newValueNV;
     private int TextValueQTY = 1;
     private string typeSelect, typeWHSelect;
     [Inject] private IJSRuntime JSx { get; set; }
@@ -849,6 +886,69 @@
             else
             {
                 await JS.InvokeVoidAsync("alert", $"Delete giá gói chụp ({SelectValuePrice}) không thành công!");
+            }
+        }
+    }
+
+    private async Task addNVClick()
+    {
+        if (string.IsNullOrEmpty(newValueNV))
+        { return; }
+        isLoading = true;
+        List<Data.DTOs.ListParaUser> datapara = await GetSPInfo.GetLoginUser("nvAmy", newValueNV, null);
+        if (datapara != null && datapara.Any())
+        {
+            await JS.InvokeVoidAsync("alert", $"Nhân viên ({newValueNV}) đã tồn tại!");
+            isLoading = false;
+        }
+        else
+        {
+            int checkInsert = await AddPara.InsertParamaterRawAsync("nvAmy", newValueNV, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListNv = data.Where(x => x.KeyPara == "nvAmy").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+                isLoading = false;
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Thêm nhân viên ({newValueNV}) thành công!");
+                newValueNV = "";
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Thêm nhân viên ({newValueNV}) không thành công!");
+                isLoading = false;
+            }
+        }
+    }
+
+    private async Task XoaNVClick()
+    {
+        if (string.IsNullOrEmpty(SelectValueThoMake))
+        {
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn nhân viên cần xóa trước");
+            await JS.InvokeVoidAsync("closeAllOptionMenus");
+            return;
+        }
+        bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có chắc chắn muốn nhân viên ({SelectValueThoMake}) không?");
+
+        if (confirmed)
+        {
+            isLoading = true;
+            int checkInsert = await DeletePara.DeleteParamaterRawAsync("nvAmy", SelectValueThoMake, null);
+            if (checkInsert > 0)
+            {
+                List<Data.DTOs.ListParamaterMakeup> data = await GetListParamaterMakeup.GetParamaterMakeUp();
+                this.ListNv = data.Where(x => x.KeyPara == "nvAmy").ToDictionary(x => x.keyData1, x => (x.keyData2, x.imageid));
+                await JS.InvokeVoidAsync("closeAllOptionMenus");
+                await JS.InvokeVoidAsync("alert", $"Delete nhân viên ({SelectValueThoMake}) thành công!");
+                SelectValueThoMake = "";
+                isLoading = false;
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Delete nhân viên ({SelectValueThoMake}) không thành công!");
             }
         }
     }
@@ -1612,7 +1712,7 @@
             int nam = int.Parse(DateTime.Now.Year.ToString());
             int thang = int.Parse(DateTime.Now.Month.ToString());
 
-            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, Nguoichup_);
+            var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, NhanVien_);
             var dataDoanhthunam = await Getdoanhthunam(nam);
 
             await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
@@ -1645,7 +1745,7 @@
         month = thang.ToString("D2");
         Thang_ = thang;
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, Nguoichup_);
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, 0, NhanVien_);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
         StateHasChanged();
     }
@@ -1657,22 +1757,22 @@
         int ngay = int.Parse(e.Value.ToString());
         month = thang.ToString("D2");
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay, Nguoichup_);
+        var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay, NhanVien_);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
         StateHasChanged();
     }
 
     private int Thang_ = int.Parse(DateTime.Now.Month.ToString());
-    private string Nguoichup_ = "";
+    private string NhanVien_ = "";
     private async Task OnThoChanged(ChangeEventArgs e)
     {
-        int nam = int.Parse(DateTime.Now.Year.ToString());
-        string thochup = e.Value.ToString();
-        Nguoichup_ = thochup;
+        // int nam = int.Parse(DateTime.Now.Year.ToString());
+        // string nv = e.Value.ToString();
+        // NhanVien_ = nv;
 
-        var dataDoanhthuthang = await Getdoanhthuthang(nam, Thang_, 0, thochup);
-        await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
-        StateHasChanged();
+        // var dataDoanhthuthang = await Getdoanhthuthang(nam, Thang_, 0, nv);
+        // await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
+        // StateHasChanged();
     }
 
     private List<Data.DTOs.RentalSummaryChup> DoanhthuNam;
@@ -1721,12 +1821,12 @@
         return chartData;
     }
 
-    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay, string thochup)
+    public async Task<object> Getdoanhthuthang(int nam, int thang, int ngay, string NhanVien)
     {
         if (ngay == 0)
-            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, null, thochup);
+            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, null, NhanVien);
         else
-            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, ngay, thochup);
+            Doanhthuthang = await GetSumChup.SumGetListWedding("goiChupWedding", nam, thang, ngay, NhanVien);
         tongdoanhthuthang = (double)Doanhthuthang.Sum(x => x.Reverue);
 
 
