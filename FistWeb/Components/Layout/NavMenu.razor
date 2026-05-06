@@ -30,6 +30,12 @@
             </div>
 
             <div class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="() => checkloading(13)">
+                    <span class="bi bi-camera" aria-hidden="true"></span>Quản lý lịch chụp
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
                 <NavLink class="nav-link" @onclick="() => checkloading(4)">
                     <span class="bi bi-mastodon" aria-hidden="true"></span> Make-up
                 </NavLink>
@@ -54,9 +60,11 @@
             </div>
 
         }
-        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" || username.ToUpper() == "NHANVIENCHUP" || username.ToUpper() == "NHANVIENTHUEDO"))
+        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" || username.ToUpper() == "NHANVIENCHUP" || 
+                username.ToUpper() == "NHANVIENTHUEDO"))
         {
-            @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" || username.ToUpper() == "NHANVIENCHUP"))
+            @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" ||
+                    username.ToUpper() == "NHANVIENCHUP"))
             {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" @onclick="() => checkloading(13)">
