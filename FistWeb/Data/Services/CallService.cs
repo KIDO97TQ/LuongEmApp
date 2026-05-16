@@ -1117,16 +1117,14 @@ namespace FistWeb.Data.Services
                                                   UNION ALL
 
                                                   SELECT 
-                                                      DATE(b.datechup) AS date,
-                                                      'Chụp ảnh' AS type,
-                                                      SUM(b.priremake) AS reverue
-                                                  FROM clothings.revenuewedding b
-                                                  JOIN clothings.paramater p ON b.idorder = p.item_key2
-                                                  WHERE EXTRACT(YEAR FROM b.datechup) = :year
-                                                      AND (:day IS NULL OR EXTRACT(DAY FROM b.datechup) = :day)
-                                                      AND (:month IS NULL OR EXTRACT(MONTH FROM b.datechup) = :month)
-                                                      AND p.function_name IN ('goiChupWedding')
-                                                  GROUP BY date, type
+                                                        DATE(b.datechup) AS date,
+                                                        'Chụp ảnh' AS type,
+                                                        SUM(b.priremake) AS reverue
+                                                    FROM clothings.revenuewedding b
+                                                    WHERE EXTRACT(YEAR FROM b.datechup) = :year
+                                                        AND (:day IS NULL OR EXTRACT(DAY FROM b.datechup) = :day)
+                                                        AND (:month IS NULL OR EXTRACT(MONTH FROM b.datechup) = :month)
+                                                    GROUP BY date, type
                                               ) AS merged
                                               GROUP BY merged.date, merged.type
                                               ORDER BY merged.date ");
