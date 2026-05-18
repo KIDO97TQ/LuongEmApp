@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\website\\fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|d:\\bak_desktop\\free code\\luongemstudio\\website\\fistweb\\components\\pages\\alldoanhthuamy.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F7A5512F-5130-4B48-9398-C38911786482}|FistWeb\\FistWeb.csproj|solutionrelative:fistweb\\components\\pages\\alldoanhthuamy.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -34,11 +38,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "FistWeb\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "FistWeb\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-18T09:12:35.035Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "IUserService.cs",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Data\\Services\\IUserService.cs",
               "RelativeDocumentMoniker": "FistWeb\\Data\\Services\\IUserService.cs",
@@ -46,12 +63,11 @@
               "RelativeToolTip": "FistWeb\\Data\\Services\\IUserService.cs",
               "ViewState": "AgIAAKYAAAAAAAAAAAAnwL8AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-16T13:38:40.826Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-16T13:38:40.826Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "DoanhThuThueDo.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Pages\\DoanhThuThueDo.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\DoanhThuThueDo.razor",
@@ -63,7 +79,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AllDoanhThuLuongEm.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Pages\\AllDoanhThuLuongEm.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\AllDoanhThuLuongEm.razor",
@@ -71,12 +87,11 @@
               "RelativeToolTip": "FistWeb\\Components\\Pages\\AllDoanhThuLuongEm.razor",
               "ViewState": "AgIAACgAAAAAAAAAAAAnwDoAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-06T15:51:58.282Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-06T15:51:58.282Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AllDoanhThuAmy.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Pages\\AllDoanhThuAmy.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\AllDoanhThuAmy.razor",
@@ -89,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "TotalDoanhThu.razor",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Components\\Pages\\TotalDoanhThu.razor",
               "RelativeDocumentMoniker": "FistWeb\\Components\\Pages\\TotalDoanhThu.razor",
@@ -97,12 +112,11 @@
               "RelativeToolTip": "FistWeb\\Components\\Pages\\TotalDoanhThu.razor",
               "ViewState": "AgIAAOgAAAAAAAAAAAAnwAYBAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-06T15:42:11.088Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-06T15:42:11.088Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "CallService.cs",
               "DocumentMoniker": "D:\\Bak_DESKTOP\\FREE CODE\\LuongEmStudio\\website\\FistWeb\\Data\\Services\\CallService.cs",
               "RelativeDocumentMoniker": "FistWeb\\Data\\Services\\CallService.cs",
@@ -110,8 +124,7 @@
               "RelativeToolTip": "FistWeb\\Data\\Services\\CallService.cs",
               "ViewState": "AgIAAFAEAAAAAAAAAAAowHUEAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-06T02:37:48.626Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-06T02:37:48.626Z"
             }
           ]
         }
