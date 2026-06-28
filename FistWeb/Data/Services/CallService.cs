@@ -423,25 +423,40 @@ namespace FistWeb.Data.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
-        public async Task<int> InsertOrder(long UserID, List<Data.DTOs.ProductItem> products)
+        public async Task<int> InsertOrder(long UserID, List<Data.DTOs.ProductItem> products, string action)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 int totalInserted = 0;
-
+                string status = "BORROW", sql = "";
                 TimeZoneInfo vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
                 DateTime gioVN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnZone);
 
-                string sql = @"INSERT INTO clothings.orders 
+                if (action == "MUA")
+                {
+                    status = "SOLD";
+                    sql = @"INSERT INTO clothings.orders 
                                    (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
                                VALUES 
-                                   (@orderid, @userid, @totalamount, 'BORROW', @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+                                   (@orderid, @userid, @totalamount, @status, @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
+
+                               UPDATE clothings.products 
+                               SET saveqty = stockquantity - @qty 
+                               WHERE productid = @productid ";
+                }
+                else
+                {
+
+                    sql = @"INSERT INTO clothings.orders 
+                                   (orderid, userid, totalamount, status, moneycoc, productid, qty, notes, tienphatsinh, borrowdate) 
+                               VALUES 
+                                   (@orderid, @userid, @totalamount, @status, @moneycoc, @productid, @qty, @notes, @tienphatsinh, @borrowdate);
 
                                UPDATE clothings.products 
                                SET saveqty = saveqty - @qty 
-                               WHERE productid = @productid;";
-
+                               WHERE productid = @productid ";
+                }
                 foreach (var order in products)
                 {
                     long orderId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
@@ -456,7 +471,8 @@ namespace FistWeb.Data.Services
                         new NpgsqlParameter("@qty", order.QTYThue),
                         new NpgsqlParameter("@notes", NpgsqlTypes.NpgsqlDbType.Text) { Value = (object?)order.Notes ?? "" },
                         new NpgsqlParameter("@tienphatsinh", NpgsqlTypes.NpgsqlDbType.Numeric) { Value = 0m },
-                        new NpgsqlParameter("@borrowdate", gioVN)
+                        new NpgsqlParameter("@borrowdate", gioVN),
+                        new NpgsqlParameter("@status", status)
                     };
 
                     totalInserted += await _context.Database.ExecuteSqlRawAsync(sql, parameters);
@@ -1394,7 +1410,7 @@ namespace FistWeb.Data.Services
 
                                UPDATE clothings.productsamy
                                SET stockquantity = stockquantity - @qty 
-                               WHERE productid = @productid;";
+                               WHERE productid = @productid ";
                 }
                 else
                 {
@@ -1405,7 +1421,7 @@ namespace FistWeb.Data.Services
 
                                UPDATE clothings.productsamy
                                SET saveqty = saveqty - @qty 
-                               WHERE productid = @productid;";
+                               WHERE productid = @productid ";
                 }
 
                 long PayId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));

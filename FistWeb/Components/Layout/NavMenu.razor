@@ -61,7 +61,7 @@
 
         }
 
-        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" || username.ToUpper() == "NHANVIENCHUP" || 
+        @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "LINHXUAN" || username.ToUpper() == "NHANVIENAMY" || username.ToUpper() == "NHANVIENCHUP" ||
                 username.ToUpper() == "NHANVIENTHUEDO"))
         {
             @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENAMY" ||
@@ -74,7 +74,7 @@
                 </div>
             }
 
-            @* @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG" || username.ToUpper() == "NHANVIENTHUEDO"))
+            @if (loginResult == "true" && (username.ToUpper() == "LINHXUAN"))
             {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" @onclick="() => checkloading(8)">
@@ -88,7 +88,7 @@
                         <span class="bi bi-list-stars" aria-hidden="true"></span>Quản lý thuê đồ
                     </NavLink>
                 </div>
-            } *@
+            }
 
             @if (loginResult == "true" && (username.ToUpper() == "BANGTAM" || username.ToUpper() == "TRUONGDUNG"))
             {

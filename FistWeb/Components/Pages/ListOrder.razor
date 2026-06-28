@@ -59,6 +59,7 @@
                     <option>All</option>
                     <option>Đã trả</option>
                     <option>Chưa trả</option>
+                    <option>Đã bán</option>
                     <option>Bị hủy</option>
                 </select>
                 Tháng
@@ -118,18 +119,18 @@
                                     item.priceperday = pricePerDay;
                                     <td data-label="Giá/ngày">@item.priceperday.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
                                 }
-                                <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
-                                @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
-                                @* <td data-label="Trạng thái">@item.status</td> *@
-                                <td data-label="Trạng thái">
-                                    @(item.status == "BORROW" ? "Đang thuê" :
-                                      item.status == "RETURN" ? "Đã trả" :
-                                      item.status == "CANCEL" ? "Đã hủy" :
-                                      item.status == "SOLD" ? "Đã bán" : item.status)
-                                </td>
-                                <td style="display: none;" data-label="Order">@item.orderid</td>
-                                <td style="display: none;" data-label="productid">@item.productid</td>
-                                @if (item.status == "BORROW")
+                    <td data-label="Tiền cọc">@item.moneycoc.ToString("N0", new CultureInfo("vi-VN")) vnđ</td>
+                    @* <td data-label="Phát sinh">@item.tienphatsinh.ToString("N0", new CultureInfo("vi-VN")) vnđ</td> *@
+                    @* <td data-label="Trạng thái">@item.status</td> *@
+                    <td data-label="Trạng thái">
+                        @(item.status == "BORROW" ? "Đang thuê" :
+                                                item.status == "RETURN" ? "Đã trả" :
+                                                item.status == "CANCEL" ? "Đã hủy" :
+                                                item.status == "SOLD" ? "Đã bán" : item.status)
+                    </td>
+                    <td style="display: none;" data-label="Order">@item.orderid</td>
+                    <td style="display: none;" data-label="productid">@item.productid</td>
+                    @if (item.status == "BORROW")
                                 {
                                     @if (isLoadingOption)
                                     {
@@ -202,6 +203,17 @@
         <div class="form-container">
             <!-- Left side - Form -->
             <div class="form-section-left">
+                <div class="radio-group">
+                    <label class="btn-radio">
+                        <input type="radio" name="type" value="thue" checked @onchange="OnMethordByChanged" />
+                        <span>Thuê</span>
+                    </label>
+
+                    <label class="btn-radio">
+                        <input type="radio" name="type" value="mua" @onchange="OnMethordByChanged" />
+                        <span>Bán</span>
+                    </label>
+                </div>
                 <!-- sđt, cccd ....  -->
                 <div class="form-group">
                     <label class="form-label required-label">Sđt/CCCD:</label>
@@ -261,9 +273,22 @@
                 </div>
 
                 <!-- Gía thê theo ngày-->
-                <div class="form-group">
+                @* <div class="form-group">
                     <label class="form-label required-label">Giá thuê 1 ngày:</label>
                     <input type="text" value="@SelectGiaTheoNgay" class="form-input readonly-input" readonly />
+                </div> *@
+
+                <div class="form-group">
+                    @if (MethordBuy)
+                    {
+                        <label class="form-label required-label">Giá bán:</label>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" value="@DisplayGia" @oninput="OnGiaChanged" class="form-input" />
+                    }
+                    else
+                    {
+                        <label class="form-label required-label">Giá thuê 1 ngày:</label>
+                        <input type="text" value="@SelectGiaTheoNgay" class="form-input readonly-input" readonly />
+                    }
                 </div>
 
                 <!-- Số lượng -->
@@ -282,30 +307,33 @@
                 </div>
 
                 <!-- tiền cọc -->
-                <div class="form-group">
-                    <label class="form-label">Tiền cọc:</label>
-                    <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
-                        @{
-                            var item0 = "0.000 vnđ";
-                            var item1 = "50.000 vnđ";
-                            var item2 = "100.000 vnđ";
-                            var item3 = "150.000 vnđ";
-                            var item4 = "200.000 vnđ";
-                            var item5 = "250.000 vnđ";
-                            var item6 = "300.000 vnđ";
-                            var item7 = "500.000 vnđ";
+                @if (!MethordBuy)
+                {
+                    <div class="form-group">
+                        <label class="form-label">Tiền cọc:</label>
+                        <select class="form-select" @bind="SelectTienCoc" @bind:event="oninput">
+                            @{
+                                var item0 = "0.000 vnđ";
+                                var item1 = "50.000 vnđ";
+                                var item2 = "100.000 vnđ";
+                                var item3 = "150.000 vnđ";
+                                var item4 = "200.000 vnđ";
+                                var item5 = "250.000 vnđ";
+                                var item6 = "300.000 vnđ";
+                                var item7 = "500.000 vnđ";
 
-                            <option value="@item0">@item0</option>
-                            <option value="@item1">@item1</option>
-                            <option value="@item2">@item2</option>
-                            <option value="@item3">@item3</option>
-                            <option value="@item4">@item4</option>
-                            <option value="@item5">@item5</option>
-                            <option value="@item6">@item6</option>
-                            <option value="@item7">@item7</option>
-                        }
-                    </select>
-                </div>
+                                <option value="@item0">@item0</option>
+                                <option value="@item1">@item1</option>
+                                <option value="@item2">@item2</option>
+                                <option value="@item3">@item3</option>
+                                <option value="@item4">@item4</option>
+                                <option value="@item5">@item5</option>
+                                <option value="@item6">@item6</option>
+                                <option value="@item7">@item7</option>
+                            }
+                        </select>
+                    </div>
+                }
 
                 <!-- Mô tả thêm về SP -->
                 <div class="form-group">
@@ -409,7 +437,21 @@
             }
             else
             {
-                <button class="button-add" type="button" @onclick="UpdateThueDo"><i class="bi bi-check2-circle"></i>Thuê</button>
+                @if (MethordBuy)
+                {
+                    <button class="button-add" type="button" @onclick="UpdateThueDo">
+                        <i class="bi bi-check2-circle"></i>
+                        Bán
+                    </button>
+                }
+                else
+                {
+                <button class="button-add" type="button" @onclick="UpdateThueDo">
+                        <i class="bi bi-check2-circle"></i>
+                        Thuê
+                    </button>
+                }
+
             }
         </div>
 
@@ -550,6 +592,7 @@
             "All" => "ALL",
             "Đã trả" => "RETURN",
             "Chưa trả" => "BORROW",
+            "Đã bán" => "SOLD",
             "Bị hủy" => "CANCEL",
             _ => "ALL"
         };
@@ -966,6 +1009,7 @@
         MotaSP = null;
         productid = null;
         typeSP = null;
+        DisplayGia = null;
         TextQTY = null;
         Tonkho = 0;
         results = new();
@@ -975,11 +1019,24 @@
 
     private async Task UpdateThueDo()
     {
+        string action;
         int checkupdate = 0;
         if (ProductList.Count == 0)
         {
             JSx.InvokeVoidAsync("alert", "❗ Không có đơn nào cần thuê");
             return;
+        }
+
+        if (MethordBuy)
+            action = "MUA";
+        else
+            action = "THUE";
+
+        if (action == "MUA")
+        {
+            bool confirmed = await JSx.InvokeAsync<bool>("confirm", $"Bạn có muốn bán đơn này không?");
+            if (!confirmed)
+            { return; }
         }
 
         UpdateisLoading = true;
@@ -1008,7 +1065,7 @@
 
             if (Usserid != 0 && checkupdate > 0)
             {
-                checkupdate = await InsertOrder.InsertOrder(Usserid, ProductList);
+                checkupdate = await InsertOrder.InsertOrder(Usserid, ProductList, action);
                 if (checkupdate > 0)
                 {
                     UserInfo = new();
@@ -1019,7 +1076,10 @@
                     TextSdtKH = "";
                     TextNote = "";
                     SelectTypeSP = "";
-                    JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
+                    if (action == "MUA")
+                        JSx.InvokeVoidAsync("alert", "Thêm đơn bán hàng thành công");
+                    else
+                        JSx.InvokeVoidAsync("alert", "Thêm đơn thuê hàng thành công");
                 }
             }
             else
@@ -1083,6 +1143,52 @@
     }
 
     #endregion
+
+    private bool MethordBuy = false;
+    void OnMethordByChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (value == "mua")
+            MethordBuy = true;
+        else
+            MethordBuy = false;
+
+        resutlsImage = null;
+        SelectSizeSP = null;
+        SelectGiaTheoNgay = null;
+        SelectTienCoc = null;
+        MotaSP = null;
+        productid = null;
+        typeSP = null;
+        TextQTY = null;
+        Tonkho = 0;
+        results = new();
+        SelectTypeSP = "";
+        ProductList = new();
+        TextNote = "";
+    }
+    string DisplayGia = "";
+    void OnGiaChanged(ChangeEventArgs e)
+    {
+        if (!MethordBuy) return;
+
+        var input = e.Value?.ToString() ?? "";
+
+        // chỉ giữ số
+        var numeric = new string(input.Where(char.IsDigit).ToArray());
+
+        if (decimal.TryParse(numeric, out decimal value))
+        {
+            SelectGiaTheoNgay = value.ToString();
+
+            DisplayGia = value.ToString("N0", new CultureInfo("vi-VN"));
+        }
+        else
+        {
+            DisplayGia = "";
+        }
+    }
     #endregion
 }
 
