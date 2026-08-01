@@ -129,9 +129,9 @@
     private async Task OnDayChanged(ChangeEventArgs e)
     {
         int nam = int.Parse(DateTime.Now.Year.ToString());
-        int thang = int.Parse(DateTime.Now.Month.ToString());
+        int thang = int.Parse(month);
         int ngay = int.Parse(e.Value.ToString());
-        month = thang.ToString("D2");
+        //month = thang.ToString("D2");
 
         var dataDoanhthuthang = await Getdoanhthuthang(nam, thang, ngay);
         await JS.InvokeVoidAsync("chartHelper.renderChart", "Doanhthuthang", dataDoanhthuthang, "bar");
