@@ -1,11 +1,14 @@
 wwwroot\add-product.png
+wwwroot\add.png
 wwwroot\bootstrap\bootstrap.min.css
 wwwroot\bootstrap\bootstrap.min.css.map
 wwwroot\camera.png
 wwwroot\cameralist.png
+wwwroot\categories.png
 wwwroot\css\app.css
 wwwroot\css\Loading.css
 wwwroot\customer.png
+wwwroot\dashboard.png
 wwwroot\descriptionCamera.png
 wwwroot\details.png
 wwwroot\edit-account.png
@@ -13,6 +16,7 @@ wwwroot\edit.png
 wwwroot\fashion-blogger.png
 wwwroot\js\CharSumJs.js
 wwwroot\js\ChartSumWH.js
+wwwroot\js\Line.js
 wwwroot\js\ListThueDo.js
 wwwroot\js\Quanlydo.js
 wwwroot\list.png
@@ -21,5 +25,6 @@ wwwroot\makeup.png
 wwwroot\pie-chart.png
 wwwroot\return.png
 wwwroot\shopper.png
+wwwroot\spending.png
 wwwroot\statistics.png
 wwwroot\task.png

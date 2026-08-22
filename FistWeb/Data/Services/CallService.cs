@@ -1,4 +1,5 @@
-﻿using FistWeb.Data;
+﻿using CloudinaryDotNet;
+using FistWeb.Data;
 using FistWeb.Data.DTOs;
 using FistWeb.Data.Entities;
 using Google.Apis.Drive.v3.Data;
@@ -11,6 +12,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FistWeb.Data.Services
 {
@@ -21,7 +23,8 @@ namespace FistWeb.Data.Services
     IInsertSPAmyService, IGetProductIDAmyService, IUpdateProductByIdAmyService, IDeleteProductAmyService, IInsertRevenueAmyService, IGetSumRevenueAmyService, IGetListMakeupAmyService,
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
     IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService,
-        IGetProductID1Service, IGetProductID1AmyService, GetQTYListThueDoAmy
+    IGetProductID1Service, IGetProductID1AmyService, GetQTYListThueDoAmy, IGetCategories, InsertParamaterChiTieu, InsertCategory, UpdateCategory, IGetChiTieu, IUpdateExpese, IDelChiTieu,
+        IGetCategoriesAmy, InsertParamaterChiTieuAmy, InsertCategoryAmy, UpdateCategoryAmy, IGetChiTieuAmy, IUpdateExpeseAmy, IDelChiTieuAmy
     {
         private readonly AppDbContext _context;
 
@@ -1700,6 +1703,324 @@ namespace FistWeb.Data.Services
                     .FromSqlRaw(sql)
                     .Select(x => x.imageid)
                     .ToListAsync();
+        }
+        #endregion
+
+        #region Chi Tiêu Kido
+
+        public async Task<int> InsertParamaterChiTieu(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User)
+        {
+            var sql = new StringBuilder(@"INSERT INTO kido.expenses (expense_date, amount, category_id, description, note, user_name )
+                                                                    VALUES ( @DataExpense,
+                                                                             @amount,
+                                                                             @CategoryID,
+                                                                             @description,
+                                                                             @note, @userName)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("DataExpense", date),
+                new NpgsqlParameter("amount", amount),
+                new NpgsqlParameter("note", (object?)note ?? " "),
+                new NpgsqlParameter("CategoryID", CategoryID),
+                new NpgsqlParameter("description", description),
+                new NpgsqlParameter("userName", User),
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<CategoriesInfo>> GetCategories()
+        {
+            StringBuilder sql = new StringBuilder(@" SELECT b.id, 
+                                                            b.name,
+                                                            b.icon,
+                                                            b.is_active as IsActive,
+                                                            b.description as Description
+                                                        FROM kido.categories b");
+
+            return await _context.Set<CategoriesInfo>()
+                    .FromSqlRaw(sql.ToString())
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<int> InsertCategory(string name, string icon, string Description)
+        {
+            var sql = new StringBuilder(@"INSERT INTO kido.categories ( id, name, icon, is_active, description )
+                                                               VALUES ( @CategoryID,
+                                                                        @nameCategory,
+                                                                        @icon,
+                                                                        @is_active, @description)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("CategoryID", Guid.NewGuid()),
+                new NpgsqlParameter("nameCategory", name),
+                new NpgsqlParameter("icon", icon),
+                new NpgsqlParameter("is_active", true),
+                new NpgsqlParameter("description", (object?)Description ?? DBNull.Value),
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> UpdateCategory(Guid id, string name, string icon, Boolean status, string type)
+        {
+            var sql = new StringBuilder("");
+            if (type == "UPDATE")
+            {
+                sql = new StringBuilder(@"Update kido.categories set name=@nameCategory, icon=@icon
+                                                                 Where id=@CategoryID");
+            }
+            else if (type == "DELETE")
+            {
+                sql = new StringBuilder(@"DELETE from kido.categories Where id=@CategoryID");
+            }
+            else
+            {
+                sql = new StringBuilder(@"Update kido.categories set is_active=@is_active
+                                                                 Where id=@CategoryID");
+            }
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("CategoryID",id),
+                new NpgsqlParameter("nameCategory", name),
+                new NpgsqlParameter("icon", icon),
+                new NpgsqlParameter("is_active", status),
+            };
+
+            int a = await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+            _context.ChangeTracker.Clear();
+            return a;
+        }
+
+        public async Task<List<ExpenseInfo>> GetChiTieu(DateTime? FromDate, DateTime? ToDate, int? month)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder(@" SELECT ex.id, ex.user_name as user, ex.amount, ex.description AS Description, ex.note, ex.expense_date as ExpenseDate, ex.category_id as CategoryId
+                                                       FROM kido.expenses ex where 1=1 ");
+
+            if (FromDate.HasValue && ToDate.HasValue)
+            {
+                sql.Append(" AND ex.expense_date >= @FromDate AND ex.expense_date < @ToDate ");
+                parameters.Add(new NpgsqlParameter("FromDate", FromDate.Value.Date));
+                parameters.Add(new NpgsqlParameter("ToDate", ToDate.Value.Date.AddDays(1)));
+            }
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM ex.expense_date) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+            return await _context.Set<ExpenseInfo>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<int> UpdateExpese(Guid id, string userName, DateTime expenseDate, decimal amount, Guid categoryId, string description, string? note)
+        {
+            List<NpgsqlParameter> parameters = new();
+
+            StringBuilder sql = new(@"UPDATE kido.expenses SET
+                                     user_name = @userName,
+                                     amount = @amount,
+                                     description = @description,
+                                     note = @note,
+                                     expense_date = @expenseDate,
+                                     category_id = @categoryId,
+                                     updated_at = NOW()
+                                 WHERE id = @id ");
+
+            parameters.Add(new NpgsqlParameter("id", id));
+            parameters.Add(new NpgsqlParameter("userName", userName));
+            parameters.Add(new NpgsqlParameter("amount", amount));
+            parameters.Add(new NpgsqlParameter("description", description));
+            parameters.Add(new NpgsqlParameter("note", (object?)note ?? DBNull.Value));
+            parameters.Add(new NpgsqlParameter("expenseDate", expenseDate));
+            parameters.Add(new NpgsqlParameter("categoryId", categoryId));
+
+            int result = await _context.Database.ExecuteSqlRawAsync(
+                sql.ToString(),
+                parameters.ToArray()
+            );
+
+            _context.ChangeTracker.Clear();
+            return result;
+        }
+
+        public async Task<int> DelChiTieu(Guid id)
+        {
+            var sql = new StringBuilder(@"Delete from kido.expenses Where id=@ExID");
+            
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("ExID",id),
+            };
+
+            int a = await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+            _context.ChangeTracker.Clear();
+            return a;
+        }
+        #endregion
+
+        #region Chi Tiêu Amy
+
+        public async Task<int> InsertParamaterChiTieuAmy(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User)
+        {
+            var sql = new StringBuilder(@"INSERT INTO kido.expensesAmy (expense_date, amount, category_id, description, note, user_name )
+                                                                    VALUES ( @DataExpense,
+                                                                             @amount,
+                                                                             @CategoryID,
+                                                                             @description,
+                                                                             @note, @userName)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("DataExpense", date),
+                new NpgsqlParameter("amount", amount),
+                new NpgsqlParameter("note", (object?)note ?? " "),
+                new NpgsqlParameter("CategoryID", CategoryID),
+                new NpgsqlParameter("description", description),
+                new NpgsqlParameter("userName", User),
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<List<CategoriesInfo>> GetCategoriesAmy()
+        {
+            StringBuilder sql = new StringBuilder(@" SELECT b.id, 
+                                                            b.name,
+                                                            b.icon,
+                                                            b.is_active as IsActive,
+                                                            b.description as Description
+                                                        FROM kido.categoriesAmy b");
+
+            return await _context.Set<CategoriesInfo>()
+                    .FromSqlRaw(sql.ToString())
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<int> InsertCategoryAmy(string name, string icon, string Description)
+        {
+            var sql = new StringBuilder(@"INSERT INTO kido.categoriesAmy ( id, name, icon, is_active, description )
+                                                               VALUES ( @CategoryID,
+                                                                        @nameCategory,
+                                                                        @icon,
+                                                                        @is_active, @description)");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("CategoryID", Guid.NewGuid()),
+                new NpgsqlParameter("nameCategory", name),
+                new NpgsqlParameter("icon", icon),
+                new NpgsqlParameter("is_active", true),
+                new NpgsqlParameter("description", (object?)Description ?? DBNull.Value),
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+        }
+
+        public async Task<int> UpdateCategoryAmy(Guid id, string name, string icon, Boolean status, string type)
+        {
+            var sql = new StringBuilder("");
+            if (type == "UPDATE")
+            {
+                sql = new StringBuilder(@"Update kido.categoriesAmy set name=@nameCategory, icon=@icon
+                                                                 Where id=@CategoryID");
+            }
+            else if (type == "DELETE")
+            {
+                sql = new StringBuilder(@"DELETE from kido.categoriesAmy Where id=@CategoryID");
+            }
+            else
+            {
+                sql = new StringBuilder(@"Update kido.categoriesAmy set is_active=@is_active
+                                                                 Where id=@CategoryID");
+            }
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("CategoryID",id),
+                new NpgsqlParameter("nameCategory", name),
+                new NpgsqlParameter("icon", icon),
+                new NpgsqlParameter("is_active", status),
+            };
+
+            int a = await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+            _context.ChangeTracker.Clear();
+            return a;
+        }
+
+        public async Task<List<ExpenseInfo>> GetChiTieuAmy(DateTime? FromDate, DateTime? ToDate, int? month)
+        {
+            List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
+            StringBuilder sql = new StringBuilder(@" SELECT ex.id, ex.user_name as user, ex.amount, ex.description AS Description, ex.note, ex.expense_date as ExpenseDate, ex.category_id as CategoryId
+                                                       FROM kido.expensesAmy ex where 1=1 ");
+
+            if (FromDate.HasValue && ToDate.HasValue)
+            {
+                sql.Append(" AND ex.expense_date >= @FromDate AND ex.expense_date < @ToDate ");
+                parameters.Add(new NpgsqlParameter("FromDate", FromDate.Value.Date));
+                parameters.Add(new NpgsqlParameter("ToDate", ToDate.Value.Date.AddDays(1)));
+            }
+            if (month.HasValue)
+            {
+                sql.Append(" AND EXTRACT(MONTH FROM ex.expense_date) = :month ");
+                parameters.Add(new NpgsqlParameter("month", month));
+            }
+            return await _context.Set<ExpenseInfo>()
+                    .FromSqlRaw(sql.ToString(), parameters.ToArray())
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<int> UpdateExpeseAmy(Guid id, string userName, DateTime expenseDate, decimal amount, Guid categoryId, string description, string? note)
+        {
+            List<NpgsqlParameter> parameters = new();
+
+            StringBuilder sql = new(@"UPDATE kido.expensesAmy SET
+                                     user_name = @userName,
+                                     amount = @amount,
+                                     description = @description,
+                                     note = @note,
+                                     expense_date = @expenseDate,
+                                     category_id = @categoryId,
+                                     updated_at = NOW()
+                                 WHERE id = @id ");
+
+            parameters.Add(new NpgsqlParameter("id", id));
+            parameters.Add(new NpgsqlParameter("userName", userName));
+            parameters.Add(new NpgsqlParameter("amount", amount));
+            parameters.Add(new NpgsqlParameter("description", description));
+            parameters.Add(new NpgsqlParameter("note", (object?)note ?? DBNull.Value));
+            parameters.Add(new NpgsqlParameter("expenseDate", expenseDate));
+            parameters.Add(new NpgsqlParameter("categoryId", categoryId));
+
+            int result = await _context.Database.ExecuteSqlRawAsync(
+                sql.ToString(),
+                parameters.ToArray()
+            );
+
+            _context.ChangeTracker.Clear();
+            return result;
+        }
+
+        public async Task<int> DelChiTieuAmy(Guid id)
+        {
+            var sql = new StringBuilder(@"Delete from kido.expensesAmy Where id=@ExID");
+
+            var parameters = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter("ExID",id),
+            };
+
+            int a = await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
+            _context.ChangeTracker.Clear();
+            return a;
         }
         #endregion
     }

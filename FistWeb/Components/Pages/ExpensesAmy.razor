@@ -1,0 +1,2681 @@
+﻿@page "/expensesAmy"
+@using Microsoft.EntityFrameworkCore
+@using System.Data
+@using System.Text.Json
+@using FistWeb.Data.Services
+@using System.Text.RegularExpressions
+@inject Data.AppDbContext Db
+@inject LoadingService LoadingService
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using System.Text
+@inject NavigationManager Navigation
+@implements IDisposable
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@inject InsertParamaterChiTieuAmy InsertChiTieu
+@inject IGetCategoriesAmy CategoriesInfo
+@inject InsertCategoryAmy InsertCategory
+@inject UpdateCategoryAmy UpdateCategory
+@inject IGetChiTieuAmy GetChiTieu
+@inject IUpdateExpeseAmy UpdateExpese
+@inject IDelChiTieuAmy DelChiTieu
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab1">
+        <img src="dashboard.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Dashboard
+    </button>
+    <button class="tab-btn" data-tab="tab2">
+        <img src="spending.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Chi tiêu
+    </button>
+    <button class="tab-btn" data-tab="tab3">
+        <img src="add.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Thêm Chi tiêu
+    </button>
+    <button class="tab-btn" data-tab="tab4">
+        <img src="categories.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Danh mục
+    </button>
+    <button class="tab-btn" data-tab="tab5">
+        <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Reports
+    </button>
+</div>
+
+@* TAB 1 - DASHBOARD*@
+<div class="tab-content active" id="tab1">
+
+    @if (isLoadingDashboard)
+    {
+        <div class="dashboard-loading">
+            ⏳ Đang tải Dashboard...
+        </div>
+    }
+    else
+    {
+        @* =========================
+           SUMMARY
+           ========================= *@
+
+        <div class="dashboard-summary">
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    🔥 Tổng chi tiêu năm
+                </div>
+
+                <div class="dashboard-card-value">
+                    @DashboardTotalExpense.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+
+                <div class="dashboard-card-sub">
+                    Tất cả thời gian
+                </div>
+            </div>
+
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    Chi tiêu tháng này
+                </div>
+
+                <div class="dashboard-card-value">
+                    @DashboardMonthExpense.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+
+                <div class="dashboard-card-sub">
+                    Tháng @DateTime.Now.Month/@DateTime.Now.Year
+                </div>
+            </div>
+
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    Số khoản chi
+                </div>
+
+                <div class="dashboard-card-value">
+                    @DashboardExpenseCount
+                </div>
+
+                <div class="dashboard-card-sub">
+                    Tổng số giao dịch
+                </div>
+            </div>
+
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    Trung bình / khoản
+                </div>
+
+                <div class="dashboard-card-value">
+                    @DashboardAverageExpense.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+
+                <div class="dashboard-card-sub">
+                    Mức chi trung bình
+                </div>
+            </div>
+
+        </div>
+
+
+        @* CHARTS *@
+        <div class="dashboard-row">
+
+            @* Chi tiêu theo ngày *@
+            <div class="chart-card">
+
+                <div class="staff-header">
+
+                    <h3 class="card-title">
+                        Chi tiêu trong tháng
+                    </h3>
+
+                    <div class="staff-controls">
+
+                        <label class="label-ca">
+                            Tháng:
+                        </label>
+
+                        <select class="control-select"
+                                @bind="DashboardMonth"
+                                @bind:after="() => LoadDashboard(DashboardMonth)">
+
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">
+                                    @i.ToString("D2")
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="ExpenseMonthChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            @* Chi tiêu theo danh mục *@
+            <div class="chart-card">
+
+                <div class="staff-header">
+
+                    <h3 class="card-title">
+                        Chi tiêu theo danh mục
+                    </h3>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="ExpenseCategoryChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+        @* CHI TIÊU USER THEO NGÀY *@
+        <div class="dashboard-row user-chart-row">
+
+            <div class="chart-card user-daily-chart-card">
+
+                <h3 class="card-title">
+                    <span style="font-size: 28px;">👨‍👩‍👧</span>
+                    Chi tiêu từng người hàng ngày trong tháng @DashboardMonth.ToString()
+                </h3>
+
+                <div class="chart-container user-daily-chart-container">
+                    <canvas id="UserDailyExpenseChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+        @* =========================
+           TOP CATEGORY
+           ========================= *@
+
+        <div class="dashboard-section">
+
+            <h3 class="dashboard-section-title">
+                🔥 Danh mục chi tiêu nhiều nhất
+            </h3>
+
+            <div class="top-category-list">
+
+                @if (TopCategories != null && TopCategories.Any())
+                {
+                    int stt = 1;
+
+                    foreach (var item in TopCategories)
+                    {
+                        <div class="top-category-item">
+
+                            <div class="top-category-number">
+                                @stt
+                            </div>
+
+                            <div class="top-category-icon">
+                                @item.Icon
+                            </div>
+
+                            <div class="top-category-info">
+
+                                <div class="top-category-name">
+                                    @item.Name
+                                </div>
+
+                                <div class="top-category-count">
+                                    @item.Count khoản chi
+                                </div>
+
+                            </div>
+
+                            <div class="top-category-amount">
+                                @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </div>
+
+                        </div>
+
+                        stt++;
+                    }
+                }
+                else
+                {
+                    <div class="dashboard-empty">
+                        📭 Chưa có dữ liệu chi tiêu
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    }
+
+</div>
+
+@* TAB 2 - DANH SÁCH CHI TIÊU*@
+<div class="tab-content" id="tab2">
+
+    @if (isLoadingExpense)
+    {
+        <div style="text-align:center; padding:30px;">
+            ⏳ Đang tải dữ liệu...
+        </div>
+    }
+    else
+    {
+        @* FILTER *@
+        <div class="header-controls">
+
+            <div class="controls-left">
+
+                <label class="form-label">
+                    Từ ngày:
+                </label>
+
+                <input type="date"
+                       class="control-select"
+                       @bind="ExpenseFromDate" />
+
+                <label class="form-label">
+                    Đến ngày:
+                </label>
+
+                <input type="date"
+                       class="control-select"
+                       @bind="ExpenseToDate" />
+
+                @if (isLoadingExpense)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    <button class="button-search"
+                            type="button"
+                            @onclick="SearchExpensesByTime">
+                        <i class="bi bi-search"></i>
+                        Tìm kiếm
+                    </button>
+                }
+
+                <label class="form-label">
+                    Người chi:
+                </label>
+
+                <select class="control-select"
+                        @bind="Nguoichi"
+                        @bind:after="SearchExpenses">
+                    <option value="">
+                        Tất cả
+                    </option>
+                    @foreach (var item in User)
+                    {
+                        <option value="@item.Key">
+                            @item.Value
+                        </option>
+                    }
+                </select>
+
+                <label class="form-label">
+                    Danh mục:
+                </label>
+
+                <select class="control-select"
+                        @bind="ExpenseCategoryFilter"
+                        @bind:after="SearchExpenses">
+                    <option value="">
+                        Tất cả
+                    </option>
+
+                    @if (Categories != null)
+                    {
+                        foreach (var category in Categories)
+                        {
+                            <option value="@category.Key">
+                                @category.Value.Icon @category.Value.Name
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+
+        @* TỔNG TIỀN *@
+        <div class="expense-summary">
+            <div class="summary-card">
+                <div class="summary-title">
+                    🔥 Tổng chi tiêu
+                </div>
+
+                <div class="summary-value">
+                    @TotalExpense.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-title">
+                    Số khoản chi
+                </div>
+
+                <div class="summary-value">
+                    @FilteredExpenses.Count
+                </div>
+
+            </div>
+
+        </div>
+
+        @* table *@
+        @if (IsEditingExpense)
+        {
+            <div class="edit-expense-container">
+
+                <div class="edit-expense-header">
+                    <h3>
+                        ✏️ Chỉnh sửa khoản chi
+                    </h3>
+
+                    <button type="button"
+                            class="edit-close-btn"
+                            @onclick="CancelEditExpense">
+                        ✕
+                    </button>
+                </div>
+
+
+                <div class="edit-expense-form">
+
+                    @* Ngày *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Ngày chi tiêu:
+                        </label>
+
+                        <input type="datetime-local"
+                               class="form-input"
+                               @bind="EditExpenseDate" />
+
+                    </div>
+
+
+                    @* Danh mục *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Danh mục:
+                        </label>
+
+                        <select class="form-select"
+                                @bind="EditExpenseCategoryId">
+
+                            <option value="@Guid.Empty">
+                                Chọn danh mục
+                            </option>
+
+                            @if (Categories != null)
+                            {
+                                foreach (var category in Categories)
+                                {
+                                    <option value="@category.Key">
+
+                                        @category.Value.Icon
+                                        @category.Value.Name
+
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    @* Số tiền *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Số tiền:
+                        </label>
+
+                        <input type="number"
+                               class="form-input"
+                               min="1"
+                               step="1000"
+                               @bind="EditExpenseAmount" />
+
+                    </div>
+
+                    @* user *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Người chi:
+                        </label>
+
+                        <select class="form-select"
+                                @bind="EditExpenseUser">
+
+                            @foreach (var item in User)
+                            {
+                                <option value="@item.Key">
+                                    @item.Value
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    @* Nội dung *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Nội dung:
+                        </label>
+
+                        <input type="text"
+                               class="form-input"
+                               maxlength="255"
+                               @bind="EditExpenseDescription"
+                               placeholder="Nhập nội dung chi tiêu..." />
+
+                    </div>
+
+
+                    @* Ghi chú *@
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Ghi chú:
+                        </label>
+
+                        <textarea class="form-input"
+                                  rows="3"
+                                  @bind="EditExpenseNote"
+                                  placeholder="Nhập ghi chú...">
+                                                                                                </textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="edit-expense-footer">
+
+                    <button type="button"
+                            class="button-cancel"
+                            @onclick="CancelEditExpense">
+
+                        Hủy
+
+                    </button>
+
+                    <button type="button"
+                            class="button-save"
+                            @onclick="SaveEditExpense">
+
+                        <i class="bi bi-check2-circle"></i>
+
+                        Lưu thay đổi
+
+                    </button>
+
+                </div>
+
+            </div>
+        }
+
+        @* TABLE *@
+
+        @* chinh sua *@
+        <div class="chart-order">
+
+            <table class="table-custom">
+
+                <thead>
+
+                    <tr>
+                        <th>STT</th>
+                        <th>Người chi</th>
+                        <th>Ngày</th>
+                        <th>Danh mục</th>
+                        <th>Nội dung</th>
+                        <th>Số tiền</th>
+                        <th>Ghi chú</th>
+                        <th>Thao tác</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (CurrentPageExpenses != null && CurrentPageExpenses.Any())
+                    {
+                        int count = (ExpenseCurrentPage - 1) * ExpenseRowsPerPage + 1;
+
+                        foreach (var item in CurrentPageExpenses)
+                        {
+                            <tr>
+
+                                <td data-label="STT">
+                                    @count
+                                </td>
+
+                                <td data-label="STT">
+                                    @item.User
+                                </td>
+
+                                <td data-label="Ngày">
+                                    @item.ExpenseDate.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+
+                                <td data-label="Danh mục">
+                                    @if (Categories.ContainsKey(item.CategoryId))
+                                    {
+                                        var category = Categories[item.CategoryId];
+
+                                        <span>
+                                            @category.Icon
+                                            @category.Name
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Không xác định
+                                        </span>
+                                    }
+                                </td>
+
+                                <td data-label="Nội dung">
+                                    @item.Description
+                                </td>
+
+                                <td data-label="Số tiền">
+
+                                    <strong>
+                                        @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vn₫
+                                    </strong>
+
+                                </td>
+
+                                <td data-label="Ghi chú">
+                                    @(string.IsNullOrEmpty(item.Note) ? "-" : item.Note)
+                                </td>
+
+                                <td data-label="Thao tác">
+
+                                    <button class="btn-action"
+                                            title="Sửa"
+                                            @onclick="() => EditExpense(item)">
+                                        ✏️
+                                    </button>
+
+                                    <button class="btn-action"
+                                            title="Xóa"
+                                            @onclick="() => DeleteExpense(item)">
+                                        🗑️
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7"
+                                style="text-align:center; padding:30px;">
+
+                                📭 Không có dữ liệu chi tiêu
+
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* PAGINATION *@
+        <div class="pagination">
+
+            <button @onclick="PrevExpensePage"
+                    disabled="@(!CanExpensePrev)">
+                <i class="fa-solid fa-arrow-left"></i>
+                Trước
+            </button>
+
+            <span>
+                Trang @ExpenseCurrentPage / @ExpenseTotalPages
+            </span>
+
+            <button @onclick="NextExpensePage"
+                    disabled="@(!CanExpenseNext)">
+                Sau
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+    }
+
+</div>
+
+@* TAB 3 - THÊM CHI TIÊU *@
+<div class="tab-content" id="tab3">
+
+    <div class="form-container">
+        <h3 class="card-title">
+            <span style="font-size: 28px;">🛍️</span>
+            Thêm các khoản đã chi tiêu
+        </h3>
+        <div class="form-section-left">
+
+            @* user *@
+            <div class="form-group">
+
+                <label class="form-label required-label">
+                    Người chi tiêu:
+                </label>
+
+                <select class="form-select" @bind="SelectedUser">
+                    @foreach (var item in User)
+                    {
+                        <option value="@item.Key">
+                            @item.Value
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            @* Ngày chi tiêu *@
+            <div class="form-group">
+
+                <label class="form-label required-label">
+                    Ngày chi tiêu:
+                </label>
+
+                <input type="date"
+                       class="form-input"
+                       @bind="ExpenseDate" />
+
+            </div>
+
+
+            @* Số tiền *@
+            <div class="form-group">
+
+                <label class="form-label required-label">
+                    Số tiền:
+                </label>
+
+                <input type="text"
+                       class="form-input"
+                       value="@AmountDisplay"
+                       @oninput="OnAmountInput"
+                       placeholder="Nhập số tiền..." />
+
+            </div>
+
+
+            @* Danh mục *@
+            <div class="form-group">
+
+                <label class="form-label required-label">
+                    Danh mục:
+                </label>
+
+                <select class="form-select" @bind="SelectedCategoryId">
+
+                    <option value="">
+                        Chọn danh mục
+                    </option>
+
+                    @if (Categories != null)
+                    {
+                        foreach (var category in Categories)
+                        {
+                            <option value="@category.Key">
+                                @category.Value.Icon @category.Value.Name
+                                @foreach (var ct in CategoriesModel)
+                                {
+                                    @if (category.Key == ct.Id)
+                                    {
+                                        @($" ({ct.Description})")
+                                    }
+                                }
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
+
+
+
+            @* Nội dung *@
+            <div class="form-group">
+
+                <label class="form-label">
+                    Nội dung:
+                </label>
+
+                <input type="text"
+                       class="form-input"
+                       @bind="Description"
+                       placeholder="Ví dụ: Ăn trưa..." />
+
+            </div>
+
+
+            @* Ghi chú *@
+            <div class="form-group">
+
+                <label class="form-label">
+                    Ghi chú:
+                </label>
+
+                <textarea class="form-input"
+                          rows="4"
+                          @bind="Note"
+                          placeholder="Ghi chú thêm...">
+                </textarea>
+
+            </div>
+
+
+            @* Button *@
+            <div class="store-info">
+
+                @if (UpdateisLoading)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    <button class="button-add"
+                            type="button"
+                            @onclick="AddExpense">
+                        <i class="bi bi-check2-circle"></i>
+                        Lưu khoản chi
+                    </button>
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* TAB 4 - DANH MỤC*@
+<div class="tab-content" id="tab4">
+
+    <div class="dashboard-row1">
+        @*  FORM THÊM DANH MỤC *@
+        <div class="chart-card category-form-card">
+
+            <h3 class="card-title">
+                <span style="font-size: 28px;">🗂️</span>
+                Thêm danh mục
+            </h3>
+
+            <div class="form-section-left">
+
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        Tên danh mục:
+                    </label>
+
+                    <input type="text"
+                           class="form-input"
+                           @bind="NewCategoryName"
+                           placeholder="Ví dụ: Ăn uống..." />
+
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Icon:
+                    </label>
+
+                    <div class="icon-selector">
+
+                        <button type="button"
+                                class="selected-icon"
+                                @onclick="ToggleIconPicker">
+
+                            @(string.IsNullOrEmpty(NewCategoryIcon)
+                                                        ? "📦"
+                                                        : NewCategoryIcon)
+
+                        </button>
+
+                        @if (ShowIconPicker)
+                        {
+                            <div class="icon-picker">
+
+                                @foreach (var icon in CategoryIcons)
+                                {
+                                    <button type="button"
+                                            class="icon-item"
+                                            @onclick="() => SelectIcon(icon)">
+
+                                        @icon
+
+                                    </button>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Mô tả:
+                    </label>
+
+                    <textarea class="form-input"
+                              rows="4"
+                              @bind="NewDescription"
+                              placeholder="Mô tả thêm về danh mục...">
+                </textarea>
+
+                </div>
+                @if (UpdateisLoading)
+                {
+                    <div class="spinner" style="margin-top:10px;"></div>
+                }
+                else
+                {
+                    @if (IsEditingCategory == false)
+                    {
+                        <div class="store-info">
+
+                            <button class="button-add"
+                                    type="button"
+                                    @onclick="AddCategory">
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Thêm danh mục
+
+                            </button>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="store-info">
+
+                            <button class="button-add"
+                                    type="button"
+                                    @onclick="SaveEditCategory">
+
+                                <i class="bi bi-check2-circle"></i>
+
+                                Cập nhật danh mục
+
+                            </button>
+
+                        </div>
+
+                        <div class="store-info">
+
+                            <button class="button-add"
+                                    type="button"
+                                    @onclick="BtCancel">
+
+                                <i class="bi bi-x-circle-fill"></i>
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+                    }
+                }
+            </div>
+
+        </div>
+
+
+        @*  DANH SÁCH DANH MỤC *@
+        <div class="chart-card category-list-card">
+
+            <h3 class="card-title">
+                <span style="font-size: 28px;">📋</span>
+                Danh sách danh mục
+            </h3>
+
+
+            <div class="chart-order">
+
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Icon</th>
+                            <th>Tên danh mục</th>
+                            <th>Mô tả</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (CategoriesModel?.Any() == true)
+                        {
+                            int stt = 1;
+
+                            foreach (var category in CategoriesModel)
+                            {
+                                <tr>
+
+                                    <td data-label="STT">
+                                        @stt
+                                    </td>
+
+                                    <td data-label="Icon"
+                                        style="font-size: 24px;">
+                                        @category.Icon
+                                    </td>
+
+                                    <td data-label="Tên danh mục">
+                                        <strong>
+                                            @category.Name
+                                        </strong>
+                                    </td>
+
+                                    <td data-label="Mô tả">
+                                        <strong>
+                                            @category.Description
+                                        </strong>
+                                    </td>
+
+                                    <td data-label="Trạng thái">
+
+                                        @if (category.IsActive)
+                                        {
+                                            <span class="category-active">
+                                                Đang sử dụng
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="category-inactive">
+                                                Đã tắt
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td data-label="Thao tác">
+                                        @if (UpdateisLoading)
+                                        {
+                                            <div class="spinner" style="margin-top:10px;"></div>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn-action"
+                                                    title="Sửa"
+                                                    @onclick="() => EditCategory(category)">
+                                                ✏️
+                                            </button>
+
+                                            <button class="btn-action"
+                                                    title="Bật / tắt"
+                                                    @onclick="() => ToggleCategory(category)">
+                                                @(category.IsActive ? "🟢" : "🔴")
+                                            </button>
+
+                                            <button class="btn-action"
+                                                    title="Xóa"
+                                                    @onclick="() => DeleteCategory(category)">
+                                                🗑️
+                                            </button>
+                                        }
+                                    </td>
+
+                                </tr>
+
+                                stt++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+
+                                <td colspan="6"
+                                    style="text-align:center; padding:30px;">
+
+                                    📭 Chưa có danh mục
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* TAB 5 - REPORTS *@
+<div class="tab-content" id="tab5">
+
+    <div class="report-container">
+
+        @* FILTER *@
+        <div class="report-filter">
+
+            <div class="report-filter-title">
+                Báo cáo chi tiêu
+            </div>
+
+            <div class="report-filter-row">
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Năm:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="ReportYear"
+                            @bind:after="LoadReport">
+
+                        @for (int year = DateTime.Now.Year - 2; year <= DateTime.Now.Year; year++)
+                        {
+                            <option value="@year">
+                                @year
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Tháng:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="ReportMonth"
+                            @bind:after="LoadReport">
+
+                        <option value="0">
+                            Tất cả
+                        </option>
+
+                        @for (int month = 1; month <= 12; month++)
+                        {
+                            <option value="@month">
+                                Tháng @month
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Người chi:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="ReportUser"
+                            @bind:after="LoadReport">
+
+                        <option value="">
+                            Tất cả
+                        </option>
+
+                        @foreach (var item in User)
+                        {
+                            <option value="@item.Key">
+                                @item.Value
+                            </option>
+                        }
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Danh mục:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="ReportCategoryId"
+                            @bind:after="LoadReport">
+
+                        <option value="">
+                            Tất cả
+                        </option>
+
+                        @if (Categories != null)
+                        {
+                            foreach (var category in Categories)
+                            {
+                                <option value="@category.Key">
+                                    @category.Value.Icon
+                                    @category.Value.Name
+                                </option>
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @*SUMMARY *@
+        <div class="report-summary">
+
+            <div class="report-summary-card">
+
+                <div class="report-summary-title">
+                    🔥 Tổng chi tiêu
+                </div>
+
+                <div class="report-summary-value">
+                    @ReportTotal.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+
+            </div>
+
+
+            <div class="report-summary-card">
+
+                <div class="report-summary-title">
+                    Số khoản chi
+                </div>
+
+                <div class="report-summary-value">
+                    @ReportExpenses.Count
+                </div>
+
+            </div>
+
+
+            <div class="report-summary-card">
+
+                <div class="report-summary-title">
+                    Chi trung bình
+                </div>
+
+                <div class="report-summary-value">
+                    @ReportAverage.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                </div>
+
+            </div>
+
+        </div>
+
+        @* CATEGORY REPORT *@
+        <div class="report-card">
+
+            <div class="report-card-header">
+                <h3>
+                    Thống kê theo danh mục
+                </h3>
+            </div>
+
+            <table class="table-custom">
+
+                <thead>
+
+                    <tr>
+                        <th>STT</th>
+                        <th>Danh mục</th>
+                        <th>Số khoản</th>
+                        <th>Tổng tiền</th>
+                        <th>Tỷ lệ</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (ReportCategories.Any())
+                    {
+                        int stt = 1;
+
+                        foreach (var item in ReportCategories)
+                        {
+                            <tr>
+
+                                <td>
+                                    @stt
+                                </td>
+
+                                <td>
+                                    <span class="report-category-icon">
+                                        @item.Icon
+                                    </span>
+
+                                    @item.Name
+                                </td>
+
+                                <td>
+                                    @item.Count
+                                </td>
+
+                                <td>
+                                    @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                </td>
+
+                                <td>
+                                    @item.Percent.ToString("0.##") %
+                                </td>
+
+                            </tr>
+
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5"
+                                style="text-align:center">
+                                Không có dữ liệu
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        @* DETAIL*@
+        <div class="report-card">
+
+            <div class="report-card-header">
+
+                <h3>
+                    Chi tiết chi tiêu
+                </h3>
+
+            </div>
+
+            <table class="table-custom">
+
+                <thead>
+
+                    <tr>
+                        <th>STT</th>
+                        <th>Ngày</th>
+                        <th>Danh mục</th>
+                        <th>Người chi</th>
+                        <th>Nội dung</th>
+                        <th>Số tiền</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (ReportExpenses.Any())
+                    {
+                        int stt = 1;
+
+                        foreach (var item in ReportExpenses)
+                        {
+                            string categoryName =
+                            "Không xác định";
+
+                            string categoryIcon = "📦";
+
+                            if (Categories.TryGetValue(
+                            item.CategoryId,
+                            out var category))
+                            {
+                                categoryName = category.Name;
+                                categoryIcon = category.Icon;
+                            }
+
+                            <tr>
+
+                                <td>
+                                    @stt
+                                </td>
+
+                                <td>
+                                    @item.ExpenseDate.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @categoryIcon
+                                    @categoryName
+                                </td>
+
+                                <td>
+                                    @item.User
+                                </td>
+
+                                <td>
+                                    @item.Description
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6"
+                                style="text-align:center">
+                                Không có dữ liệu
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
+    });
+</script>
+
+
+@code {
+    private string month;
+    [Inject] private IJSRuntime JSx { get; set; }
+    private bool isLoadingService = true;
+    private bool _disposed = false;
+    private CancellationTokenSource cts = new();
+    private bool UpdateisLoading = false;
+    private bool checkload = false;
+    private Dictionary<string, string> User = new()
+    {
+        {"TAM","Tâm"},
+        {"DUNG","Dũng"},
+        {"CAI","Cải"}
+    };
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.month = DateTime.Now.Month.ToString();
+    }
+
+    private ValueTask OnBeforeNavigation(LocationChangingContext context)
+    {
+        if (isLoadingService)
+        {
+            context.PreventNavigation();
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                LoadingService.Begin();
+                bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+                if (isLoggedIn)
+                {
+                    SelectedUser = User.First().Key;
+                    await LoadExpenses(null, null, int.Parse(this.month));
+                    this.DataDashboardExpenses = await GetChiTieu.GetChiTieuAmy(null, null, null);
+                    //await TimKiem();
+                    CategoriesModel = await CategoriesInfo.GetCategoriesAmy();
+                    this.Categories = this.CategoriesModel.ToDictionary(x => x.Id, x => (x.Icon, x.Name));
+                    await LoadDashboard(0);
+                    await LoadReport();
+                    if (!_disposed)
+                    {
+                        StateHasChanged();
+                    }
+                    LoadingService.End();
+                    isLoadingService = false;
+                }
+                else
+                {
+                    LoadingService.End();
+                    isLoadingService = false;
+                    Navigation.NavigateTo("/", true);
+
+                }
+            }
+            catch (Exception)
+            {
+                LoadingService.End();
+                isLoadingService = false;
+                throw;
+            }
+        }
+    }
+
+    private async Task GetCategory()
+    {
+        CategoriesModel = await CategoriesInfo.GetCategoriesAmy();
+        this.Categories = this.CategoriesModel.Where(x => x.IsActive == true).ToDictionary(x => x.Id, x => (x.Icon, x.Name));
+    }
+
+    private async Task LoadData()
+    {
+        this.checkload = true;
+        await LoadExpenses(null, null, int.Parse(this.month));
+        this.DataDashboardExpenses = await GetChiTieu.GetChiTieuAmy(null, null, null);
+        CategoriesModel = await CategoriesInfo.GetCategoriesAmy();
+        this.Categories = this.CategoriesModel.ToDictionary(x => x.Id, x => (x.Icon, x.Name));
+        await LoadDashboard(0);
+        await LoadReport();
+        this.checkload = false;
+        StateHasChanged();
+    }
+
+    #region tab1 Dashboard
+
+    private bool isLoadingDashboard = true;
+    private decimal DashboardTotalExpense;
+    private decimal DashboardMonthExpense;
+    private int DashboardExpenseCount;
+    private decimal DashboardAverageExpense;
+    private int DashboardMonth = DateTime.Now.Month;
+    private List<Data.DTOs.DashboardCategoryInfo> TopCategories = new();
+    private List<Data.DTOs.ExpenseInfo> DataDashboardExpenses { get; set; } = new();
+
+    private async Task LoadDashboard(int month)
+    {
+        try
+        {
+            if (!this.checkload)
+                isLoadingDashboard = true;
+
+            var expenses = new List<Data.DTOs.ExpenseInfo>();
+            if (month > 0)
+                expenses = await GetChiTieu.GetChiTieuAmy(null, null, month);
+            else
+                expenses =this.DataDashboardExpenses;
+            // =========================
+            // Tổng tất cả
+            // =========================
+
+            DashboardTotalExpense = DataDashboardExpenses.Sum(x => x.Amount);
+
+
+            // =========================
+            // Tháng hiện tại
+            // =========================
+
+            int currentYear = DateTime.Now.Year;
+
+            DashboardMonthExpense =
+                expenses
+                    .Where(x =>
+                        x.ExpenseDate.Year == currentYear &&
+                        x.ExpenseDate.Month == DashboardMonth
+                    )
+                    .Sum(x => x.Amount);
+
+
+            // =========================
+            // Số khoản chi
+            // =========================
+
+            DashboardExpenseCount =
+                expenses.Count;
+
+
+            // =========================
+            // Trung bình
+            // =========================
+
+            DashboardAverageExpense =
+                DashboardExpenseCount > 0
+                    ? DashboardTotalExpense /
+                      DashboardExpenseCount
+                    : 0;
+
+
+            // =========================
+            // Top category
+            // =========================
+
+            TopCategories = expenses
+                .GroupBy(x => x.CategoryId)
+                .Select(g =>
+                {
+                    Categories.TryGetValue(g.Key, out var category);
+
+                    return new Data.DTOs.DashboardCategoryInfo
+                    {
+                        CategoryId = g.Key,
+                        Name = category.Name ?? "Không xác định",
+                        Icon = category.Icon ?? "📦",
+                        Amount = g.Sum(x => x.Amount),
+                        Count = g.Count()
+                    };
+                })
+                .OrderByDescending(x => x.Amount)
+                .Take(5)
+                .ToList();
+
+            if (!this.checkload)
+                isLoadingDashboard = false;
+
+            StateHasChanged();
+
+            // Chart
+
+            await RenderDashboardCharts(expenses);
+            await RenderUserDailyExpenseChart();
+        }
+        catch (Exception ex)
+        {
+            if (!this.checkload)
+                isLoadingDashboard = false;
+
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi Dashboard: {ex.Message}"
+            );
+        }
+    }
+
+    private async Task RenderDashboardCharts(List<Data.DTOs.ExpenseInfo> expenses)
+    {
+        int year = DateTime.Now.Year;
+
+        var monthData = expenses
+            .Where(x =>
+                x.ExpenseDate.Year == year &&
+                x.ExpenseDate.Month == DashboardMonth)
+            .GroupBy(x => x.ExpenseDate.Day)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Sum(y => y.Amount)
+            );
+
+        int days =
+            DateTime.DaysInMonth(
+                year,
+                DashboardMonth
+            );
+
+        var labels = Enumerable
+            .Range(1, days)
+            .Select(x => x.ToString("D2"))
+            .ToList();
+
+        var data = Enumerable
+            .Range(1, days)
+            .Select(day =>
+                monthData.TryGetValue(
+                    day,
+                    out var amount)
+                    ? amount
+                    : 0
+            )
+            .ToList();
+
+
+        var monthChart = new
+        {
+            labels = labels,
+
+            datasets = new[]
+            {
+            new
+            {
+                label = "Chi tiêu",
+
+                data = data,
+
+                borderWidth = 2,
+
+                fill = true,
+
+                tension = 0.3
+            }
+        }
+        };
+
+
+        await JS.InvokeVoidAsync(
+            "chartHelper.renderChart",
+            "ExpenseMonthChart",
+            monthChart,
+            "bar"
+        );
+
+
+        // =========================
+        // Category chart
+        // =========================
+
+        var categoryData = expenses.GroupBy(x => x.CategoryId).Select(g =>
+        {
+            string categoryName = "Không xác định";
+
+            if (Categories.TryGetValue(g.Key, out var category))
+            {
+                categoryName = category.Name;
+            }
+
+            return new
+            {
+                Name = categoryName,
+                Amount = g.Sum(x => x.Amount)
+            };
+        })
+        .OrderByDescending(x => x.Amount)
+        .ToList();
+
+
+        var categoryChart = new
+        {
+            labels = categoryData
+                .Select(x => x.Name)
+                .ToList(),
+
+            datasets = new[]
+            {
+            new
+            {
+                label = "Chi tiêu",
+
+                data = categoryData
+                    .Select(x => x.Amount)
+                    .ToList(),
+
+                borderWidth = 1
+            }
+        }
+        };
+
+
+        await JS.InvokeVoidAsync(
+            "chartHelper.renderChart",
+            "ExpenseCategoryChart",
+            categoryChart,
+            "doughnut"
+        );
+    }
+
+    private async Task RenderUserDailyExpenseChart()
+    {
+        int year = DateTime.Now.Year;
+
+        int daysInMonth = DateTime.DaysInMonth(
+            year,
+            DashboardMonth);
+
+        // Trục X: ngày 1 -> ngày cuối tháng
+        var labels = Enumerable
+            .Range(1, daysInMonth)
+            .Select(x => x.ToString())
+            .ToArray();
+
+        // Tạo dữ liệu cho từng User
+        var userDatasets = new List<object>();
+
+        foreach (var user in User)
+        {
+            string userCode = user.Key;
+            string userName = user.Value;
+
+            var userExpenses = DataDashboardExpenses
+                .Where(x =>
+                    x.User == userCode &&
+                    x.ExpenseDate.Year == year &&
+                    x.ExpenseDate.Month == DashboardMonth)
+                .ToList();
+
+            var data = Enumerable
+                .Range(1, daysInMonth)
+                .Select(day =>
+                    userExpenses
+                        .Where(x => x.ExpenseDate.Day == day)
+                        .Sum(x => x.Amount))
+                .ToArray();
+
+            userDatasets.Add(new
+            {
+                label = userName,
+                data = data
+            });
+        }
+
+        await JS.InvokeVoidAsync(
+            "userDailyExpenseChart.render",
+            "UserDailyExpenseChart",
+            labels,
+            userDatasets);
+    }
+    #endregion
+
+    #region Tab2 - Chi tiêu
+    private bool isLoadingExpense = false;
+    private DateTime? ExpenseFromDate { get; set; }
+    private DateTime? ExpenseToDate { get; set; }
+    private string ExpenseCategoryFilter { get; set; } = "";
+    private string Nguoichi { get; set; } = "";
+    private List<Data.DTOs.ExpenseInfo> AllExpenses { get; set; } = new();
+    private List<Data.DTOs.ExpenseInfo> FilteredExpenses { get; set; } = new();
+    private List<Data.DTOs.ExpenseInfo> CurrentPageExpenses { get; set; } = new();
+    private decimal TotalExpense { get; set; }
+    private int ExpenseCurrentPage = 1;
+    private int ExpenseRowsPerPage = 10;
+
+    private int ExpenseTotalPages =>
+        Math.Max(
+            1,
+            (int)Math.Ceiling(
+                (decimal)FilteredExpenses.Count
+                / ExpenseRowsPerPage
+            )
+        );
+
+    private bool CanExpensePrev => ExpenseCurrentPage > 1;
+    private bool CanExpenseNext => ExpenseCurrentPage < ExpenseTotalPages;
+
+    private async Task LoadExpenses(DateTime? FromDate, DateTime? ToDate, int? month)
+    {
+        try
+        {
+            if (!this.checkload)
+                isLoadingExpense = true;
+
+            AllExpenses = await GetChiTieu.GetChiTieuAmy(FromDate, ToDate, month);
+
+            FilteredExpenses = AllExpenses
+                .OrderByDescending(x => x.ExpenseDate)
+                .ToList();
+
+            CalculateExpenseTotal();
+            ExpenseCurrentPage = 1;
+            LoadExpensePage();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi tải dữ liệu chi tiêu: {ex.Message}"
+            );
+        }
+        finally
+        {
+            if (!this.checkload)
+                isLoadingExpense = false;
+        }
+    }
+
+    private void CalculateExpenseTotal()
+    {
+        TotalExpense = FilteredExpenses.Sum(x => x.Amount);
+    }
+
+    private void LoadExpensePage()
+    {
+        CurrentPageExpenses = FilteredExpenses
+            .Skip((ExpenseCurrentPage - 1) * ExpenseRowsPerPage)
+            .Take(ExpenseRowsPerPage)
+            .ToList();
+    }
+
+    private void NextExpensePage()
+    {
+        if (CanExpenseNext)
+        {
+            ExpenseCurrentPage++;
+
+            LoadExpensePage();
+        }
+    }
+
+    private void PrevExpensePage()
+    {
+        if (CanExpensePrev)
+        {
+            ExpenseCurrentPage--;
+
+            LoadExpensePage();
+        }
+    }
+
+    private async Task SearchExpensesByTime()
+    {
+        if (!ExpenseFromDate.HasValue || !ExpenseToDate.HasValue)
+        {
+            await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Chưa chọn thời gian tìm kiếm"
+                );
+            return;
+        }
+        await LoadExpenses(ExpenseFromDate, ExpenseToDate, null);
+    }
+    private async Task SearchExpenses()
+    {
+        try
+        {
+            isLoadingExpense = true;
+            IEnumerable<Data.DTOs.ExpenseInfo> query = AllExpenses;
+
+            // Nguoichi
+            if (!string.IsNullOrEmpty(Nguoichi))
+            {
+                query = query.Where(x =>
+                        x.User == Nguoichi
+                );
+            }
+
+            // Danh mục
+            if (!string.IsNullOrEmpty(ExpenseCategoryFilter))
+            {
+                if (Guid.TryParse(
+                    ExpenseCategoryFilter,
+                    out Guid categoryId))
+                {
+                    query = query.Where(x =>
+                        x.CategoryId == categoryId
+                    );
+                }
+            }
+
+            FilteredExpenses = query
+                .OrderByDescending(x => x.ExpenseDate)
+                .ToList();
+
+            ExpenseCurrentPage = 1;
+
+            CalculateExpenseTotal();
+
+            LoadExpensePage();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi tìm kiếm: {ex.Message}"
+            );
+        }
+        finally
+        {
+            isLoadingExpense = false;
+        }
+    }
+
+    private bool IsEditingExpense = false;
+    private Guid EditExpenseId;
+    private DateTime EditExpenseDate;
+    private decimal EditExpenseAmount;
+    private Guid EditExpenseCategoryId;
+    private string EditExpenseDescription = "";
+    private string EditExpenseUser = "";
+    private string EditExpenseNote = "";
+    private async Task EditExpense(Data.DTOs.ExpenseInfo expense)
+    {
+        if (expense == null)
+            return;
+
+        EditExpenseId = expense.Id;
+        EditExpenseDate = expense.ExpenseDate;
+        EditExpenseAmount = expense.Amount;
+        EditExpenseCategoryId = expense.CategoryId;
+        EditExpenseDescription = expense.Description ?? "";
+        EditExpenseNote = expense.Note ?? "";
+        EditExpenseUser = expense.User;
+
+        IsEditingExpense = true;
+
+        StateHasChanged();
+    }
+    private void CancelEditExpense()
+    {
+        IsEditingExpense = false;
+
+        EditExpenseId = Guid.Empty;
+        EditExpenseDate = DateTime.Now;
+        EditExpenseAmount = 0;
+        EditExpenseCategoryId = Guid.Empty;
+        EditExpenseDescription = "";
+        EditExpenseNote = "";
+
+        StateHasChanged();
+    }
+    private async Task SaveEditExpense()
+    {
+        try
+        {
+            // Validate
+            if (EditExpenseCategoryId == Guid.Empty)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng chọn danh mục!"
+                );
+
+                return;
+            }
+
+            if (EditExpenseAmount <= 0)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Số tiền phải lớn hơn 0!"
+                );
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(EditExpenseDescription))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng nhập nội dung chi tiêu!"
+                );
+
+                return;
+            }
+
+
+            // =========================
+            // Update
+            // =========================
+
+            isLoadingExpense = true;
+            //Task<int> UpdateExpese(Guid id, string userName, DateTime expenseDate, decimal amount, Guid categoryId, string description, string? note);
+
+            int result = await UpdateExpese.UpdateExpeseAmy(EditExpenseId, EditExpenseUser, EditExpenseDate, EditExpenseAmount, EditExpenseCategoryId,
+                EditExpenseDescription.Trim(), string.IsNullOrWhiteSpace(EditExpenseNote) ? null : EditExpenseNote.Trim());
+            if (result > 0)
+            {
+                IsEditingExpense = false;
+                EditExpenseId = Guid.Empty;
+                EditExpenseAmount = 0;
+                EditExpenseCategoryId = Guid.Empty;
+                EditExpenseDescription = "";
+                EditExpenseNote = "";
+                await LoadData();
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật khoản chi thành công!"
+                );
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật khoản chi thất bại!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi cập nhật khoản chi: {ex.Message}"
+            );
+        }
+        finally
+        {
+            isLoadingExpense = false;
+
+        }
+    }
+
+    private async Task DeleteExpense(Data.DTOs.ExpenseInfo expense)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Bạn có chắc muốn xóa khoản chi \"{expense.Description}\"?");
+
+        if (!confirmed)
+            return;
+
+        Guid DelExpenseId = expense.Id;
+
+        UpdateisLoading = true;
+        int checkInsert = 0;
+        try
+        {
+            checkInsert = await DelChiTieu.DelChiTieuAmy(DelExpenseId);
+
+            if (checkInsert > 0)
+            {
+                await JS.InvokeVoidAsync("alert", $"Xóa khoản chi tiêu thành công!");
+                await LoadData();
+            }
+            else
+                await JS.InvokeVoidAsync("alert", $"Xóa khoản chi tiêu không thành công!");
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi xóa khoản chi: {ex.Message}"
+            );
+        }
+        finally
+        {
+            isLoadingExpense = false;
+        }
+        // await ExpensesInfo.DeleteExpense(expense.Id);
+    }
+
+    #endregion
+
+    #region Tab3 - Thêm chi tiêu
+
+    private DateTime ExpenseDate { get; set; } = DateTime.Today;
+    private decimal Amount { get; set; }
+    private string AmountDisplay { get; set; } = "";
+    private string SelectedCategoryId { get; set; } = "";
+    private string SelectedUser { get; set; } = "";
+    private string Description { get; set; } = "";
+    private string Note { get; set; } = "";
+    private List<Data.DTOs.CategoriesInfo> CategoriesModel = new();
+    private Dictionary<Guid, (string Icon, string Name)> Categories = new();
+
+    private void OnAmountInput(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? "";
+
+        // Chỉ giữ lại số
+        string digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            Amount = 0;
+            AmountDisplay = "";
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal value))
+        {
+            Amount = value;
+
+            AmountDisplay = value.ToString(
+                "N0",
+                new CultureInfo("vi-VN")
+            );
+        }
+    }
+
+    private async Task AddExpense()
+    {
+        // Validate ngày
+        if (ExpenseDate == default)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn ngày chi tiêu!"
+            );
+
+            return;
+        }
+
+        // Validate số tiền
+        if (Amount <= 0)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng nhập số tiền!"
+            );
+
+            return;
+        }
+
+        // Validate danh mục
+        if (string.IsNullOrEmpty(SelectedCategoryId))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn danh mục!"
+            );
+
+            return;
+        }
+
+        if (Guid.TryParse(SelectedCategoryId, out Guid id))
+        {
+            // id là Guid
+        }
+
+        UpdateisLoading = true;
+        int checkInsert = 0;
+        try
+        {
+            checkInsert = await InsertChiTieu.InsertParamaterChiTieuAmy(ExpenseDate, Amount, Note, id, Description, SelectedUser);
+
+            if (checkInsert > 0)
+            {
+                await JS.InvokeVoidAsync("alert", $"Thêm khoản chi tiêu thành công!");
+
+                AmountDisplay = "";
+                Note = "";
+                Description = "";
+                SelectedCategoryId = "";
+
+                this.checkload = false;
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"Thêm khoản chi tiêu không thành công!");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi khoản chi: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoading = false;
+            await LoadData();
+        }
+    }
+
+    #endregion
+
+    #region Tab4 - Danh mục
+
+    private string NewCategoryName { get; set; } = "";
+    private string NewDescription { get; set; } = "";
+    private string NewCategoryIcon { get; set; } = "";
+    private Guid EditCategoryId { get; set; }
+    private string EditCategoryName { get; set; } = "";
+    private string EditCategoryIcon { get; set; } = "";
+    private bool IsEditingCategory = false;
+    private List<string> CategoryIcons = new() { "🍜", "🍔", "🍕", "🍗", "🍎", "☕", "🍺", "🏠", "🚗", "✈️", "🛒", "💰", "💳", "🎓", "💊", "🎮", "🎵", "📱", "💻", "📚", "👕", "🎁", "❤️", "⭐" };
+    private bool ShowIconPicker = false;
+
+    private void ToggleIconPicker()
+    {
+        ShowIconPicker = !ShowIconPicker;
+    }
+
+    private void SelectIcon(string icon)
+    {
+        NewCategoryIcon = icon;
+        ShowIconPicker = false;
+    }
+
+    private async Task AddCategory()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(NewCategoryName))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng nhập tên danh mục!"
+                );
+
+                return;
+            }
+
+            // Nếu không nhập icon thì dùng icon mặc định
+            if (string.IsNullOrWhiteSpace(NewCategoryIcon))
+            {
+                NewCategoryIcon = "📦";
+            }
+
+            // Kiểm tra danh mục trùng
+            var existCategory = CategoriesModel
+                .FirstOrDefault(x =>
+                    x.Name.Trim().Equals(
+                        NewCategoryName.Trim(),
+                        StringComparison.OrdinalIgnoreCase
+                    ));
+
+            if (existCategory != null)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Danh mục ({NewCategoryName}) đã tồn tại!"
+                );
+
+                return;
+            }
+
+            UpdateisLoading = true;
+            int checkInsert = await InsertCategory.InsertCategoryAmy(NewCategoryName.Trim(), NewCategoryIcon.Trim(), NewDescription.Trim());
+
+            if (checkInsert > 0)
+            {
+                await GetCategory();
+
+                NewCategoryName = "";
+                NewCategoryIcon = "";
+
+                StateHasChanged();
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Thêm danh mục thành công!"
+                );
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Thêm danh mục thất bại!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi thêm danh mục: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoading = false;
+        }
+    }
+
+    private async Task EditCategory(Data.DTOs.CategoriesInfo CategoriesData)
+    {
+        try
+        {
+            if (CategoriesData == null)
+                return;
+
+            NewCategoryName = CategoriesData.Name;
+            NewCategoryIcon = CategoriesData.Icon;
+            EditCategoryId = CategoriesData.Id;
+
+            EditCategoryName = CategoriesData.Name;
+            EditCategoryIcon = CategoriesData.Icon;
+
+            IsEditingCategory = true;
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            IsEditingCategory = false;
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi mở chỉnh sửa danh mục: {ex.Message}"
+            );
+        }
+    }
+    private async Task BtCancel()
+    {
+        EditCategoryId = Guid.Empty;
+        EditCategoryName = "";
+        EditCategoryIcon = "";
+        NewCategoryName = "";
+        NewCategoryIcon = "";
+        IsEditingCategory = false;
+    }
+    private async Task SaveEditCategory()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(EditCategoryName))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng nhập tên danh mục!"
+                );
+
+                return;
+            }
+
+            EditCategoryName = NewCategoryName;
+            EditCategoryIcon = NewCategoryIcon;
+
+            IsEditingCategory = true;
+            UpdateisLoading = true;
+            //Guid id, string name, string icon, Boolean status, string type
+            int result = await UpdateCategory.UpdateCategoryAmy(EditCategoryId, EditCategoryName.Trim(), EditCategoryIcon?.Trim() ?? "📦", true, "UPDATE");
+
+            if (result > 0)
+            {
+                await GetCategory();
+                IsEditingCategory = false;
+
+                EditCategoryId = Guid.Empty;
+                EditCategoryName = "";
+                EditCategoryIcon = "";
+                NewCategoryName = "";
+                NewCategoryIcon = "";
+                await InvokeAsync(StateHasChanged);
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật danh mục thành công!"
+                );
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật danh mục thất bại!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi cập nhật danh mục: {ex.Message}"
+            );
+        }
+        finally
+        {
+            IsEditingCategory = false;
+            UpdateisLoading = false;
+        }
+    }
+
+    private async Task DeleteCategory(Data.DTOs.CategoriesInfo CategoriesData)
+    {
+        try
+        {
+            if (CategoriesData == null)
+                return;
+
+            bool confirmed = await JS.InvokeAsync<bool>(
+                "confirm",
+                $"Bạn có chắc chắn muốn xóa danh mục \"{CategoriesData.Name}\" không?"
+            );
+
+            if (!confirmed)
+                return;
+
+            UpdateisLoading = true;
+            int result = await UpdateCategory.UpdateCategoryAmy(CategoriesData.Id, "", "", false, "DELETE");
+
+            if (result > 0)
+            {
+                await GetCategory();
+                StateHasChanged();
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Xóa danh mục \"{CategoriesData.Name}\" thành công!"
+                );
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Xóa danh mục thất bại!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Không thể xóa danh mục.\n\n{ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoading = false;
+        }
+    }
+
+    private async Task ToggleCategory(Data.DTOs.CategoriesInfo CategoriesData)
+    {
+        try
+        {
+            if (CategoriesData == null)
+                return;
+
+            string action = CategoriesData.IsActive
+                ? "tắt"
+                : "bật";
+
+            bool confirmed = await JS.InvokeAsync<bool>(
+                "confirm",
+                $"Bạn có chắc chắn muốn {action} danh mục \"{CategoriesData.Name}\" không?"
+            );
+
+            if (!confirmed)
+                return;
+
+            UpdateisLoading = true;
+
+            bool newStatus = !CategoriesData.IsActive;
+            int result = await UpdateCategory.UpdateCategoryAmy(CategoriesData.Id, "", "", newStatus, "UPDATE_STATUS");
+            if (result > 0)
+            {
+                await GetCategory();
+                CategoriesData.IsActive = newStatus;
+                StateHasChanged();
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Đã {action} danh mục \"{CategoriesData.Name}\"!"
+                );
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Không thể {action} danh mục!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi thay đổi trạng thái danh mục: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoading = false;
+        }
+    }
+
+    #endregion
+
+    #region tab5 Reports
+
+    private int ReportYear = DateTime.Now.Year;
+    private int ReportMonth = DateTime.Now.Month;
+    private string ReportUser = "";
+    private Guid? ReportCategoryId = null;
+    private List<Data.DTOs.ExpenseInfo> ReportExpenses = new();
+    private List<Data.DTOs.ReportCategoryInfo> ReportCategories = new();
+    private decimal ReportTotal;
+    private decimal ReportAverage;
+
+    private async Task LoadReport()
+    {
+        try
+        {
+            var expenses = this.DataDashboardExpenses;
+
+            if (expenses == null)
+            {
+                ReportExpenses = new();
+                return;
+            }
+
+            // =========================
+            // FILTER
+            // =========================
+
+            ReportExpenses = expenses
+                .Where(x =>
+                    x.ExpenseDate.Year == ReportYear
+                )
+                .Where(x =>
+                    ReportMonth == 0 ||
+                    x.ExpenseDate.Month == ReportMonth
+                )
+                .Where(x =>
+                    string.IsNullOrEmpty(ReportUser) ||
+                    x.User == ReportUser
+                )
+                .Where(x =>
+                    !ReportCategoryId.HasValue ||
+                    x.CategoryId == ReportCategoryId.Value
+                )
+                .OrderByDescending(x => x.ExpenseDate)
+                .ToList();
+
+
+            // =========================
+            // SUMMARY
+            // =========================
+
+            ReportTotal =
+                ReportExpenses.Sum(x => x.Amount);
+
+            ReportAverage =
+                ReportExpenses.Count > 0
+                    ? ReportTotal / ReportExpenses.Count
+                    : 0;
+
+
+            // =========================
+            // CATEGORY
+            // =========================
+
+            ReportCategories = ReportExpenses
+                .GroupBy(x => x.CategoryId)
+                .Select(g =>
+                {
+                    string name = "Không xác định";
+                    string icon = "📦";
+
+                    if (Categories.TryGetValue(
+                        g.Key,
+                        out var category))
+                    {
+                        name = category.Name;
+                        icon = category.Icon;
+                    }
+
+                    return new Data.DTOs.ReportCategoryInfo
+                    {
+                        CategoryId = g.Key,
+
+                        Name = name,
+
+                        Icon = icon,
+
+                        Amount = g.Sum(x => x.Amount),
+
+                        Count = g.Count()
+                    };
+                })
+                .OrderByDescending(x => x.Amount)
+                .ToList();
+
+
+            // =========================
+            // PERCENT
+            // =========================
+
+            foreach (var item in ReportCategories)
+            {
+                item.Percent =
+                    ReportTotal > 0
+                        ? item.Amount / ReportTotal * 100
+                        : 0;
+            }
+
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi tạo báo cáo: {ex.Message}"
+            );
+        }
+    }
+    #endregion
+
+
+}

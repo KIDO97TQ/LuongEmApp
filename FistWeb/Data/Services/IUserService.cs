@@ -264,4 +264,68 @@ namespace FistWeb.Data.Services
         Task<int> UpdateOrderWeddingById(ListInfoGoiChup updatedProduct);
     }
     #endregion
+
+    #region Chi tieu Kido
+    public interface IGetCategories
+    {
+        Task<List<CategoriesInfo>> GetCategories();
+    }
+    public interface InsertParamaterChiTieu
+    {
+        Task<int> InsertParamaterChiTieu(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User);
+    }
+    public interface InsertCategory
+    {
+        Task<int> InsertCategory(string name, string icon, string Description);
+    }
+    public interface UpdateCategory
+    {
+        Task<int> UpdateCategory(Guid id, string name, string icon, Boolean status, string type);
+    }
+    public interface IGetChiTieu
+    {
+        Task<List<ExpenseInfo>> GetChiTieu(DateTime? FromDate, DateTime? ToDate, int? month);
+    }
+    public interface IUpdateExpese
+    {
+        Task<int> UpdateExpese(Guid id, string userName, DateTime expenseDate, decimal amount, Guid categoryId, string description, string? note);
+    }
+
+    public interface IDelChiTieu
+    {
+        Task<int> DelChiTieu(Guid id);
+    }
+    #endregion
+
+    #region Chi tieu Amy
+    public interface IGetCategoriesAmy
+    {
+        Task<List<CategoriesInfo>> GetCategoriesAmy();
+    }
+    public interface InsertParamaterChiTieuAmy
+    {
+        Task<int> InsertParamaterChiTieuAmy(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User);
+    }
+    public interface InsertCategoryAmy
+    {
+        Task<int> InsertCategoryAmy(string name, string icon, string Description);
+    }
+    public interface UpdateCategoryAmy
+    {
+        Task<int> UpdateCategoryAmy(Guid id, string name, string icon, Boolean status, string type);
+    }
+    public interface IGetChiTieuAmy
+    {
+        Task<List<ExpenseInfo>> GetChiTieuAmy(DateTime? FromDate, DateTime? ToDate, int? month);
+    }
+    public interface IUpdateExpeseAmy
+    {
+        Task<int> UpdateExpeseAmy(Guid id, string userName, DateTime expenseDate, decimal amount, Guid categoryId, string description, string? note);
+    }
+
+    public interface IDelChiTieuAmy
+    {
+        Task<int> DelChiTieuAmy(Guid id);
+    }
+    #endregion
 }

@@ -31,6 +31,9 @@ namespace FistWeb.Data
         public DbSet<RentalSummaryChup> RentalSummaryChup { get; set; }
         public DbSet<ListInfoGoiChup> ListInfoGoiChup { get; set; }
 
+        public DbSet<CategoriesInfo> CategoriesInfo { get; set; }
+        public DbSet<ExpenseInfo> ExpenseInfo { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<users>().HasKey(u => u.UserId);
@@ -77,6 +80,9 @@ namespace FistWeb.Data
 
             modelBuilder.Entity<RentalSummaryChup>().HasNoKey();
             modelBuilder.Entity<ListInfoGoiChup>().HasNoKey();
+
+            modelBuilder.Entity<CategoriesInfo>().HasNoKey();
+            modelBuilder.Entity<ExpenseInfo>().HasNoKey();
         }
     }
 }

@@ -75,6 +75,26 @@ builder.Services.AddScoped<IAddParaWeddingService, CallService>();
 builder.Services.AddScoped<IUpdateLichChupWedding, CallService>();
 builder.Services.AddScoped<IUpdateOrderWeddingByIdService, CallService>();
 #endregion
+
+#region Chi tieu Kido
+builder.Services.AddScoped<IGetCategories, CallService>();
+builder.Services.AddScoped<InsertParamaterChiTieu, CallService>();
+builder.Services.AddScoped<InsertCategory, CallService>();
+builder.Services.AddScoped<UpdateCategory, CallService>();
+builder.Services.AddScoped<IGetChiTieu, CallService>();
+builder.Services.AddScoped<IUpdateExpese, CallService>();
+builder.Services.AddScoped<IDelChiTieu, CallService>();
+#endregion
+
+#region Chi tieu Kido
+builder.Services.AddScoped<IGetCategoriesAmy, CallService>();
+builder.Services.AddScoped<InsertParamaterChiTieuAmy, CallService>();
+builder.Services.AddScoped<InsertCategoryAmy, CallService>();
+builder.Services.AddScoped<UpdateCategoryAmy, CallService>();
+builder.Services.AddScoped<IGetChiTieuAmy, CallService>();
+builder.Services.AddScoped<IUpdateExpeseAmy, CallService>();
+builder.Services.AddScoped<IDelChiTieuAmy, CallService>();
+#endregion
 #endregion
 
 builder.Services.AddSingleton<LoadingService>();

@@ -177,4 +177,45 @@ namespace FistWeb.Data.DTOs
         public int CountHair { get; set; }
         public int CountJob { get; set; }
     }
+
+    #region Quan li chi tieu
+    public class CategoriesInfo
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public bool IsActive { get; set; }
+        public string? Description { get; set; }
+    }
+
+    public class ExpenseInfo
+    {
+        public Guid Id { get; set; }
+        public string User { get; set; }
+        public DateTime ExpenseDate { get; set; }
+        public decimal Amount { get; set; }
+        public Guid CategoryId { get; set; }
+        public string? Description { get; set; }
+        public string? Note { get; set; }
+    }
+
+    public class DashboardCategoryInfo
+    {
+        public Guid CategoryId { get; set; }
+        public string Name { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public decimal Amount { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class ReportCategoryInfo
+    {
+        public Guid CategoryId { get; set; }
+        public string Name { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public decimal Amount { get; set; }
+        public int Count { get; set; }
+        public decimal Percent { get; set; }
+    }
+    #endregion
 }
