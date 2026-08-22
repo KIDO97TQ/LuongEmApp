@@ -363,20 +363,35 @@ textarea.form-input[b-8yebls6zrk] {
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     }
 
+    /*danh muc*/
 .dashboard-row1[b-8yebls6zrk] {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.5fr);
     gap: 20px;
-    align-items: flex-start;
+    width: 100%;
+    align-items: start;
 }
 
-.category-form-card[b-8yebls6zrk] {
-    flex: 1;
-}
-
+.category-form-card[b-8yebls6zrk],
 .category-list-card[b-8yebls6zrk] {
-    flex: 2;
+    min-width: 0;
+    width: 100%;
 }
 
+    /* =========================
+   TABLE
+   ========================= */
+
+    .category-list-card .chart-order[b-8yebls6zrk] {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .category-list-card .table-custom[b-8yebls6zrk] {
+        width: 100%;
+    }
+
+/*-------------*/
 .card-title[b-8yebls6zrk] {
     display: flex;
     align-items: center;
@@ -1021,6 +1036,15 @@ textarea.form-input[b-8yebls6zrk] {
     .category-form-card[b-8yebls6zrk],
     .category-list-card[b-8yebls6zrk] {
         flex: none;
+        width: 100%;
+    }
+    .dashboard-row1[b-8yebls6zrk] {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .category-form-card[b-8yebls6zrk],
+    .category-list-card[b-8yebls6zrk] {
         width: 100%;
     }
 }
