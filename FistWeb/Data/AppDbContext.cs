@@ -33,6 +33,9 @@ namespace FistWeb.Data
 
         public DbSet<CategoriesInfo> CategoriesInfo { get; set; }
         public DbSet<ExpenseInfo> ExpenseInfo { get; set; }
+        public DbSet<UserAccount> UserAccount { get; set; }
+        public DbSet<GoldAsset> GoldAsset { get; set; }
+        public DbSet<Income> Income { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,6 +86,9 @@ namespace FistWeb.Data
 
             modelBuilder.Entity<CategoriesInfo>().HasNoKey();
             modelBuilder.Entity<ExpenseInfo>().HasNoKey();
+            modelBuilder.Entity<UserAccount>().HasNoKey();
+            modelBuilder.Entity<GoldAsset>().HasNoKey();
+            modelBuilder.Entity<Income>().HasNoKey();
         }
     }
 }

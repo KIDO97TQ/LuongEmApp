@@ -77,6 +77,7 @@ builder.Services.AddScoped<IUpdateOrderWeddingByIdService, CallService>();
 #endregion
 
 #region Chi tieu Kido
+builder.Services.AddScoped<IGetUserAcount, CallService>();
 builder.Services.AddScoped<IGetCategories, CallService>();
 builder.Services.AddScoped<InsertParamaterChiTieu, CallService>();
 builder.Services.AddScoped<InsertCategory, CallService>();
@@ -86,7 +87,7 @@ builder.Services.AddScoped<IUpdateExpese, CallService>();
 builder.Services.AddScoped<IDelChiTieu, CallService>();
 #endregion
 
-#region Chi tieu Kido
+#region Chi tieu Amy
 builder.Services.AddScoped<IGetCategoriesAmy, CallService>();
 builder.Services.AddScoped<InsertParamaterChiTieuAmy, CallService>();
 builder.Services.AddScoped<InsertCategoryAmy, CallService>();
@@ -94,6 +95,13 @@ builder.Services.AddScoped<UpdateCategoryAmy, CallService>();
 builder.Services.AddScoped<IGetChiTieuAmy, CallService>();
 builder.Services.AddScoped<IUpdateExpeseAmy, CallService>();
 builder.Services.AddScoped<IDelChiTieuAmy, CallService>();
+#endregion
+
+#region Tich Luy
+builder.Services.AddScoped<IInsertIncome, CallService>();
+builder.Services.AddScoped<IInsertGold, CallService>();
+builder.Services.AddScoped<IGetGoldAssets, CallService>();
+builder.Services.AddScoped<IGetIncome, CallService>();
 #endregion
 #endregion
 

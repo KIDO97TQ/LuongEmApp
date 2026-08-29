@@ -24,7 +24,8 @@ namespace FistWeb.Data.Services
     IGetTotalDoanhThuAmyService, GetListThueDoAmy, IUpdateReturnOderAmyService, IUpdateReturnAllOrderAmyService, UpdateReturnAllOrder1Amy, IInsertOrdersAmyService,
     IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService,
     IGetProductID1Service, IGetProductID1AmyService, GetQTYListThueDoAmy, IGetCategories, InsertParamaterChiTieu, InsertCategory, UpdateCategory, IGetChiTieu, IUpdateExpese, IDelChiTieu,
-        IGetCategoriesAmy, InsertParamaterChiTieuAmy, InsertCategoryAmy, UpdateCategoryAmy, IGetChiTieuAmy, IUpdateExpeseAmy, IDelChiTieuAmy
+        IGetCategoriesAmy, InsertParamaterChiTieuAmy, InsertCategoryAmy, UpdateCategoryAmy, IGetChiTieuAmy, IUpdateExpeseAmy, IDelChiTieuAmy, IInsertGold, IInsertIncome, IGetUserAcount,
+        IGetGoldAssets, IGetIncome
     {
         private readonly AppDbContext _context;
 
@@ -1708,7 +1709,7 @@ namespace FistWeb.Data.Services
 
         #region Chi Tiêu Kido
 
-        public async Task<int> InsertParamaterChiTieu(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User)
+        public async Task<int> InsertParamaterChiTieu1(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User)
         {
             var sql = new StringBuilder(@"INSERT INTO kido.expenses (expense_date, amount, category_id, description, note, user_name )
                                                                     VALUES ( @DataExpense,
@@ -1730,6 +1731,90 @@ namespace FistWeb.Data.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString(), parameters.ToArray());
         }
 
+        public async Task<int> InsertParamaterChiTieu(DateTime expenseDate, decimal amount, string? note, Guid categoryId, string? description, string userName, Guid accountId)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            expenseDate = expenseDate.ToUniversalTime();
+            try
+            {
+                // 1. Kiểm tra số dư tài khoản
+                var balance = await _context.Database.SqlQueryRaw<decimal>(
+                                                          @"SELECT balance AS ""Value""
+                                                            FROM kido.accounts
+                                                            WHERE id = {0}
+                                                              AND is_active = TRUE
+                                                            FOR UPDATE",
+                                                          accountId)
+                                                      .FirstOrDefaultAsync();
+
+                if (balance < amount)
+                {
+                    return 1000;
+                }
+
+                // 2. Trừ tiền trong tài khoản
+                int updateAccount =
+                    await _context.Database.ExecuteSqlRawAsync(
+                        @"UPDATE kido.accounts
+                             SET balance = balance - {0},
+                                 updated_at = NOW()
+                             WHERE id = {1}",
+                        amount,
+                        accountId);
+
+                if (updateAccount <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                // 3. Thêm khoản chi
+                int insertExpense = await _context.Database.ExecuteSqlRawAsync(
+                        @"INSERT INTO kido.expenses
+                        (
+                            expense_date,
+                            amount,
+                            category_id,
+                            description,
+                            note,
+                            user_name,
+                            account_id
+                        )
+                        VALUES
+                        (
+                            {0},
+                            {1},
+                            {2},
+                            {3},
+                            {4},
+                            {5},
+                            {6}
+                        )",
+                        expenseDate,
+                        amount,
+                        categoryId,
+                        description,
+                        note,
+                        userName,
+                        accountId);
+
+                if (insertExpense <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                await transaction.CommitAsync();
+                _context.ChangeTracker.Clear();
+                return insertExpense;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
         public async Task<List<CategoriesInfo>> GetCategories()
         {
             StringBuilder sql = new StringBuilder(@" SELECT b.id, 
@@ -1744,6 +1829,25 @@ namespace FistWeb.Data.Services
                     .AsNoTracking()
                     .ToListAsync();
         }
+
+        public async Task<List<UserAccount>> GetUserAcount()
+        {
+            StringBuilder sql = new StringBuilder(@" select t. id, t.name,
+                                                            t.account_type as AccountType,
+                                                            t.balance,
+                                                            t.user_name    as UserName,
+                                                            t.description,
+                                                            t.is_active    as IsActive,
+                                                            t.created_at   as CreatedAt,
+                                                            t.updated_at   as UpdatedAt
+                                                       from kido.accounts t");
+
+            return await _context.Set<UserAccount>()
+                    .FromSqlRaw(sql.ToString())
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
 
         public async Task<int> InsertCategory(string name, string icon, string Description)
         {
@@ -1799,7 +1903,8 @@ namespace FistWeb.Data.Services
         public async Task<List<ExpenseInfo>> GetChiTieu(DateTime? FromDate, DateTime? ToDate, int? month)
         {
             List<NpgsqlParameter> parameters = new List<NpgsqlParameter>();
-            StringBuilder sql = new StringBuilder(@" SELECT ex.id, ex.user_name as user, ex.amount, ex.description AS Description, ex.note, ex.expense_date as ExpenseDate, ex.category_id as CategoryId
+            StringBuilder sql = new StringBuilder(@" SELECT ex.id, ex.user_name as user, ex.amount, ex.description AS Description, ex.note, ex.expense_date as ExpenseDate, 
+                                                            ex.category_id as CategoryId, ex.account_Id as AccountId
                                                        FROM kido.expenses ex where 1=1 ");
 
             if (FromDate.HasValue && ToDate.HasValue)
@@ -1853,7 +1958,7 @@ namespace FistWeb.Data.Services
         public async Task<int> DelChiTieu(Guid id)
         {
             var sql = new StringBuilder(@"Delete from kido.expenses Where id=@ExID");
-            
+
             var parameters = new List<NpgsqlParameter>
             {
                 new NpgsqlParameter("ExID",id),
@@ -2022,6 +2127,211 @@ namespace FistWeb.Data.Services
             _context.ChangeTracker.Clear();
             return a;
         }
+        #endregion
+
+        #region Tich Luy
+        public async Task<int> InsertIncome(DateTime incomeDate, decimal amount, string incomeType, string userName, string? note, Guid accountId)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                incomeDate = incomeDate.ToUniversalTime();
+                //thêm log cộng tiền vào tk
+                int insertExpense = await _context.Database.ExecuteSqlRawAsync(
+                @"INSERT INTO kido.income
+                                    (
+                                        income_date,
+                                        amount,
+                                        income_type,
+                                        user_name,
+                                        account_id,
+                                        note
+                                    )
+                                    VALUES
+                                    (
+                                        {0},
+                                        {1},
+                                        {2},
+                                        {3},
+                                        {4},
+                                        {5}
+                                    )",
+                                        incomeDate,
+                                        amount,
+                                        incomeType,
+                                        userName,
+                                        accountId,
+                                        (object?)note ?? DBNull.Value
+                );
+
+                if (insertExpense <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                //cộng tiền tk
+                // 2. Trừ tiền trong tài khoản
+                int updateAccount = await _context.Database.ExecuteSqlRawAsync(
+                        @"UPDATE kido.accounts
+                             SET balance = balance + {0},
+                                 updated_at = NOW()
+                             WHERE id = {1}",
+                        amount,
+                        accountId);
+
+                if (updateAccount <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                await transaction.CommitAsync();
+                _context.ChangeTracker.Clear();
+                return insertExpense;
+
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<int> InsertGold(string goldType, decimal weight, decimal purchasePrice, DateTime purchaseDate, string userName, string? note, Guid accountId, bool NoMoney)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            purchaseDate = purchaseDate.ToUniversalTime();
+            try
+            {
+                if (!NoMoney) //ko dùng tiền tích lũy mua vàng
+                {
+                    // 1. Kiểm tra số dư tài khoản
+                    var balance = await _context.Database.SqlQueryRaw<decimal>(
+                                                              @"SELECT balance AS ""Value""
+                                                            FROM kido.accounts
+                                                            WHERE id = {0}
+                                                              AND is_active = TRUE
+                                                            FOR UPDATE",
+                                                              accountId)
+                                                          .FirstOrDefaultAsync();
+
+                    if (balance < purchasePrice)
+                    {
+                        return 1000;
+                    }
+
+                    // 2. Trừ tiền trong tài khoản
+                    int updateAccount = await _context.Database.ExecuteSqlRawAsync(
+                            @"UPDATE kido.accounts
+                             SET balance = balance - {0},
+                                 updated_at = NOW()
+                             WHERE id = {1}",
+                            purchasePrice,
+                            accountId);
+
+                    if (updateAccount <= 0)
+                    {
+                        await transaction.RollbackAsync();
+                        return 0;
+                    }
+                }
+
+                // 3. Thêm khoản chi
+                int insertExpense = await _context.Database.ExecuteSqlRawAsync(
+                        @"INSERT INTO kido.gold_assets
+                                                    (
+                                                        gold_type,
+                                                        weight,
+                                                        purchase_price,
+                                                        purchase_date,
+                                                        user_name,
+                                                        account_id,
+                                                        note
+                                                    )
+                        VALUES
+                        (
+                            {0},
+                            {1},
+                            {2},
+                            {3},
+                            {4},
+                            {5},
+                            {6}
+                        )",
+                        goldType,
+                        weight,
+                        purchasePrice,
+                        purchaseDate,
+                        userName,
+                        accountId,
+                        note);
+
+                if (insertExpense <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                await transaction.CommitAsync();
+                _context.ChangeTracker.Clear();
+                return insertExpense;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<List<Income>> GetIncome()
+        {
+            StringBuilder sql = new StringBuilder(@" SELECT  i.id,
+                                                             i.income_date AS IncomeDate,
+                                                             i.amount,
+                                                             i.income_type AS IncomeType,
+                                                             i.user_name AS UserName,
+                                                             i.account_id AS AccountId,
+                                                             a.account_type as AccountType,
+                                                             a.name AS AccountName,
+                                                             i.note,
+                                                             i.created_at AS CreatedAt,
+                                                             i.updated_at AS UpdatedAt
+                                                         FROM kido.income i
+                                                         LEFT JOIN kido.accounts a
+                                                             ON i.account_id = a.id
+                                                         ORDER BY i.income_date DESC ");
+
+            return await _context.Set<Income>()
+                .FromSqlRaw(sql.ToString())
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<GoldAsset>> GetGoldAssets()
+        {
+            StringBuilder sql = new StringBuilder(@" SELECT g.id,
+                                                            g.gold_type AS GoldType,
+                                                            g.weight,
+                                                            g.purchase_price AS PurchasePrice,
+                                                            g.purchase_date AS PurchaseDate,
+                                                            g.user_name AS UserName,
+                                                            g.account_id AS AccountId,
+                                                            a.name AS AccountName,
+                                                            g.note,
+                                                            g.created_at AS CreatedAt,
+                                                            g.updated_at AS UpdatedAt
+                                                        FROM kido.gold_assets g
+                                                        LEFT JOIN kido.accounts a
+                                                            ON g.account_id = a.id
+                                                        ORDER BY g.purchase_date DESC ");
+
+            return await _context.Set<GoldAsset>()
+                .FromSqlRaw(sql.ToString())
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         #endregion
     }
 }

@@ -1,0 +1,2042 @@
+﻿@page "/Saving"
+@using Microsoft.EntityFrameworkCore
+@using System.Data
+@using System.Text.Json
+@using FistWeb.Data.Services
+@using System.Text.RegularExpressions
+@inject Data.AppDbContext Db
+@inject LoadingService LoadingService
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using System.Text
+@inject NavigationManager Navigation
+@implements IDisposable
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@inject IGetUserAcount GetUserAcount
+@inject IInsertGold InsertGold
+@inject IInsertIncome InsertIncome
+@inject IGetGoldAssets GetGoldAssets
+@inject IGetIncome GetIncome
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="tab1">
+        <img src="dashboard.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Dashboard
+    </button>
+    <button class="tab-btn" data-tab="tab2">
+        <img src="spending.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Lịch sử thu nhập
+    </button>
+    <button class="tab-btn" data-tab="tab3">
+        <img src="add.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Thêm Thu Nhập
+    </button>
+    <button class="tab-btn" data-tab="tab4">
+        <img src="categories.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Danh mục
+    </button>
+    <button class="tab-btn" data-tab="tab5">
+        <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        Reports
+    </button>
+</div>
+
+@* TAB 1 - DASHBOARD*@
+<div class="tab-content active" id="tab1">
+
+    @if (isLoadingDashboard)
+    {
+        <div class="dashboard-loading">
+            ⏳ Đang tải Dashboard...
+        </div>
+    }
+    else
+    {
+        <div class="saving-dashboard">
+
+            <div class="dashboard-title">
+                <div>
+                    <h2>💰 Dashboard tích lũy</h2>
+                    <p>Tổng quan tài sản hiện tại</p>
+                </div>
+
+                <select class="control-select"
+                        @bind="SavingDashboardUser"
+                        @bind:after="LoadSavingDashboard">
+
+                    <option value="">
+                        Tất cả
+                    </option>
+                    @foreach (var item in User)
+                    {
+                        <option value="@item.Key">
+                            @item.Value
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            @* =========================
+           ROW 1 - SUMMARY
+           ========================= *@
+            <div class="saving-summary-grid">
+
+                <div class="saving-summary-card money">
+                    <div class="saving-card-icon">💵</div>
+
+                    <div>
+                        <div class="saving-card-title">
+                            Tổng tiền đang có
+                        </div>
+
+                        <div class="saving-card-value">
+                            @TotalAccountBalance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="saving-summary-card gold">
+                    <div class="saving-card-icon">🪙</div>
+
+                    <div>
+                        <div class="saving-card-title">
+                            Tổng vốn mua vàng
+                        </div>
+
+                        <div class="saving-card-value">
+                            @TotalGoldPurchase.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="saving-summary-card asset">
+                    <div class="saving-card-icon">📈</div>
+
+                    <div>
+                        <div class="saving-card-title">
+                            Tổng tài sản
+                        </div>
+
+                        <div class="saving-card-value">
+                            @TotalAssets.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="saving-summary-card income">
+                    <div class="saving-card-icon">💰</div>
+
+                    <div>
+                        <div class="saving-card-title">
+                            Thu nhập tháng này
+                        </div>
+
+                        <div class="saving-card-value">
+                            @CurrentMonthIncome.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            @* =========================
+           ROW 2
+           ========================= *@
+
+            <div class="dashboard-row1">
+
+                <div class="chart-card yy">
+
+                    <h3 class="card-title">
+                        💰 Cơ cấu tiền hiện có
+                    </h3>
+
+                    <div class="asset-list">
+
+
+
+                        <div class="asset-item">
+
+                            <div>
+                                <span class="asset-icon">💵</span>
+                                Tiền mặt
+                            </div>
+
+                            <strong>
+                                @CashBalance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="asset-item">
+
+                            <div>
+                                <span class="asset-icon">🏦</span>
+                                Ngân hàng
+                            </div>
+
+                            <strong>
+                                @BankBalance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="asset-item">
+
+                            <div>
+                                <span class="asset-icon">💳</span>
+                                Ví điện tử
+                            </div>
+
+                            <strong>
+                                @EWalletBalance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="asset-item">
+
+                            <div>
+                                <span class="asset-icon">💰</span>
+                                Tiền tiết kiệm
+                            </div>
+
+                            <strong>
+                                @SavingBalance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <h3 class="card-title">
+                        🪙 Tình hình vàng
+                    </h3>
+
+
+                    <div class="gold-dashboard">
+
+                        <div class="gold-stat">
+
+                            <span>
+                                Tổng số lần mua
+                            </span>
+
+                            <strong>
+                                @SavingGoldList.Count
+                            </strong>
+
+                        </div>
+
+
+                        <div class="gold-stat">
+
+                            <span>
+                                Tổng khối lượng
+                            </span>
+
+                            <strong>
+                                @TotalGoldWeight.ToString("0.####") chỉ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="gold-stat">
+
+                            <span>
+                                Tổng vốn đã mua
+                            </span>
+
+                            <strong>
+                                @TotalGoldPurchase.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-row1">
+
+                <div class="chart-card">
+                    <h3 class="card-title">
+                        📊 Cơ cấu tài sản
+                    </h3>
+
+                    <div class="saving-chart-box">
+                        <canvas id="AssetStructureChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="card-title">
+                        📈 Thu nhập theo tháng
+                    </h3>
+
+                    <div class="saving-chart-box">
+                        <canvas id="IncomeByMonthChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="chart-card user-asset-card">
+
+                <h3 class="card-title">
+                    👤 Tài sản từng người
+                </h3>
+
+                <div class="user-asset-list">
+
+                    @foreach (var item in UserAssetSummaries)
+                    {
+                        <div class="user-asset-item">
+
+                            <div class="user-asset-left">
+
+                                <div class="user-avatar">
+                                    👤
+                                </div>
+
+                                <div>
+                                    <div class="user-name">
+                                        @item.UserName
+                                    </div>
+
+                                    <div class="user-sub">
+                                        Tiền:
+                                        @item.Money.ToString("N0", new CultureInfo("vi-VN"))                                vnđ
+
+                                        • Vàng:
+                                        @item.Gold.ToString("N0", new CultureInfo("vi-VN"))                                vnđ
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <strong class="user-asset-value">
+                                @item.TotalAsset.ToString("N0", new CultureInfo("vi-VN"))                        vnđ
+                            </strong>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+@* TAB 2 - LỊCH SỬ THU NHẬP & VÀNG *@
+<div class="tab-content" id="tab2">
+
+    @* LỊCH SỬ THU NHẬP *@
+    <div class="chart-card">
+
+        <div class="history-header">
+
+            <h3 class="card-title">
+                💵 Lịch sử thu nhập
+            </h3>
+
+            <div class="history-filter">
+
+                <select class="control-select"
+                        @bind="IncomeHistoryMonth"
+                        @bind:after="OnHisMoneyUserChanged">
+
+                    <option value="0">
+                        Tất cả tháng
+                    </option>
+
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i">
+                            Tháng @i.ToString("D2")
+                        </option>
+                    }
+
+                </select>
+
+                <select class="control-select"
+                        @bind="IncomeHistoryUser"
+                        @bind:after="OnHisMoneyUserChanged">
+
+                    <option value="">
+                        Tất cả User
+                    </option>
+
+                    @foreach (var item in User)
+                    {
+                        <option value="@item.Key">
+                            @item.Value
+                        </option>
+                    }
+
+                </select>
+
+
+                <select class="control-select"
+                        @bind="IncomeHistoryAccountId"
+                        @bind:after="FilterIncomeHistory">
+
+                    <option value="">
+                        Tất cả tài khoản
+                    </option>
+
+                    @foreach (var account in this.AccountsMoney)
+                    {
+                        if (account.IsActive)
+                        {
+                            <option value="@account.Id">
+                                @account.Name
+                            </option>
+                        }
+                    }
+                </select>
+
+
+                @* <button class="button-search"
+                        type="button"
+                        @onclick="FilterIncomeHistory">
+
+                    <i class="bi bi-search"></i>
+
+                    Tìm kiếm
+
+                </button> *@
+
+            </div>
+
+        </div>
+
+
+        <div class="history-summary">
+
+            <span>
+                Tổng thu nhập:
+            </span>
+
+            <strong>
+                @IncomeHistoryTotal.ToString("N0", new CultureInfo("vi-VN")) vnđ
+            </strong>
+
+        </div>
+
+
+        <div class="chart-order">
+
+            <table class="table-custom">
+
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ngày nhận</th>
+                        <th>Loại thu nhập</th>
+                        <th>Số tiền</th>
+                        <th>User</th>
+                        <th>Tài khoản</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (IncomeHistoryPage?.Any() == true)
+                    {
+                        int stt = (IncomeHistoryCurrentPage - 1) * IncomeHistoryRowsPerPage + 1;
+
+                        foreach (var income in IncomeHistoryPage)
+                        {
+                            <tr>
+
+                                <td data-label="STT">
+                                    @stt
+                                </td>
+
+                                <td data-label="Ngày nhận">
+                                    @income.IncomeDate.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+
+                                <td data-label="Loại thu nhập">
+                                    @income.IncomeType
+                                </td>
+
+                                <td data-label="Số tiền">
+                                    <strong>
+                                        @income.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                    </strong>
+                                </td>
+
+                                <td data-label="User">
+                                    @income.UserName
+                                </td>
+
+                                <td data-label="Tài khoản">
+
+                                    @{
+                                        var account = AllAccounts.FirstOrDefault(x => x.Id == income.AccountId);
+                                    }
+
+                                    @(account?.Name ?? "Không xác định")
+
+                                </td>
+
+                                <td data-label="Ghi chú">
+                                    @(string.IsNullOrWhiteSpace(income.Note) ? "-" : income.Note)
+                                </td>
+
+                            </tr>
+
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7"
+                                style="text-align:center; padding:30px;">
+                                📭 Không có dữ liệu thu nhập
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="pagination">
+
+            <button @onclick="PrevIncomeHistoryPage"
+                    disabled="@(!CanIncomeHistoryPrev)">
+                ← Trước
+            </button>
+
+            <span>
+                Trang @IncomeHistoryCurrentPage /
+                @IncomeHistoryTotalPages
+            </span>
+
+            <button @onclick="NextIncomeHistoryPage"
+                    disabled="@(!CanIncomeHistoryNext)">
+                Sau →
+            </button>
+
+        </div>
+
+    </div>
+
+    @* DANH SÁCH VÀNG *@
+    <div class="chart-card">
+
+        <div class="history-header">
+
+            <h3 class="card-title">
+                🪙 Danh sách vàng
+            </h3>
+
+            <div class="history-filter">
+
+                <select class="control-select"
+                        @bind="GoldHistoryMonth"
+                        @bind:after="FilterGoldHistory">
+
+                    <option value="0">
+                        Tất cả tháng
+                    </option>
+
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i">
+                            Tháng @i.ToString("D2")
+                        </option>
+                    }
+
+                </select>
+
+
+                <select class="control-select" @bind="GoldHistoryUser"
+                        @bind:after="OnHisGoldUserChanged">
+
+                    <option value="">
+                        Tất cả User
+                    </option>
+
+                    @foreach (var item in User)
+                    {
+                        <option value="@item.Key">
+                            @item.Value
+                        </option>
+                    }
+
+                </select>
+
+
+                <select class="control-select" @bind="GoldHistoryAccountId"
+                        @bind:after="FilterGoldHistory">
+
+                    <option value="">
+                        Tất cả tài khoản
+                    </option>
+
+                    @foreach (var account in AccountsGold)
+                    {
+                        <option value="@account.Id">
+                            @account.Name
+                        </option>
+                    }
+
+                </select>
+
+
+                @* <button class="button-search"
+                        type="button"
+                        @onclick="FilterGoldHistory">
+
+                    <i class="bi bi-search"></i>
+
+                    Tìm kiếm
+
+                </button> *@
+
+            </div>
+
+        </div>
+
+
+        <div class="history-summary">
+
+            <span>
+                Tổng tiền mua vàng:
+            </span>
+
+            <strong>
+                @GoldHistoryTotal.ToString("N0", new CultureInfo("vi-VN")) vnđ
+            </strong>
+
+            <span class="history-separator">
+                |
+            </span>
+
+            <span>
+                Tổng khối lượng:
+            </span>
+
+            <strong>
+                @GoldHistoryWeight.ToString("0.####") chỉ
+            </strong>
+
+        </div>
+
+
+        <div class="chart-order">
+
+            <table class="table-custom">
+
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ngày mua</th>
+                        <th>Loại vàng</th>
+                        <th>Khối lượng</th>
+                        <th>Giá mua</th>
+                        <th>User</th>
+                        <th>Tài khoản</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (GoldHistoryPage?.Any() == true)
+                    {
+                        int stt =
+                        (GoldHistoryCurrentPage - 1)
+                        * GoldHistoryRowsPerPage + 1;
+
+                        foreach (var gold in GoldHistoryPage)
+                        {
+                            <tr>
+
+                                <td data-label="STT">
+                                    @stt
+                                </td>
+
+                                <td data-label="Ngày mua">
+                                    @gold.PurchaseDate.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+
+                                <td data-label="Loại vàng">
+                                    @gold.GoldType
+                                </td>
+
+                                <td data-label="Khối lượng">
+                                    @gold.Weight.ToString("0.####") chỉ
+                                </td>
+
+                                <td data-label="Giá mua">
+                                    <strong>
+                                        @gold.PurchasePrice.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                    </strong>
+                                </td>
+
+                                <td data-label="User">
+                                    @gold.UserName
+                                </td>
+
+                                <td data-label="Tài khoản">
+
+                                    @{
+                                        var account = AllAccounts.FirstOrDefault(x => x.Id == gold.AccountId);
+                                    }
+
+                                    @(account?.Name ?? "Không xác định")
+
+                                </td>
+
+                                <td data-label="Ghi chú">
+                                    @(string.IsNullOrWhiteSpace(gold.Note) ? "-" : gold.Note)
+                                </td>
+
+                            </tr>
+
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8"
+                                style="text-align:center; padding:30px;">
+                                🪙 Không có dữ liệu vàng
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="pagination">
+
+            <button @onclick="PrevGoldHistoryPage" disabled="@(!CanGoldHistoryPrev)">
+                ← Trước
+            </button>
+
+            <span>
+                Trang @GoldHistoryCurrentPage / @GoldHistoryTotalPages
+            </span>
+
+            <button @onclick="NextGoldHistoryPage" disabled="@(!CanGoldHistoryNext)">
+                Sau →
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* TAB 3 - THÊM THU NHẬP *@
+<div class="tab-content" id="tab3">
+
+    <div class="dashboard-row">
+
+        @* ================= THÊM THU NHẬP ================= *@
+        <div class="chart-card income-form-card">
+
+            <h3 class="card-title">
+                <span style="font-size: 28px;">💵</span>
+                Thêm khoản thu nhập
+            </h3>
+
+            <div class="form-section-left">
+
+                @* Số tiền *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        💰 Số tiền:
+                    </label>
+
+                    <input type="text"
+                           class="form-input"
+                           @bind="IncomeAmountDisplay"
+                           @oninput="OnIncomeAmountInput"
+                           placeholder="Nhập số tiền..." />
+
+                </div>
+
+                @* Loại thu nhập *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        🏷️ Loại thu nhập:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedIncomeType">
+
+                        <option value="">
+                            Chọn loại thu nhập
+                        </option>
+
+                        <option value="FROM_SHOP">
+                            Cửa hàng
+                        </option>
+
+                        <option value="FROM_COMPANY">
+                            Lương công ty
+                        </option>
+
+                        <option value="OTHER">
+                            Thu nhập khác
+                        </option>
+
+                    </select>
+
+                </div>
+
+                @* Ngày nhận *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        📅 Ngày nhận:
+                    </label>
+
+                    <input type="date"
+                           class="form-input"
+                           @bind="IncomeDate" />
+
+                </div>
+
+                @* User *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        👤 Người thêm:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedIncomeUser"
+                            @bind:after="OnIncomeUserChanged">
+
+                        @foreach (var item in User)
+                        {
+                            <option value="@item.Key">
+                                @item.Value
+                            </option>
+                        }
+                    </select>
+
+                </div>
+
+                @* Tài khoản nhận *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        🏦 Tài khoản nhận:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedIncomeAccountID">
+
+                        <option value="">
+                            Chọn tài khoản nhận
+                        </option>
+
+                        @foreach (var account in AccountsMoney)
+                        {
+                            if (account.IsActive)
+                            {
+                                <option value="@account.Id">
+                                    @account.Name
+                                    :
+                                    @account.Balance.ToString("N0", new CultureInfo("vi-VN")) vnđ (Số dư)
+                                </option>
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+                @* Ghi chú *@
+                <div class="form-group">
+
+                    <label class="form-label">
+                        📝 Ghi chú:
+                    </label>
+
+                    <textarea class="form-input"
+                              rows="4"
+                              @bind="IncomeNote"
+                              placeholder="Ghi chú...">
+                </textarea>
+
+                </div>
+
+                @* Button *@
+                <div class="store-info">
+
+                    <button class="button-add"
+                            type="button"
+                            @onclick="AddIncome">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Lưu khoản thu nhập
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @* ================= THÊM VÀNG ================= *@
+        <div class="chart-card gold-form-card">
+
+            <h3 class="card-title">
+                <span style="font-size: 28px;">🧈</span>
+                Thêm vàng
+            </h3>
+
+            <div class="form-section-left">
+
+                @* Loại vàng *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        ✨ Loại vàng:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedGoldType">
+
+                        <option value="">
+                            Chọn loại vàng
+                        </option>
+
+                        <option value="VI">
+                            Nhẫn trơn ép vỉ
+                        </option>
+
+                        <option value="TRON">
+                            Nhẫn trơn
+                        </option>
+
+                        <option value="MIENG">
+                            Vàng miếng
+                        </option>
+
+                        <option value="24K">
+                            Vàng 24K
+                        </option>
+
+                        <option value="SUC">
+                            Vàng trang sức
+                        </option>
+
+                        <option value="OTHER">
+                            Khác
+                        </option>
+
+                    </select>
+
+                </div>
+
+                @* Khối lượng *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        ⚖️ Khối lượng:
+                    </label>
+
+                    <div class="input-with-unit">
+
+                        <input type="number"
+                               class="form-input"
+                               @bind="GoldWeight"
+                               step="0.5"
+                               min="0"
+                               placeholder="Ví dụ: 0.5" />
+
+                        <span>chỉ</span>
+
+                    </div>
+
+                </div>
+
+                @* Giá mua *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        💰 Giá mua:
+                    </label>
+
+                    <input type="text"
+                           class="form-input"
+                           @bind="GoldPurchasePriceDisplay"
+                           @oninput="OnGoldPriceInput"
+                           placeholder="Giá mua..." />
+
+                </div>
+
+                @* Ngày mua *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        📅 Ngày mua:
+                    </label>
+
+                    <input type="date"
+                           class="form-input"
+                           @bind="GoldPurchaseDate" />
+
+                </div>
+
+                @* User *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        👤 Người chi trả:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedGoldUser"
+                            @bind:after="OnIncomeUserChanged1">
+
+                        @foreach (var item in User)
+                        {
+                            <option value="@item.Key">
+                                @item.Value
+                            </option>
+                        }
+                    </select>
+
+                </div>
+
+                @* Thanh toán từ *@
+                <div class="form-group">
+
+                    <label class="form-label required-label">
+                        🏦 Thanh toán từ:
+                    </label>
+
+                    <select class="form-select"
+                            @bind="SelectedIncomeGoldAccountID">
+
+                        <option value="">
+                            Chọn tài khoản mua
+                        </option>
+
+                        @foreach (var account in AccountsGold)
+                        {
+                            <option value="@account.Id">
+                                @if (account.Name.Contains("TK Khác"))
+                                {
+                                    <text>@account.Name (Không dùng tiền tích lũy)</text>
+                                }
+                                else
+                                {
+                                    <text>
+                                        @account.Name
+                                        :
+                                        @account.Balance.ToString("N0", new CultureInfo("vi-VN")) vnđ (Số dư)
+                                    </text>
+                                }
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+                @* Ghi chú *@
+                <div class="form-group">
+
+                    <label class="form-label">
+                        📝 Ghi chú:
+                    </label>
+
+                    <textarea class="form-input"
+                              rows="4"
+                              @bind="GoldNote"
+                              placeholder="Ví dụ: Mua vàng tích lũy...">
+                </textarea>
+
+                </div>
+
+                <div class="store-info">
+
+                    <button class="button-add"
+                            type="button"
+                            @onclick="AddGold">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Lưu khoản vàng
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@* TAB 4 - DANH MỤC*@
+
+
+@* TAB 5 - REPORTS *@
+
+<script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+    // đổi active trên nút
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    // đổi nội dung hiển thị
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    });
+    });
+</script>
+
+@code {
+    private string month;
+    [Inject] private IJSRuntime JSx { get; set; }
+    private bool isLoadingService = true;
+    private bool _disposed = false;
+    private CancellationTokenSource cts = new();
+    private bool UpdateisLoading = false;
+    private bool checkload = false;
+    private bool isLoadingDashboard = true;
+    private Dictionary<string, string> User = new()
+    {
+        {"KIDO","Kido"},
+        {"LUONG","Lương"}
+    };
+    private List<Data.DTOs.UserAccount> AllAccounts = new();
+    private List<Data.DTOs.UserAccount> AccountsMoney = new();
+    private List<Data.DTOs.UserAccount> AccountsGold = new();
+
+    public void Dispose()
+    {
+        _disposed = true;
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.month = DateTime.Now.Month.ToString();
+    }
+
+    private async Task LoadData()
+    {
+        this.checkload = true;
+
+        await LoadIncomeGoldHistory();
+        await LoadSavingDashboard();
+
+        this.checkload = false;
+        StateHasChanged();
+    }
+
+    private ValueTask OnBeforeNavigation(LocationChangingContext context)
+    {
+        if (isLoadingService)
+        {
+            context.PreventNavigation();
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+
+                LoadingService.Begin();
+                bool isLoggedIn = await localStorage.GetItemAsync<bool>("isLoggedIn");
+                if (isLoggedIn)
+                {
+                    this.AllAccounts = await GetUserAcount.GetUserAcount();
+                    AccountsMoney = AllAccounts.ToList();
+                    AccountsGold = AllAccounts.ToList();
+                    await OnIncomeUserChanged();
+                    await OnIncomeUserChanged1();
+                    await LoadIncomeGoldHistory();
+                    await LoadSavingDashboard();
+
+                    if (!_disposed)
+                    {
+                        StateHasChanged();
+                    }
+                    LoadingService.End();
+                    isLoadingService = false;
+                }
+                else
+                {
+                    LoadingService.End();
+                    isLoadingService = false;
+                    Navigation.NavigateTo("/", true);
+
+                }
+            }
+            catch (Exception)
+            {
+                LoadingService.End();
+                isLoadingService = false;
+                throw;
+            }
+        }
+    }
+
+    #region Tab 1 Dashbroad
+    private string SavingDashboardUser = "";
+
+    private List<Data.DTOs.UserAccount> SavingAccounts = new();
+    private List<Data.DTOs.Income> SavingIncomeList = new();
+    private List<Data.DTOs.GoldAsset> SavingGoldList = new();
+    private decimal[] AssetStructureData = new decimal[6];
+    private decimal[] IncomeByMonthData = new decimal[12];
+    private List<Data.DTOs.UserAssetSummary> UserAssetSummaries = new();
+
+    private decimal TotalAccountBalance = 0;
+    private decimal CashBalance = 0;
+    private decimal BankBalance = 0;
+    private decimal EWalletBalance = 0;
+    private decimal SavingBalance = 0;
+    private decimal OtherBalance = 0;
+    private decimal TotalGoldPurchase = 0;
+    private decimal TotalGoldWeight = 0;
+    private decimal TotalAssets = 0;
+    private decimal CurrentMonthIncome = 0;
+
+    private async Task LoadSavingDashboard()
+    {
+        try
+        {
+            if (!this.checkload)
+                isLoadingDashboard = true;
+
+            var accounts = AllAccounts.ToList();
+            var incomes = IncomeHistoryAll.ToList();
+            var goldAssets = GoldHistoryAll.ToList();
+
+
+            if (!string.IsNullOrWhiteSpace(SavingDashboardUser))
+            {
+                accounts = accounts
+                    .Where(x =>
+                        x.UserName == SavingDashboardUser)
+                    .ToList();
+
+                incomes = incomes
+                    .Where(x =>
+                        x.UserName == SavingDashboardUser)
+                    .ToList();
+
+                goldAssets = goldAssets
+                    .Where(x =>
+                        x.UserName == SavingDashboardUser)
+                    .ToList();
+            }
+
+            SavingAccounts = accounts;
+            SavingIncomeList = incomes;
+            SavingGoldList = goldAssets;
+
+            CalculateSavingDashboard();
+
+            if (!this.checkload)
+                isLoadingDashboard = false;
+
+            StateHasChanged();
+            await RenderSavingDashboardCharts();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi tải Dashboard tích lũy: {ex.Message}"
+            );
+        }
+    }
+
+    private void CalculateSavingDashboard()
+    {
+        TotalAccountBalance =
+            SavingAccounts.Sum(x => x.Balance);
+
+
+        CashBalance =
+            SavingAccounts
+                .Where(x => x.AccountType == "CASH")
+                .Sum(x => x.Balance);
+
+
+        BankBalance =
+            SavingAccounts
+                .Where(x => x.AccountType == "BANK")
+                .Sum(x => x.Balance);
+
+
+        EWalletBalance =
+            SavingAccounts
+                .Where(x => x.AccountType == "EWALLET")
+                .Sum(x => x.Balance);
+
+
+        SavingBalance =
+            SavingAccounts
+                .Where(x => x.AccountType == "SAVING")
+                .Sum(x => x.Balance);
+
+
+        OtherBalance =
+            SavingAccounts
+                .Where(x => x.AccountType == "OTHER")
+                .Sum(x => x.Balance);
+
+
+        TotalGoldPurchase =
+            SavingGoldList.Sum(x => x.PurchasePrice);
+
+
+        TotalGoldWeight =
+            SavingGoldList.Sum(x => x.Weight);
+
+
+        CurrentMonthIncome =
+            SavingIncomeList
+                .Where(x =>
+                    x.IncomeDate.Month == DateTime.Now.Month &&
+                    x.IncomeDate.Year == DateTime.Now.Year)
+                .Sum(x => x.Amount);
+
+
+        TotalAssets =
+            TotalAccountBalance +
+            TotalGoldPurchase;
+        CalculateUserAssets();
+    }
+
+    private async Task RenderSavingDashboardCharts()
+    {
+        // =====================================================
+        // 1. CƠ CẤU TÀI SẢN
+        // =====================================================
+
+        var assetLabels = new List<string>
+    {
+        "Tiền mặt",
+        "Ngân hàng",
+        "Ví điện tử",
+        "Tiết kiệm",
+        "Khác",
+        "Vàng"
+    };
+
+        var assetData = new List<decimal>
+    {
+        CashBalance,
+        BankBalance,
+        EWalletBalance,
+        SavingBalance,
+        OtherBalance,
+        TotalGoldPurchase
+    };
+
+
+        var assetChart = new
+        {
+            labels = assetLabels,
+
+            datasets = new[]
+            {
+            new
+            {
+                label = "Tài sản",
+
+                data = assetData,
+
+                borderWidth = 1
+            }
+        }
+        };
+
+
+        await JS.InvokeVoidAsync(
+            "chartHelper.renderChart",
+            "AssetStructureChart",
+            assetChart,
+            "doughnut"
+        );
+
+
+        // =====================================================
+        // 2. THU NHẬP THEO THÁNG
+        // =====================================================
+
+        int year = DateTime.Now.Year;
+
+
+        var incomeMonthData = SavingIncomeList
+            .Where(x => x.IncomeDate.Year == year)
+            .GroupBy(x => x.IncomeDate.Month)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Sum(y => y.Amount)
+            );
+
+
+        var incomeLabels = Enumerable
+            .Range(1, 12)
+            .Select(x => $"T{x}")
+            .ToList();
+
+
+        var incomeData = Enumerable
+            .Range(1, 12)
+            .Select(month =>
+                incomeMonthData.TryGetValue(
+                    month,
+                    out var amount)
+                    ? amount
+                    : 0
+            )
+            .ToList();
+
+
+        var incomeChart = new
+        {
+            labels = incomeLabels,
+
+            datasets = new[]
+            {
+            new
+            {
+                label = "Thu nhập",
+
+                data = incomeData,
+
+                borderWidth = 2,
+
+                fill = true,
+
+                tension = 0.3
+            }
+        }
+        };
+
+
+        await JS.InvokeVoidAsync(
+            "chartHelper.renderChart",
+            "IncomeByMonthChart",
+            incomeChart,
+            "bar"
+        );
+    }
+
+    private void CalculateUserAssets()
+    {
+        UserAssetSummaries = User
+            .Select(user =>
+            {
+                var money = AllAccounts
+                    .Where(x => x.UserName == user.Key)
+                    .Sum(x => x.Balance);
+
+                var gold = GoldHistoryAll
+                    .Where(x => x.UserName == user.Key)
+                    .Sum(x => x.PurchasePrice);
+
+                return new Data.DTOs.UserAssetSummary
+                {
+                    UserCode = user.Key,
+                    UserName = user.Value,
+                    Money = money,
+                    Gold = gold
+                };
+            })
+            .OrderByDescending(x => x.TotalAsset)
+            .ToList();
+    }
+    #endregion
+
+    #region Tab 2 - History Income & Gold
+    //  Income ========================
+    private List<Data.DTOs.Income> IncomeHistoryAll = new();
+    private List<Data.DTOs.Income> IncomeHistoryFiltered = new();
+    private List<Data.DTOs.Income> IncomeHistoryPage = new();
+
+    private int IncomeHistoryMonth = 0;
+    private string IncomeHistoryUser = "";
+    private string IncomeHistoryAccountId = "";
+
+    private decimal IncomeHistoryTotal = 0;
+
+    private int IncomeHistoryCurrentPage = 1;
+    private int IncomeHistoryRowsPerPage = 10;
+
+    private int IncomeHistoryTotalPages =>
+        Math.Max(
+            1,
+            (int)Math.Ceiling(
+                (decimal)IncomeHistoryFiltered.Count /
+                IncomeHistoryRowsPerPage
+            )
+        );
+
+    private bool CanIncomeHistoryPrev => IncomeHistoryCurrentPage > 1;
+    private bool CanIncomeHistoryNext => IncomeHistoryCurrentPage < IncomeHistoryTotalPages;
+
+
+    // ======================== Gold ========================
+
+    private List<Data.DTOs.GoldAsset> GoldHistoryAll = new();
+    private List<Data.DTOs.GoldAsset> GoldHistoryFiltered = new();
+    private List<Data.DTOs.GoldAsset> GoldHistoryPage = new();
+
+    private int GoldHistoryMonth = 0;
+    private string GoldHistoryUser = "";
+    private string GoldHistoryAccountId = "";
+
+    private decimal GoldHistoryTotal = 0;
+    private decimal GoldHistoryWeight = 0;
+
+    private int GoldHistoryCurrentPage = 1;
+    private int GoldHistoryRowsPerPage = 10;
+
+    private async Task OnHisMoneyUserChanged()
+    {
+        AccountsMoney = AllAccounts.Where(x => x.UserName == IncomeHistoryUser).ToList();
+        FilterIncomeHistory();
+    }
+
+    private async Task OnHisGoldUserChanged()
+    {
+        AccountsGold = AllAccounts.Where(x => x.UserName == GoldHistoryUser).ToList();
+        FilterGoldHistory();
+    }
+
+    private int GoldHistoryTotalPages =>
+        Math.Max(
+            1,
+            (int)Math.Ceiling(
+                (decimal)GoldHistoryFiltered.Count /
+                GoldHistoryRowsPerPage
+            )
+        );
+
+    private bool CanGoldHistoryPrev => GoldHistoryCurrentPage > 1;
+    private bool CanGoldHistoryNext => GoldHistoryCurrentPage < GoldHistoryTotalPages;
+
+    private async Task LoadIncomeGoldHistory()
+    {
+        IncomeHistoryAll = await GetIncome.GetIncome();
+
+        GoldHistoryAll = await GetGoldAssets.GetGoldAssets();
+
+
+        IncomeHistoryFiltered = IncomeHistoryAll
+            .OrderByDescending(x => x.IncomeDate)
+            .ToList();
+
+
+        GoldHistoryFiltered = GoldHistoryAll
+            .OrderByDescending(x => x.PurchaseDate)
+            .ToList();
+
+        IncomeHistoryCurrentPage = 1;
+        GoldHistoryCurrentPage = 1;
+
+        CalculateIncomeHistory();
+        CalculateGoldHistory();
+
+        LoadIncomeHistoryPage();
+        LoadGoldHistoryPage();
+    }
+
+    private void FilterIncomeHistory()
+    {
+        IEnumerable<Data.DTOs.Income> query = IncomeHistoryAll;
+
+        if (IncomeHistoryMonth > 0)
+        {
+            query = query.Where(x =>
+                x.IncomeDate.Month ==
+                IncomeHistoryMonth
+            );
+        }
+
+        if (!string.IsNullOrWhiteSpace(
+            IncomeHistoryUser))
+        {
+            query = query.Where(x =>
+                x.UserName ==
+                IncomeHistoryUser
+            );
+        }
+
+        if (Guid.TryParse(
+            IncomeHistoryAccountId,
+            out Guid accountId))
+        {
+            query = query.Where(x =>
+                x.AccountId == accountId
+            );
+        }
+
+
+        IncomeHistoryFiltered = query
+            .OrderByDescending(x => x.IncomeDate)
+            .ToList();
+
+        IncomeHistoryCurrentPage = 1;
+        CalculateIncomeHistory();
+        LoadIncomeHistoryPage();
+    }
+
+    private void FilterGoldHistory()
+    {
+        IEnumerable<Data.DTOs.GoldAsset> query = GoldHistoryAll;
+
+        if (GoldHistoryMonth > 0)
+        {
+            query = query.Where(x =>
+                x.PurchaseDate.Month ==
+                GoldHistoryMonth
+            );
+        }
+
+        if (!string.IsNullOrWhiteSpace(GoldHistoryUser))
+        {
+            query = query.Where(x =>
+                x.UserName ==
+                GoldHistoryUser
+            );
+        }
+
+        if (Guid.TryParse(GoldHistoryAccountId, out Guid accountId))
+        {
+            query = query.Where(x =>
+                x.AccountId == accountId
+            );
+        }
+
+        GoldHistoryFiltered = query
+            .OrderByDescending(x => x.PurchaseDate)
+            .ToList();
+
+        GoldHistoryCurrentPage = 1;
+        CalculateGoldHistory();
+        LoadGoldHistoryPage();
+    }
+
+    private void CalculateIncomeHistory()
+    {
+        IncomeHistoryTotal = IncomeHistoryFiltered.Sum(x => x.Amount);
+    }
+
+    private void CalculateGoldHistory()
+    {
+        GoldHistoryTotal =
+            GoldHistoryFiltered.Sum(
+                x => x.PurchasePrice
+            );
+
+        GoldHistoryWeight =
+            GoldHistoryFiltered.Sum(
+                x => x.Weight
+            );
+    }
+
+    private void LoadIncomeHistoryPage()
+    {
+        IncomeHistoryPage =
+            IncomeHistoryFiltered
+                .Skip(
+                    (IncomeHistoryCurrentPage - 1)
+                    * IncomeHistoryRowsPerPage
+                )
+                .Take(IncomeHistoryRowsPerPage)
+                .ToList();
+    }
+
+    private void LoadGoldHistoryPage()
+    {
+        GoldHistoryPage =
+            GoldHistoryFiltered
+                .Skip(
+                    (GoldHistoryCurrentPage - 1)
+                    * GoldHistoryRowsPerPage
+                )
+                .Take(GoldHistoryRowsPerPage)
+                .ToList();
+    }
+
+    private void NextIncomeHistoryPage()
+    {
+        if (!CanIncomeHistoryNext)
+            return;
+        IncomeHistoryCurrentPage++;
+        LoadIncomeHistoryPage();
+    }
+
+    private void PrevIncomeHistoryPage()
+    {
+        if (!CanIncomeHistoryPrev)
+            return;
+        IncomeHistoryCurrentPage--;
+        LoadIncomeHistoryPage();
+    }
+
+    private void NextGoldHistoryPage()
+    {
+        if (!CanGoldHistoryNext)
+            return;
+        GoldHistoryCurrentPage++;
+        LoadGoldHistoryPage();
+    }
+
+    private void PrevGoldHistoryPage()
+    {
+        if (!CanGoldHistoryPrev)
+            return;
+        GoldHistoryCurrentPage--;
+        LoadGoldHistoryPage();
+    }
+
+    #endregion
+
+    #region tab3 Thêm khoản thu nhập
+    private string IncomeAmountDisplay = "";
+    private decimal IncomeAmount = 0;
+    private string SelectedIncomeType = "";
+    private DateTime IncomeDate = DateTime.Now;
+    private string SelectedIncomeUser = "KIDO";
+    // private string SelectedIncomeAccountType;
+    private Guid SelectedIncomeGoldAccountID, SelectedIncomeAccountID;
+    private string IncomeNote = "";
+    private bool UpdateisLoadingIncome = false;
+
+    private void OnIncomeAmountInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            IncomeAmountDisplay = "";
+            IncomeAmount = 0;
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal amount))
+        {
+            IncomeAmount = amount;
+            IncomeAmountDisplay = amount.ToString("N0", new CultureInfo("vi-VN"));
+        }
+    }
+
+    private void ResetIncomeForm()
+    {
+        IncomeAmountDisplay = "";
+        IncomeAmount = 0;
+        SelectedIncomeType = "";
+        IncomeDate = DateTime.Now;
+        SelectedIncomeUser = "KIDO";
+        SelectedIncomeAccountID = Guid.Empty;
+        IncomeNote = "";
+    }
+
+    #region Thêm vàng
+    private string SelectedGoldType = "";
+    private decimal GoldWeight = 0;
+    private string GoldPurchasePriceDisplay = "";
+    private decimal GoldPurchasePrice = 0;
+    private DateTime GoldPurchaseDate = DateTime.Now;
+    private string SelectedGoldUser = "KIDO";
+    private string GoldNote = "";
+    private bool UpdateisLoadingGold = false;
+
+    private void OnGoldPriceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            GoldPurchasePriceDisplay = "";
+            GoldPurchasePrice = 0;
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal price))
+        {
+            GoldPurchasePrice = price;
+            GoldPurchasePriceDisplay = price.ToString("N0", new CultureInfo("vi-VN"));
+        }
+    }
+
+    private void ResetGoldForm()
+    {
+        SelectedGoldType = "";
+        GoldWeight = 0;
+        GoldPurchasePriceDisplay = "";
+        GoldPurchasePrice = 0;
+        GoldPurchaseDate = DateTime.Now;
+        SelectedGoldUser = "KIDO";
+        SelectedIncomeGoldAccountID = Guid.Empty;
+        GoldNote = "";
+    }
+    #endregion
+
+    private async Task OnIncomeUserChanged()
+    {
+        AccountsMoney = AllAccounts.Where(x => x.UserName == SelectedIncomeUser).ToList();
+        SelectedIncomeAccountID = Guid.Empty;
+    }
+
+    private async Task OnIncomeUserChanged1()
+    {
+        AccountsGold = AllAccounts.Where(x => x.UserName == SelectedGoldUser).ToList();
+        SelectedIncomeGoldAccountID = Guid.Empty;
+    }
+
+    private async Task AddIncome()
+    {
+        if (IncomeAmount <= 0)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng nhập số tiền!"
+            );
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SelectedIncomeType))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn loại thu nhập!"
+            );
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SelectedIncomeUser))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn User!"
+            );
+            return;
+        }
+
+        if (SelectedIncomeAccountID == Guid.Empty)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn tài khoản nhận tiền!"
+            );
+            return;
+        }
+
+        try
+        {
+            UpdateisLoadingIncome = true;
+
+            int result = await InsertIncome.InsertIncome(
+                IncomeDate,
+                IncomeAmount,
+                SelectedIncomeType,
+                SelectedIncomeUser,
+                IncomeNote,
+                SelectedIncomeAccountID
+            );
+
+            if (result > 0)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Thêm khoản thu nhập thành công!"
+                );
+
+                ResetIncomeForm();
+                // Sau này gọi LoadData()
+                // await LoadData();
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Thêm khoản thu nhập không thành công!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi thêm khoản thu nhập: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoadingIncome = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AddGold()
+    {
+        #region verification data
+        if (string.IsNullOrWhiteSpace(SelectedGoldType))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn loại vàng!"
+            );
+            return;
+        }
+
+        if (GoldWeight <= 0)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng nhập khối lượng vàng!"
+            );
+            return;
+        }
+
+        if (GoldPurchasePrice <= 0)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng nhập giá mua vàng!"
+            );
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SelectedGoldUser))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn User!"
+            );
+            return;
+        }
+
+        if (SelectedIncomeGoldAccountID == Guid.Empty)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn tài khoản thanh toán!"
+            );
+            return;
+        }
+        #endregion
+
+        bool NoMoney = AllAccounts.Any(t => t.Id == SelectedIncomeGoldAccountID && t.Name.StartsWith("TK Khác", StringComparison.OrdinalIgnoreCase));
+
+        try
+        {
+            UpdateisLoadingGold = true;
+
+            int result = await InsertGold.InsertGold(
+                SelectedGoldType,
+                GoldWeight,
+                GoldPurchasePrice,
+                GoldPurchaseDate,
+                SelectedGoldUser,
+                GoldNote,
+                SelectedIncomeGoldAccountID,
+                NoMoney
+            );
+
+            if (result > 0)
+            {
+                if (result == 1000)
+                {
+                    await JS.InvokeVoidAsync(
+                        "alert",
+                        "Số dư không đủ!"
+                    );
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync(
+                        "alert",
+                        "Thêm khoản vàng thành công!"
+                    );
+
+                    ResetGoldForm();
+                    // Sau này:
+                    // await LoadData();
+                }
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Thêm khoản vàng không thành công!"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi khi thêm vàng: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateisLoadingGold = false;
+
+            StateHasChanged();
+        }
+    }
+
+    #endregion
+}

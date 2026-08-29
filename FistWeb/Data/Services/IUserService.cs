@@ -270,9 +270,14 @@ namespace FistWeb.Data.Services
     {
         Task<List<CategoriesInfo>> GetCategories();
     }
+    public interface IGetUserAcount
+    {
+        Task<List<UserAccount>> GetUserAcount();
+    }
+
     public interface InsertParamaterChiTieu
     {
-        Task<int> InsertParamaterChiTieu(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User);
+        Task<int> InsertParamaterChiTieu(DateTime date, decimal amount, string? note, Guid CategoryID, string description, string User, Guid accountId);
     }
     public interface InsertCategory
     {
@@ -327,5 +332,28 @@ namespace FistWeb.Data.Services
     {
         Task<int> DelChiTieuAmy(Guid id);
     }
+    #endregion
+
+    #region Tich Luy
+    public interface IInsertIncome
+    { 
+        Task<int> InsertIncome(DateTime incomeDate, decimal amount, string incomeType, string userName, string? note, Guid accountID);
+    }
+
+    public interface IInsertGold
+    {                      
+        Task<int> InsertGold(string goldType, decimal weight, decimal purchasePrice, DateTime purchaseDate, string userName, string? note, Guid accountId, bool NoMoney);
+    }
+
+    public interface IGetIncome
+    {
+        Task<List<Income>> GetIncome();
+    }
+
+    public interface IGetGoldAssets
+    {
+        Task<List<GoldAsset>> GetGoldAssets();
+    }
+
     #endregion
 }

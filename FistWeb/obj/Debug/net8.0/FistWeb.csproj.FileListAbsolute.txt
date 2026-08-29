@@ -224,3 +224,4 @@ D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\bin\Debug\net8.0\SixLabor
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\bin\Debug\net8.0\CloudinaryDotNet.dll
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Expenses.razor.rz.scp.css
 D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\ExpensesAmy.razor.rz.scp.css
+D:\Bak_DESKTOP\FREE CODE\LuongEmStudio\website\FistWeb\obj\Debug\net8.0\scopedcss\Components\Pages\Saving.razor.rz.scp.css

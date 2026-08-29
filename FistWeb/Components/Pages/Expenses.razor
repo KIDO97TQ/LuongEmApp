@@ -20,6 +20,7 @@
 @inject InsertCategory InsertCategory
 @inject UpdateCategory UpdateCategory
 @inject IGetChiTieu GetChiTieu
+@inject IGetUserAcount GetUserAcount
 @inject IUpdateExpese UpdateExpese
 @inject IDelChiTieu DelChiTieu
 
@@ -189,7 +190,7 @@
 
                 </div>
 
-            </div>         
+            </div>
 
         </div>
 
@@ -479,8 +480,7 @@
                             Người chi:
                         </label>
 
-                        <select class="form-select"
-                                @bind="EditExpenseUser">
+                        <select class="form-select" @bind="EditExpenseUser">
 
                             @foreach (var item in User)
                             {
@@ -491,6 +491,28 @@
                         </select>
                     </div>
 
+                    @* nguồn chi *@
+                    @* <div class="form-group">
+                        <label class="form-label">
+                            Nguồn chi:
+                        </label>
+
+                        <select class="form-select" @bind="EditExpenseUserId">
+                            <option value="@Guid.Empty">
+                                Chọn nguồn chi
+                            </option>
+
+                            @foreach (var account in Accounts)
+                            {
+                                <option value="@account.Id">
+                                    @account.Name
+                                    -
+                                    @account.Balance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                </option>
+                            }
+
+                        </select>
+                    </div> *@
                     @* Nội dung *@
                     <div class="form-group">
 
@@ -518,7 +540,7 @@
                                   rows="3"
                                   @bind="EditExpenseNote"
                                   placeholder="Nhập ghi chú...">
-                                                                                                        </textarea>
+                                                         </textarea>
 
                     </div>
 
@@ -566,6 +588,7 @@
                         <th>Danh mục</th>
                         <th>Nội dung</th>
                         <th>Số tiền</th>
+                        <th>Nguồn chi</th>
                         <th>Ghi chú</th>
                         <th>Thao tác</th>
                     </tr>
@@ -617,11 +640,19 @@
                                 </td>
 
                                 <td data-label="Số tiền">
-
                                     <strong>
                                         @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vn₫
                                     </strong>
+                                </td>
 
+                                <td data-label="Nguồn chi">
+                                    @foreach (var account in Accounts)
+                                    {
+                                        if (item.AccountId == account.Id)
+                                        {
+                                            @account.Name
+                                        }
+                                    }
                                 </td>
 
                                 <td data-label="Ghi chú">
@@ -707,14 +738,16 @@
                     Người chi tiêu:
                 </label>
 
-                <select class="form-select" @bind="SelectedUser">
+                <select class="form-select"
+                        @bind="SelectedUser"
+                        @bind:after="OnInputUserChanged">
+
                     @foreach (var item in User)
                     {
                         <option value="@item.Key">
                             @item.Value
                         </option>
                     }
-
                 </select>
 
             </div>
@@ -748,6 +781,34 @@
 
             </div>
 
+            @* nguồn chi *@
+            <div class="form-group">
+
+                <label class="form-label required-label">
+                    Tài khoản thanh toán:
+                </label>
+
+                <select class="form-select" @bind="SelectedExpenseAccountId">
+
+                    <option value="">
+                        Chọn tài khoản
+                    </option>
+
+                    @foreach (var account in Accounts)
+                    {
+                        if (account.IsActive)
+                        {
+                            <option value="@account.Id">
+                                @account.Name
+                                :
+                                @account.Balance.ToString("N0", new CultureInfo("vi-VN")) vnđ (Số dư)
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
 
             @* Danh mục *@
             <div class="form-group">
@@ -1297,11 +1358,11 @@
                         {
                             <tr>
 
-                                <td>
+                                <td data-label="STT">
                                     @stt
                                 </td>
 
-                                <td>
+                                <td data-label="Danh mục">
                                     <span class="report-category-icon">
                                         @item.Icon
                                     </span>
@@ -1309,15 +1370,15 @@
                                     @item.Name
                                 </td>
 
-                                <td>
+                                <td data-label="Số khoản">
                                     @item.Count
                                 </td>
 
-                                <td>
+                                <td data-label="Tổng tiền">
                                     @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
                                 </td>
 
-                                <td>
+                                <td data-label="Tỉ lệ">
                                     @item.Percent.ToString("0.##") %
                                 </td>
 
@@ -1363,6 +1424,7 @@
                         <th>Danh mục</th>
                         <th>Người chi</th>
                         <th>Nội dung</th>
+                        <th>Nguồn chi</th>
                         <th>Số tiền</th>
                     </tr>
 
@@ -1391,28 +1453,38 @@
 
                             <tr>
 
-                                <td>
+                                <td data-label="STT">
                                     @stt
                                 </td>
 
-                                <td>
+                                <td data-label="Ngày">
                                     @item.ExpenseDate.ToString("dd/MM/yyyy")
                                 </td>
 
-                                <td>
+                                <td data-label="Danh mục">
                                     @categoryIcon
                                     @categoryName
                                 </td>
 
-                                <td>
+                                <td data-label="Người chi">
                                     @item.User
                                 </td>
 
-                                <td>
+                                <td data-label="Nội dung">
                                     @item.Description
                                 </td>
 
-                                <td>
+                                <td data-label="Nguồn chi">
+                                    @foreach (var account in AllAccounts)
+                                    {
+                                        if (item.AccountId == account.Id)
+                                        {
+                                            @account.Name
+                                        }
+                                    }
+                                </td>
+
+                                <td data-label="Số tiền">
                                     <strong>
                                         @item.Amount.ToString("N0", new CultureInfo("vi-VN")) vnđ
                                     </strong>
@@ -1506,7 +1578,9 @@
                     SelectedUser = User.First().Key;
                     await LoadExpenses(null, null, int.Parse(this.month));
                     this.DataDashboardExpenses = await GetChiTieu.GetChiTieu(null, null, null);
-                    //await TimKiem();
+                    this.AllAccounts = await GetUserAcount.GetUserAcount();
+                    Accounts = AllAccounts.ToList();
+                    await OnInputUserChanged();
                     CategoriesModel = await CategoriesInfo.GetCategories();
                     this.Categories = this.CategoriesModel.ToDictionary(x => x.Id, x => (x.Icon, x.Name));
                     await LoadDashboard(0);
@@ -1992,7 +2066,7 @@
     private Guid EditExpenseId;
     private DateTime EditExpenseDate;
     private decimal EditExpenseAmount;
-    private Guid EditExpenseCategoryId;
+    private Guid EditExpenseCategoryId, EditExpenseUserId;
     private string EditExpenseDescription = "";
     private string EditExpenseUser = "";
     private string EditExpenseNote = "";
@@ -2157,6 +2231,15 @@
     private string Note { get; set; } = "";
     private List<Data.DTOs.CategoriesInfo> CategoriesModel = new();
     private Dictionary<Guid, (string Icon, string Name)> Categories = new();
+    private string SelectedExpenseAccountId = "";
+    private List<Data.DTOs.UserAccount> AllAccounts = new();
+    private List<Data.DTOs.UserAccount> Accounts = new();
+
+    private async Task OnInputUserChanged()
+    {
+        Accounts = AllAccounts.Where(x => x.UserName == SelectedUser).ToList();
+        SelectedExpenseAccountId = "";
+    }
 
     private void OnAmountInput(ChangeEventArgs e)
     {
@@ -2222,22 +2305,44 @@
         {
             // id là Guid
         }
+        if (string.IsNullOrEmpty(SelectedExpenseAccountId))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Vui lòng chọn tài khoản chi tiêu!"
+            );
+            return;
+        }
+
+        if (!Guid.TryParse(SelectedExpenseAccountId, out Guid accountId))
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                "Tài khoản không hợp lệ!"
+            );
+            return;
+        }
 
         UpdateisLoading = true;
         int checkInsert = 0;
         try
         {
-            checkInsert = await InsertChiTieu.InsertParamaterChiTieu(ExpenseDate, Amount, Note, id, Description, SelectedUser);
-
+            checkInsert = await InsertChiTieu.InsertParamaterChiTieu(ExpenseDate, Amount, Note, id, Description, SelectedUser, accountId);
             if (checkInsert > 0)
             {
-                await JS.InvokeVoidAsync("alert", $"Thêm khoản chi tiêu thành công!");
-
-                AmountDisplay = "";
-                Note = "";
-                Description = "";
-                SelectedCategoryId = "";
-
+                if (checkInsert == 1000)
+                {
+                    await JS.InvokeVoidAsync("alert", $"❌ Tài khoản không đủ số dư để thực hiện khoản chi {Amount.ToString("N0", new CultureInfo("vi-VN")) + " vnđ"}");
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("alert", $"Thêm khoản chi tiêu thành công!");
+                    AmountDisplay = "";
+                    Note = "";
+                    Description = "";
+                    SelectedCategoryId = "";
+                    SelectedExpenseAccountId = "";
+                }
                 this.checkload = false;
             }
             else

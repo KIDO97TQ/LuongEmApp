@@ -123,8 +123,8 @@ namespace FistWeb.Data.DTOs
 
     public class InfoMakeUp
     {
-        public string namekh { get; set; }           
-        public string type { get; set; }               
+        public string namekh { get; set; }
+        public string type { get; set; }
         public decimal price { get; set; }
         public DateTime createdate { get; set; }
     }
@@ -197,6 +197,7 @@ namespace FistWeb.Data.DTOs
         public Guid CategoryId { get; set; }
         public string? Description { get; set; }
         public string? Note { get; set; }
+        public Guid AccountId { get; set; }
     }
 
     public class DashboardCategoryInfo
@@ -216,6 +217,69 @@ namespace FistWeb.Data.DTOs
         public decimal Amount { get; set; }
         public int Count { get; set; }
         public decimal Percent { get; set; }
+    }
+
+    public class UserAccount
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; } = "";
+
+        public string AccountType { get; set; } = "";
+
+        public decimal Balance { get; set; }
+
+        public string UserName { get; set; } = "";
+
+        public string? Description { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+    }
+    #endregion
+
+    #region Tich luy
+    public class Income
+    {
+        public Guid Id { get; set; }
+        public DateTime IncomeDate { get; set; }
+        public decimal Amount { get; set; }
+        public string IncomeType { get; set; } = "";
+        public string UserName { get; set; } = "";
+        public Guid AccountId { get; set; }
+        public string AccountType { get; set; } = "";
+        public string? Note { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    public class GoldAsset
+    {
+        public Guid Id { get; set; }
+        public string GoldType { get; set; } = "";
+        public decimal Weight { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public string UserName { get; set; } = "";
+        public Guid? AccountId { get; set; }
+        public string? AccountName { get; set; }
+        public string? Note { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    public class UserAssetSummary
+    {
+        public string UserCode { get; set; } = "";
+        public string UserName { get; set; } = "";
+
+        public decimal Money { get; set; }
+        public decimal Gold { get; set; }
+
+        public decimal TotalAsset => Money + Gold;
     }
     #endregion
 }
