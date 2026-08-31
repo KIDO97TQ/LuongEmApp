@@ -355,5 +355,20 @@ namespace FistWeb.Data.Services
         Task<List<GoldAsset>> GetGoldAssets();
     }
 
+    public interface IGetGoldInfo
+    {
+        Task<List<GoldInfo>> GetGoldInfo();
+    }
+
+    public interface IUpdateAccount
+    {
+        Task<int> UpdateAccount(Guid id, string name, string accountType, decimal balance, string userName, string? description, bool isActive);
+    }
+
+    public interface IUpdateGoldPrice
+    {
+        Task<int> UpdateGoldPrice(Guid id, string goldType, string? description, decimal buyPrice, decimal nowPrice);
+    }
+
     #endregion
 }

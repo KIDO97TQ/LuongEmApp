@@ -12114,7 +12114,8 @@ textarea.form-input[b-ft8s7yi0js] {
     /*danh muc*/
 .dashboard-row1[b-ft8s7yi0js] {
     display: grid;
-    grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.5fr);
+    /*grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.5fr);*/
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 20px;
     width: 100%;
     align-items: start;
@@ -12924,7 +12925,7 @@ textarea.form-input[b-ft8s7yi0js] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 12px;
+    padding: 5px 12px;
     border-radius: 10px;
     transition: background 0.2s ease;
 }
@@ -13018,6 +13019,252 @@ textarea.form-input[b-ft8s7yi0js] {
     color: #0f172a;
 }
 
+/*tab4*/
+.account-manage-list[b-ft8s7yi0js] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.account-manage-item[b-ft8s7yi0js] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 14px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.account-sub[b-ft8s7yi0js] {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.account-right[b-ft8s7yi0js] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/*rrrr*/
+.modal-overlay[b-ft8s7yi0js] {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 9999;
+}
+
+.account-edit-modal[b-ft8s7yi0js] {
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+
+.modal-header[b-ft8s7yi0js] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+    .modal-header h3[b-ft8s7yi0js] {
+        margin: 0;
+        font-size: 18px;
+    }
+
+.modal-close[b-ft8s7yi0js] {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f5f9;
+    cursor: pointer;
+}
+
+.modal-body[b-ft8s7yi0js] {
+    padding: 20px;
+}
+
+    .modal-body .form-group[b-ft8s7yi0js] {
+        margin-bottom: 16px;
+    }
+
+.modal-footer[b-ft8s7yi0js] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.button-cancel[b-ft8s7yi0js] {
+    padding: 9px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.account-active[b-ft8s7yi0js] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* =========================
+   GOLD PRICE MANAGER
+   ========================= */
+
+.gold-price-card[b-ft8s7yi0js] {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+
+/* danh sách */
+
+.gold-price-list[b-ft8s7yi0js] {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* từng item */
+
+.gold-price-item[b-ft8s7yi0js] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 15px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+    .gold-price-item:hover[b-ft8s7yi0js] {
+        transform: translateY(-2px);
+        background: #fef3c7;
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.06);
+    }
+
+
+/* bên trái */
+
+.gold-price-left[b-ft8s7yi0js] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gold-price-icon[b-ft8s7yi0js] {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    font-size: 23px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.gold-price-name[b-ft8s7yi0js] {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.gold-price-description[b-ft8s7yi0js] {
+    margin-top: 3px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+
+/* giá */
+
+.gold-price-values[b-ft8s7yi0js] {
+    margin-top: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 15px;
+}
+
+.gold-price-value[b-ft8s7yi0js] {
+    font-size: 13px;
+    color: #475569;
+}
+
+    .gold-price-value strong[b-ft8s7yi0js] {
+        color: #0f172a;
+    }
+
+
+/* now price nổi bật hơn */
+
+.gold-price-now strong[b-ft8s7yi0js] {
+    color: #d97706;
+    font-size: 14px;
+}
+
+
+/* bên phải */
+
+.gold-price-right[b-ft8s7yi0js] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* thời gian cập nhật */
+
+.gold-updated-time[b-ft8s7yi0js] {
+    color: #94a3b8;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+
+/* nút edit riêng */
+
+.gold-edit-button[b-ft8s7yi0js] {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #fde68a;
+    border-radius: 9px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .gold-edit-button:hover[b-ft8s7yi0js] {
+        background: #fef3c7;
+        transform: scale(1.05);
+    }
+
 
 /* =========================   MOBILE   ========================= */
 
@@ -13088,8 +13335,47 @@ textarea.form-input[b-ft8s7yi0js] {
     .chart-card canvas[b-ft8s7yi0js] {
         height: 260px !important;
     }
+
+    .account-right[b-ft8s7yi0js] ,gold-price-description[b-ft8s7yi0js] {
+        font-size: 12px;
+    }
+     .gold-price-description[b-ft8s7yi0js] {
+        font-size: 2px;
+    }
 }
 
+/*uuuuuuuuuuuuuuuuuuuu*/
+
+.gold-current-value[b-ft8s7yi0js] {
+    font-weight: 700;
+    color: #d97706;
+}
+
+.gold-profit-row[b-ft8s7yi0js] {
+    margin-top: 4px;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.profit-positive[b-ft8s7yi0js] {
+    color: #16a34a !important;
+}
+
+.profit-negative[b-ft8s7yi0js] {
+    color: #dc2626 !important;
+}
+
+.profit-neutral[b-ft8s7yi0js] {
+    color: #64748b !important;
+}
+
+.gold-profit-row small[b-ft8s7yi0js] {
+    margin-left: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
 
 @media (max-width: 1000px) {
     .dashboard-summary[b-ft8s7yi0js] {
@@ -13100,6 +13386,15 @@ textarea.form-input[b-ft8s7yi0js] {
 
 @media (max-width: 600px) {
 
+    .modal-overlay[b-ft8s7yi0js] {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .account-edit-modal[b-ft8s7yi0js] {
+        max-width: none;
+        border-radius: 18px 18px 0 0;
+    }
     .report-filter-row[b-ft8s7yi0js] {
         grid-template-columns: 1fr;
     }

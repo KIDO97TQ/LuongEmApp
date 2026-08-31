@@ -102,6 +102,9 @@ builder.Services.AddScoped<IInsertIncome, CallService>();
 builder.Services.AddScoped<IInsertGold, CallService>();
 builder.Services.AddScoped<IGetGoldAssets, CallService>();
 builder.Services.AddScoped<IGetIncome, CallService>();
+builder.Services.AddScoped<IGetGoldInfo, CallService>();
+builder.Services.AddScoped<IUpdateAccount, CallService>();
+builder.Services.AddScoped<IUpdateGoldPrice, CallService>();
 #endregion
 #endregion
 

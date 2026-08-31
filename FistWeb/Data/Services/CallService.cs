@@ -25,7 +25,7 @@ namespace FistWeb.Data.Services
     IStockQTYAmyService, IInsertRevenueWeddingService, IGetListWeddingService, IGetSumRevenueWeddingService, IAddParaWeddingService, IUpdateLichChupWedding, IUpdateOrderWeddingByIdService,
     IGetProductID1Service, IGetProductID1AmyService, GetQTYListThueDoAmy, IGetCategories, InsertParamaterChiTieu, InsertCategory, UpdateCategory, IGetChiTieu, IUpdateExpese, IDelChiTieu,
         IGetCategoriesAmy, InsertParamaterChiTieuAmy, InsertCategoryAmy, UpdateCategoryAmy, IGetChiTieuAmy, IUpdateExpeseAmy, IDelChiTieuAmy, IInsertGold, IInsertIncome, IGetUserAcount,
-        IGetGoldAssets, IGetIncome
+        IGetGoldAssets, IGetIncome, IGetGoldInfo, IUpdateAccount, IUpdateGoldPrice
     {
         private readonly AppDbContext _context;
 
@@ -2330,6 +2330,76 @@ namespace FistWeb.Data.Services
                 .FromSqlRaw(sql.ToString())
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<List<GoldInfo>> GetGoldInfo()
+        {
+            StringBuilder sql = new StringBuilder(@" SELECT g.id,
+                                                            g.gold_type   as GoldType,
+                                                            g.description as Description,
+                                                            g.buy_price   as BuyPrice,
+                                                            g.now_price   as NowPrice,
+                                                            g.updated_at  AS UpdatedAt
+                                                       FROM kido.gold_prices g order by g.description desc");
+
+            return await _context.Set<GoldInfo>()
+                .FromSqlRaw(sql.ToString())
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<int> UpdateAccount(Guid id, string name, string accountType, decimal balance, string userName, string? description, bool isActive)
+        {
+            string sql = @"  UPDATE kido.accounts
+                             SET
+                                 name = @name,
+                                 account_type = @accountType,
+                                 balance = @balance,
+                                 user_name = @userName,
+                                 description = @description,
+                                 is_active = @isActive,
+                                 updated_at = NOW()
+                             WHERE id = @id ";
+
+            var parameters = new[]
+            {
+                 new NpgsqlParameter("@id", id),
+                 new NpgsqlParameter("@name", name),
+                 new NpgsqlParameter("@accountType", accountType),
+                 new NpgsqlParameter("@balance", balance),
+                 new NpgsqlParameter("@userName", userName),
+                 new NpgsqlParameter("@description",(object?)description ?? DBNull.Value),
+                 new NpgsqlParameter("@isActive", isActive)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(
+                sql,
+                parameters
+            );
+        }
+
+        public async Task<int> UpdateGoldPrice(Guid id, string goldType, string? description, decimal buyPrice, decimal nowPrice)
+        {
+            string sql = @"UPDATE kido.gold_prices SET gold_type = @goldType,
+                                                       description = @description,
+                                                       buy_price = @buyPrice,
+                                                       now_price = @nowPrice,
+                                                       updated_at = NOW()
+                                                 WHERE id = @id ";
+
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@id", id),
+                new NpgsqlParameter("@goldType", goldType),
+                new NpgsqlParameter("@description", (object?)description ?? DBNull.Value),
+                new NpgsqlParameter("@buyPrice", buyPrice),
+                new NpgsqlParameter("@nowPrice", nowPrice)
+            };
+
+            return await _context.Database.ExecuteSqlRawAsync(
+                sql,
+                parameters
+            );
         }
 
         #endregion

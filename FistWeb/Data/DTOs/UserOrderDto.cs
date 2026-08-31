@@ -281,5 +281,16 @@ namespace FistWeb.Data.DTOs
 
         public decimal TotalAsset => Money + Gold;
     }
+
+    public class GoldInfo
+    {
+        public Guid id { get; set; }
+        public string GoldType { get; set; } = "";
+        public string Description { get; set; }
+        public decimal BuyPrice { get; set; }
+        public decimal NowPrice { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
     #endregion
 }

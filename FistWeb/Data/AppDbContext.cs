@@ -36,6 +36,7 @@ namespace FistWeb.Data
         public DbSet<UserAccount> UserAccount { get; set; }
         public DbSet<GoldAsset> GoldAsset { get; set; }
         public DbSet<Income> Income { get; set; }
+        public DbSet<GoldInfo> GoldInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -89,6 +90,7 @@ namespace FistWeb.Data
             modelBuilder.Entity<UserAccount>().HasNoKey();
             modelBuilder.Entity<GoldAsset>().HasNoKey();
             modelBuilder.Entity<Income>().HasNoKey();
+            modelBuilder.Entity<GoldInfo>().HasNoKey();
         }
     }
 }

@@ -540,7 +540,7 @@
                                   rows="3"
                                   @bind="EditExpenseNote"
                                   placeholder="Nhập ghi chú...">
-                                                         </textarea>
+                                                                         </textarea>
 
                     </div>
 
@@ -827,16 +827,19 @@
                     {
                         foreach (var category in Categories)
                         {
-                            <option value="@category.Key">
-                                @category.Value.Icon @category.Value.Name
-                                @foreach (var ct in CategoriesModel)
-                                {
-                                    @if (category.Key == ct.Id)
+                            var categoryInfo = CategoriesModel.FirstOrDefault(x => x.Id == category.Key);
+
+                            if (categoryInfo != null && categoryInfo.IsActive)
+                            {
+                                <option value="@category.Key">
+                                    @category.Value.Icon @category.Value.Name
+
+                                    @if (!string.IsNullOrWhiteSpace(categoryInfo.Description))
                                     {
-                                        @($" ({ct.Description})")
+                                        @($" ({categoryInfo.Description})")
                                     }
-                                }
-                            </option>
+                                </option>
+                            }
                         }
                     }
 

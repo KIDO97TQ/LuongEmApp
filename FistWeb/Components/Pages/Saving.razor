@@ -20,6 +20,9 @@
 @inject IInsertIncome InsertIncome
 @inject IGetGoldAssets GetGoldAssets
 @inject IGetIncome GetIncome
+@inject IUpdateAccount UpdateAccounts
+@inject IGetGoldInfo GetGoldInfo
+@inject IUpdateGoldPrice UpdateGoldInfo
 
 <div class="tabs">
     <button class="tab-btn active" data-tab="tab1">
@@ -27,20 +30,16 @@
         Dashboard
     </button>
     <button class="tab-btn" data-tab="tab2">
-        <img src="spending.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        <img src="his.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Lịch sử thu nhập
     </button>
     <button class="tab-btn" data-tab="tab3">
-        <img src="add.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        <img src="addMoney.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
         Thêm Thu Nhập
     </button>
     <button class="tab-btn" data-tab="tab4">
-        <img src="categories.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Danh mục
-    </button>
-    <button class="tab-btn" data-tab="tab5">
-        <img src="pie-chart.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
-        Reports
+        <img src="user.png" alt="icon" style="width: 25px; height: 25px; margin-right: 6px;">
+        User Mntn
     </button>
 </div>
 
@@ -160,8 +159,6 @@
 
                     <div class="asset-list">
 
-
-
                         <div class="asset-item">
 
                             <div>
@@ -221,7 +218,7 @@
 
                 </div>
 
-                <div class="chart-card">
+                <div class="chart-card gold-dashboard-card">
 
                     <h3 class="card-title">
                         🪙 Tình hình vàng
@@ -263,8 +260,67 @@
                             </span>
 
                             <strong>
-                                @TotalGoldPurchase.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                @TotalGoldPurchase.ToString("N0", new CultureInfo("vi-VN"))                            vnđ
                             </strong>
+
+                        </div>
+
+
+                        <div class="gold-stat">
+
+                            <span>
+                                Giá trị hiện tại
+                            </span>
+
+                            <strong class="gold-current-value">
+                                @TotalGoldCurrentValue.ToString("N0", new CultureInfo("vi-VN"))                            vnđ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="gold-stat gold-profit-row">
+
+                            <span>
+                                Lãi / Lỗ
+                            </span>
+
+
+                            @if (TotalGoldProfitLoss > 0)
+                            {
+                                <strong class="profit-positive">
+
+                                    +
+                                    @TotalGoldProfitLoss.ToString("N0", new CultureInfo("vi-VN"))                            vnđ
+
+                                    <small>
+                                        (+@TotalGoldProfitPercent.ToString("0.##")%)
+                                    </small>
+
+                                    📈
+
+                                </strong>
+                            }
+                            else if (TotalGoldProfitLoss < 0)
+                            {
+                                <strong class="profit-negative">
+
+                                    @TotalGoldProfitLoss.ToString("N0", new CultureInfo("vi-VN"))                            vnđ
+
+                                    <small>
+                                        (@TotalGoldProfitPercent.ToString("0.##")%)
+                                    </small>
+
+                                    📉
+
+                                </strong>
+                            }
+                            else
+                            {
+                                <strong class="profit-neutral">
+                                    0 vnđ
+                                </strong>
+                            }
 
                         </div>
 
@@ -323,17 +379,17 @@
 
                                     <div class="user-sub">
                                         Tiền:
-                                        @item.Money.ToString("N0", new CultureInfo("vi-VN"))                                vnđ
+                                        @item.Money.ToString("N0", new CultureInfo("vi-VN")) vnđ
 
                                         • Vàng:
-                                        @item.Gold.ToString("N0", new CultureInfo("vi-VN"))                                vnđ
+                                        @item.Gold.ToString("N0", new CultureInfo("vi-VN")) vnđ
                                     </div>
                                 </div>
 
                             </div>
 
                             <strong class="user-asset-value">
-                                @item.TotalAsset.ToString("N0", new CultureInfo("vi-VN"))                        vnđ
+                                @item.TotalAsset.ToString("N0", new CultureInfo("vi-VN")) vnđ
                             </strong>
 
                         </div>
@@ -429,7 +485,6 @@
 
         </div>
 
-
         <div class="history-summary">
 
             <span>
@@ -442,11 +497,8 @@
 
         </div>
 
-
         <div class="chart-order">
-
             <table class="table-custom">
-
                 <thead>
                     <tr>
                         <th>STT</th>
@@ -478,8 +530,15 @@
                                 </td>
 
                                 <td data-label="Loại thu nhập">
-                                    @income.IncomeType
-                                </td>
+                                    @(income.IncomeType switch
+                                    {
+                                        "FROM_SHOP" => "Cửa hàng",
+                                        "FROM_COMPANY" => "Lương công ty",
+                                        "OTHER" => "Thu nhập khác",
+                                        "FROM_INVESTMENT" => "Đầu tư",
+                                        _ => "Không xác định"
+                                    } )
+                        </td>
 
                                 <td data-label="Số tiền">
                                     <strong>
@@ -488,7 +547,13 @@
                                 </td>
 
                                 <td data-label="User">
-                                    @income.UserName
+                            @foreach (var item in User)
+                                    {
+                                        if (income.UserName == item.Key)
+                                        {
+                                            @item.Value
+                                        }
+                                    }
                                 </td>
 
                                 <td data-label="Tài khoản">
@@ -671,9 +736,7 @@
 
                     @if (GoldHistoryPage?.Any() == true)
                     {
-                        int stt =
-                        (GoldHistoryCurrentPage - 1)
-                        * GoldHistoryRowsPerPage + 1;
+                        int stt = (GoldHistoryCurrentPage - 1) * GoldHistoryRowsPerPage + 1;
 
                         foreach (var gold in GoldHistoryPage)
                         {
@@ -688,7 +751,13 @@
                                 </td>
 
                                 <td data-label="Loại vàng">
-                                    @gold.GoldType
+                                    @foreach (var item in GoldInfo)
+                                    {
+                                        if (gold.GoldType == item.GoldType)
+                                        {
+                                            @item.Description
+                                        }
+                                    }
                                 </td>
 
                                 <td data-label="Khối lượng">
@@ -702,7 +771,13 @@
                                 </td>
 
                                 <td data-label="User">
-                                    @gold.UserName
+                                    @foreach (var item in User)
+                                    {
+                                        if (gold.UserName == item.Key)
+                                        {
+                                            @item.Value
+                                        }
+                                    }
                                 </td>
 
                                 <td data-label="Tài khoản">
@@ -944,30 +1019,12 @@
                             Chọn loại vàng
                         </option>
 
-                        <option value="VI">
-                            Nhẫn trơn ép vỉ
-                        </option>
-
-                        <option value="TRON">
-                            Nhẫn trơn
-                        </option>
-
-                        <option value="MIENG">
-                            Vàng miếng
-                        </option>
-
-                        <option value="24K">
-                            Vàng 24K
-                        </option>
-
-                        <option value="SUC">
-                            Vàng trang sức
-                        </option>
-
-                        <option value="OTHER">
-                            Khác
-                        </option>
-
+                        @foreach (var item in GoldInfo)
+                        {
+                            <option value="@item.GoldType">
+                                @item.Description
+                            </option>
+                        }
                     </select>
 
                 </div>
@@ -1115,10 +1172,450 @@
 
 </div>
 
-@* TAB 4 - DANH MỤC*@
+@* TAB 4 - User control*@
+<div class="tab-content" id="tab4">
+
+    <div class="dashboard-row1 manage-row">
+
+        @* =========================
+           QUẢN LÝ ACCOUNT
+           ========================= *@
+
+        <div class="chart-card">
+
+            <h3 class="card-title">
+                🏦 Quản lý tài khoản
+            </h3>
+
+            <div class="account-manage-list">
+
+                @foreach (var account in AllAccounts)
+                {
+                    if (account.IsActive)
+                    {
+                        <div class="account-manage-item">
+
+                            <div>
+
+                                <strong class="gold-price-name">
+                                    @account.Name
+                                </strong>
+
+                                <div class="account-sub">
+
+                                    @account.AccountType
+                                    •
+                                    @(User.TryGetValue(account.UserName, out var userName) ? userName : account.UserName)
+                                </div>
+
+                            </div>
+
+                            <div class="account-right">
+                                <strong>
+                                    @account.Balance.ToString("N0", new CultureInfo("vi-VN")) vnđ
+                                </strong>
+
+                                <button class="gold-edit-button"
+                                        @onclick="() => OpenEditAccount(account)">
+                                    ✏️
+                                </button>
+
+                            </div>
+
+                        </div>
+                    }
+                }
+
+                @if (ShowEditAccount)
+                {
+                    <div class="modal-overlay">
+
+                        <div class="account-edit-modal">
+
+                            <div class="modal-header">
+
+                                <h3>
+                                    ✏️ Chỉnh sửa tài khoản
+                                </h3>
+
+                                <button type="button"
+                                        class="modal-close"
+                                        @onclick="CloseEditAccount">
+                                    ✕
+                                </button>
+
+                            </div>
 
 
-@* TAB 5 - REPORTS *@
+                            <div class="modal-body">
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Tên tài khoản
+                                    </label>
+
+                                    <input class="form-input"
+                                           @bind="EditAccountName"
+                                           readonly
+                                           disabled />
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Loại tài khoản
+                                    </label>
+
+                                    <select class="form-select"
+                                            @bind="EditAccountType"
+                                            disabled>
+
+                                        <option value="CASH">
+                                            💵 Tiền mặt
+                                        </option>
+
+                                        <option value="BANK">
+                                            🏦 Ngân hàng
+                                        </option>
+
+                                        <option value="EWALLET">
+                                            💳 Ví điện tử
+                                        </option>
+
+                                        <option value="SAVING">
+                                            💰 Tiết kiệm
+                                        </option>
+
+                                        <option value="OTHER">
+                                            📦 Khác
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Số dư
+                                    </label>
+
+                                    <div class="input-with-unit">
+
+                                        <input class="form-input"
+                                               value="@EditAccountBalanceDisplay"
+                                               @oninput="OnEditAccountBalanceInput" />
+
+                                        <span>
+                                            vnđ
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        User
+                                    </label>
+
+                                    <select class="form-select"
+                                            @bind="EditAccountUser"
+                                            disabled>
+
+                                        @foreach (var user in User)
+                                        {
+                                            <option value="@user.Key">
+                                                @user.Value
+                                            </option>
+                                        }
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Mô tả
+                                    </label>
+
+                                    <textarea class="form-input"
+                                              rows="3"
+                                              @bind="EditAccountDescription">
+                                                    </textarea>
+
+                                </div>
+
+
+                                @* <div class="form-group">
+
+                                    <label class="account-active">
+
+                                        <input type="checkbox"
+                                               @bind="EditAccountIsActive" />
+
+                                        <span>
+                                            Tài khoản đang hoạt động
+                                        </span>
+
+                                    </label>
+
+                                </div> *@
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button type="button"
+                                        class="button-cancel"
+                                        @onclick="CloseEditAccount">
+
+                                    Hủy
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="button-add"
+                                        disabled="@UpdateAccountLoading"
+                                        @onclick="UpdateAccount">
+
+                                    @if (UpdateAccountLoading)
+                                    {
+                                        <span class="spinner"></span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            💾 Lưu thay đổi
+                                        </span>
+                                    }
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        @* =========================
+           GIÁ VÀNG
+           ========================= *@
+
+        <div class="chart-card gold-price-card">
+
+            <h3 class="card-title">
+                🪙 Quản lý giá vàng
+            </h3>
+
+            <div class="gold-price-list">
+
+                @foreach (var item in GoldInfo)
+                {
+                    <div class="gold-price-item">
+
+                        <div class="gold-price-left">
+
+                            @* <div class="gold-price-icon">
+                                🪙
+                            </div> *@
+
+                            <div>
+
+                                <div class="gold-price-name">
+                                    @item.Description
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(item.Description))
+                                {
+                                    <div class="gold-price-description">
+                                        @item.Description
+                                    </div>
+                                }
+
+
+                                <div class="gold-price-values">
+
+                                    <div class="gold-price-value">
+                                        Giá mua:
+                                        <strong>
+                                            @item.BuyPrice.ToString("N0", new CultureInfo("vi-VN")) đ/chỉ
+                                        </strong>
+                                    </div>
+
+
+                                    <div class="gold-price-value gold-price-now">
+                                        Hiện tại:
+                                        <strong>
+                                            @item.NowPrice.ToString("N0", new CultureInfo("vi-VN")) đ/chỉ
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gold-price-right">
+
+                            @* <span class="gold-updated-time">
+                                @item.UpdatedAt.ToString("dd/MM HH:mm")
+                            </span> *@
+
+                            <button class="gold-edit-button"
+                                    @onclick="() => OpenEditGoldPrice(item)">
+                                ✏️
+                            </button>
+
+                        </div>
+
+                    </div>
+                }
+
+                @if (ShowEditGoldPrice)
+                {
+                    <div class="modal-overlay">
+
+                        <div class="account-edit-modal">
+
+                            <div class="modal-header">
+
+                                <h3>
+                                    🪙 Chỉnh sửa giá vàng
+                                </h3>
+
+                                <button type="button"
+                                        class="modal-close"
+                                        @onclick="CloseEditGoldPrice">
+                                    ✕
+                                </button>
+
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Loại vàng
+                                    </label>
+
+                                    <input class="form-input"
+                                           @bind="EditGoldType"
+                                           readonly
+                                           disabled />
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Giá mua
+                                    </label>
+
+                                    <div class="input-with-unit">
+
+                                        <input class="form-input"
+                                               value="@EditGoldBuyPriceDisplay"
+                                               @oninput="OnEditGoldBuyPriceInput" />
+
+                                        <span>vnđ/chỉ</span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Giá hiện tại
+                                    </label>
+
+                                    <div class="input-with-unit">
+
+                                        <input class="form-input"
+                                               value="@EditGoldNowPriceDisplay"
+                                               @oninput="OnEditGoldNowPriceInput" />
+
+                                        <span>vnđ/chỉ</span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label class="form-label">
+                                        Mô tả
+                                    </label>
+
+                                    <textarea class="form-input"
+                                              rows="3"
+                                              @bind="EditGoldDescription">
+                                    </textarea>
+
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="button"
+                                        class="button-cancel"
+                                        @onclick="CloseEditGoldPrice">
+                                    Hủy
+                                </button>
+
+                                <button type="button"
+                                        class="button-add"
+                                        disabled="@UpdateGoldPriceLoading"
+                                        @onclick="UpdateGoldPrice">
+
+                                    @if (UpdateGoldPriceLoading)
+                                    {
+                                        <span class="spinner"></span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            💾 Lưu thay đổi
+                                        </span>
+                                    }
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1151,6 +1648,7 @@
     private List<Data.DTOs.UserAccount> AllAccounts = new();
     private List<Data.DTOs.UserAccount> AccountsMoney = new();
     private List<Data.DTOs.UserAccount> AccountsGold = new();
+    private List<Data.DTOs.GoldInfo> GoldInfo = new();
 
     public void Dispose()
     {
@@ -1201,6 +1699,7 @@
                     await OnIncomeUserChanged();
                     await OnIncomeUserChanged1();
                     await LoadIncomeGoldHistory();
+                    this.GoldInfo = await GetGoldInfo.GetGoldInfo();
                     await LoadSavingDashboard();
 
                     if (!_disposed)
@@ -1233,8 +1732,6 @@
     private List<Data.DTOs.UserAccount> SavingAccounts = new();
     private List<Data.DTOs.Income> SavingIncomeList = new();
     private List<Data.DTOs.GoldAsset> SavingGoldList = new();
-    private decimal[] AssetStructureData = new decimal[6];
-    private decimal[] IncomeByMonthData = new decimal[12];
     private List<Data.DTOs.UserAssetSummary> UserAssetSummaries = new();
 
     private decimal TotalAccountBalance = 0;
@@ -1247,6 +1744,10 @@
     private decimal TotalGoldWeight = 0;
     private decimal TotalAssets = 0;
     private decimal CurrentMonthIncome = 0;
+
+    private decimal TotalGoldCurrentValue = 0;
+    private decimal TotalGoldProfitLoss = 0;
+    private decimal TotalGoldProfitPercent = 0;
 
     private async Task LoadSavingDashboard()
     {
@@ -1301,33 +1802,32 @@
 
     private void CalculateSavingDashboard()
     {
+        // ======================================
+        // TIỀN
+        // ======================================
+
         TotalAccountBalance =
             SavingAccounts.Sum(x => x.Balance);
-
 
         CashBalance =
             SavingAccounts
                 .Where(x => x.AccountType == "CASH")
                 .Sum(x => x.Balance);
 
-
         BankBalance =
             SavingAccounts
                 .Where(x => x.AccountType == "BANK")
                 .Sum(x => x.Balance);
-
 
         EWalletBalance =
             SavingAccounts
                 .Where(x => x.AccountType == "EWALLET")
                 .Sum(x => x.Balance);
 
-
         SavingBalance =
             SavingAccounts
                 .Where(x => x.AccountType == "SAVING")
                 .Sum(x => x.Balance);
-
 
         OtherBalance =
             SavingAccounts
@@ -1335,13 +1835,99 @@
                 .Sum(x => x.Balance);
 
 
-        TotalGoldPurchase =
-            SavingGoldList.Sum(x => x.PurchasePrice);
+        // ======================================
+        // RESET DỮ LIỆU VÀNG
+        // ======================================
+
+        TotalGoldPurchase = 0;
+        TotalGoldWeight = 0;
+        TotalGoldCurrentValue = 0;
+        TotalGoldProfitLoss = 0;
+        TotalGoldProfitPercent = 0;
 
 
-        TotalGoldWeight =
-            SavingGoldList.Sum(x => x.Weight);
+        // ======================================
+        // TÍNH TỪNG KHOẢN VÀNG RỒI CỘNG LẠI
+        // ======================================
 
+        foreach (var gold in SavingGoldList)
+        {
+            // Giá vốn thực tế của khoản vàng này
+            decimal purchaseAmount =
+                gold.PurchasePrice;
+
+            // Khối lượng khoản vàng này
+            decimal weight =
+                gold.Weight;
+
+
+            // Cộng tổng vốn
+            TotalGoldPurchase +=
+                purchaseAmount;
+
+            // Cộng tổng trọng lượng
+            TotalGoldWeight +=
+                weight;
+
+
+            // Tìm giá hiện tại theo đúng loại vàng
+            var priceInfo = GoldInfo
+                .FirstOrDefault(x =>
+                    string.Equals(
+                        x.GoldType?.Trim(),
+                        gold.GoldType?.Trim(),
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                );
+
+
+            if (priceInfo != null)
+            {
+                // Giá trị hiện tại của riêng khoản vàng này
+                decimal currentValue =
+                    weight *
+                    priceInfo.NowPrice;
+
+
+                // Lãi/lỗ riêng khoản này
+                decimal profitLoss =
+                    currentValue -
+                    purchaseAmount;
+
+
+                // Sau đó cộng vào tổng
+                TotalGoldCurrentValue +=
+                    currentValue;
+
+                TotalGoldProfitLoss +=
+                    profitLoss;
+            }
+            else
+            {
+                // Chưa có giá hiện tại cho loại vàng này
+                // thì tạm coi giá trị hiện tại = giá vốn
+                // để không làm tổng tài sản bị tụt về 0.
+
+                TotalGoldCurrentValue +=
+                    purchaseAmount;
+            }
+        }
+
+
+        // ======================================
+        // % LÃI / LỖ TOÀN BỘ VÀNG
+        // ======================================
+
+        TotalGoldProfitPercent =
+            TotalGoldPurchase > 0
+                ? TotalGoldProfitLoss /
+                  TotalGoldPurchase * 100
+                : 0;
+
+
+        // ======================================
+        // THU NHẬP THÁNG HIỆN TẠI
+        // ======================================
 
         CurrentMonthIncome =
             SavingIncomeList
@@ -1351,9 +1937,19 @@
                 .Sum(x => x.Amount);
 
 
+        // ======================================
+        // TỔNG TÀI SẢN
+        // ======================================
+
         TotalAssets =
             TotalAccountBalance +
-            TotalGoldPurchase;
+            TotalGoldCurrentValue;
+
+
+        // ======================================
+        // TÀI SẢN THEO USER
+        // ======================================
+
         CalculateUserAssets();
     }
 
@@ -1380,7 +1976,7 @@
         EWalletBalance,
         SavingBalance,
         OtherBalance,
-        TotalGoldPurchase
+        TotalGoldCurrentValue
     };
 
 
@@ -1479,20 +2075,60 @@
         UserAssetSummaries = User
             .Select(user =>
             {
+                // =========================
+                // TIỀN
+                // =========================
+
                 var money = AllAccounts
                     .Where(x => x.UserName == user.Key)
                     .Sum(x => x.Balance);
 
-                var gold = GoldHistoryAll
+
+                // =========================
+                // VÀNG THEO GIÁ HIỆN TẠI
+                // =========================
+
+                decimal goldCurrentValue = 0;
+
+                var userGold = GoldHistoryAll
                     .Where(x => x.UserName == user.Key)
-                    .Sum(x => x.PurchasePrice);
+                    .ToList();
+
+
+                foreach (var gold in userGold)
+                {
+                    var price = GoldInfo
+                        .FirstOrDefault(x =>
+                            string.Equals(
+                                x.GoldType?.Trim(),
+                                gold.GoldType?.Trim(),
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        );
+
+
+                    if (price != null)
+                    {
+                        goldCurrentValue +=
+                            gold.Weight *
+                            price.NowPrice;
+                    }
+                    else
+                    {
+                        // Chưa có giá hiện tại
+                        // tạm dùng giá vốn để tránh tài sản bị tụt về 0
+                        goldCurrentValue +=
+                            gold.PurchasePrice;
+                    }
+                }
+
 
                 return new Data.DTOs.UserAssetSummary
                 {
                     UserCode = user.Key,
                     UserName = user.Value,
                     Money = money,
-                    Gold = gold
+                    Gold = goldCurrentValue
                 };
             })
             .OrderByDescending(x => x.TotalAsset)
@@ -1746,7 +2382,7 @@
 
     #endregion
 
-    #region tab3 Thêm khoản thu nhập
+    #region tab 3 Thêm khoản thu nhập
     private string IncomeAmountDisplay = "";
     private decimal IncomeAmount = 0;
     private string SelectedIncomeType = "";
@@ -1827,6 +2463,7 @@
         SelectedGoldUser = "KIDO";
         SelectedIncomeGoldAccountID = Guid.Empty;
         GoldNote = "";
+
     }
     #endregion
 
@@ -1901,9 +2538,7 @@
                 );
 
                 ResetIncomeForm();
-                // Sau này gọi LoadData()
-                // await LoadData();
-                StateHasChanged();
+                await OnAfterRenderAsync(true);
             }
             else
             {
@@ -2010,8 +2645,7 @@
                     );
 
                     ResetGoldForm();
-                    // Sau này:
-                    // await LoadData();
+                    await OnAfterRenderAsync(true);
                 }
                 StateHasChanged();
             }
@@ -2038,5 +2672,306 @@
         }
     }
 
+    #endregion
+
+    #region Tab 4 User control
+    private bool ShowEditAccount = false;
+    private Guid EditAccountId;
+    private string EditAccountName = "";
+    private string EditAccountType = "";
+    private decimal EditAccountBalance = 0;
+    private string EditAccountBalanceDisplay = "";
+
+    private string EditAccountUser = "";
+    private string? EditAccountDescription = "";
+    private bool EditAccountIsActive = true;
+    private bool UpdateAccountLoading = false;
+
+    private void OpenEditAccount(Data.DTOs.UserAccount account)
+    {
+        EditAccountId = account.Id;
+        EditAccountName = account.Name;
+        EditAccountType = account.AccountType;
+        EditAccountBalance = account.Balance;
+        EditAccountBalanceDisplay = account.Balance.ToString("N0", new CultureInfo("vi-VN"));
+        EditAccountUser = account.UserName;
+        EditAccountDescription = account.Description;
+        EditAccountIsActive = account.IsActive;
+        ShowEditAccount = true;
+    }
+
+    private void CloseEditAccount()
+    {
+        ShowEditAccount = false;
+    }
+
+    private void OnEditAccountBalanceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            EditAccountBalance = 0;
+            EditAccountBalanceDisplay = "";
+
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal amount))
+        {
+            EditAccountBalance = amount;
+
+            EditAccountBalanceDisplay = amount.ToString("N0", new CultureInfo("vi-VN"));
+        }
+    }
+
+    private async Task UpdateAccount()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(EditAccountName))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng nhập tên tài khoản."
+                );
+
+                return;
+            }
+
+
+            if (string.IsNullOrWhiteSpace(EditAccountType))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng chọn loại tài khoản."
+                );
+
+                return;
+            }
+
+
+            if (string.IsNullOrWhiteSpace(EditAccountUser))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Vui lòng chọn User."
+                );
+
+                return;
+            }
+
+
+            UpdateAccountLoading = true;
+
+
+            int result =
+                await UpdateAccounts.UpdateAccount(
+                    EditAccountId,
+                    EditAccountName.Trim(),
+                    EditAccountType,
+                    EditAccountBalance,
+                    EditAccountUser,
+                    EditAccountDescription,
+                    EditAccountIsActive
+                );
+
+
+            if (result > 0)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật tài khoản thành công."
+                );
+
+
+                ShowEditAccount = false;
+
+
+                AllAccounts =
+                    await GetUserAcount.GetUserAcount();
+
+                AccountsMoney =
+                    AllAccounts.ToList();
+
+                AccountsGold =
+                    AllAccounts.ToList();
+
+
+                await LoadSavingDashboard();
+
+
+                StateHasChanged();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Không tìm thấy tài khoản cần cập nhật."
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi cập nhật tài khoản: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateAccountLoading = false;
+        }
+    }
+
+    //private List<Data.DTOs.GoldInfo> GoldPriceList = new();
+    private bool ShowEditGoldPrice = false;
+    private Guid EditGoldPriceId;
+    private string EditGoldType = "";
+    private string EditGoldDescription = "";
+    private decimal EditGoldBuyPrice = 0;
+    private string EditGoldBuyPriceDisplay = "";
+    private decimal EditGoldNowPrice = 0;
+    private string EditGoldNowPriceDisplay = "";
+    private bool UpdateGoldPriceLoading = false;
+
+    private void OpenEditGoldPrice(Data.DTOs.GoldInfo item)
+    {
+        EditGoldPriceId = item.id;
+        EditGoldType = item.Description;
+        EditGoldDescription = item.Description ?? "";
+        EditGoldBuyPrice = item.BuyPrice;
+        EditGoldBuyPriceDisplay = item.BuyPrice.ToString("N0", new CultureInfo("vi-VN"));
+        EditGoldNowPrice = item.NowPrice;
+        EditGoldNowPriceDisplay = item.NowPrice.ToString("N0", new CultureInfo("vi-VN"));
+        ShowEditGoldPrice = true;
+    }
+    private void CloseEditGoldPrice()
+    {
+        ShowEditGoldPrice = false;
+    }
+    private async Task UpdateGoldPrice()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(EditGoldType))
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Loại vàng không được để trống."
+                );
+
+                return;
+            }
+
+            if (EditGoldBuyPrice <= 0)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Giá mua phải lớn hơn 0."
+                );
+
+                return;
+            }
+
+            if (EditGoldNowPrice <= 0)
+            {
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Giá hiện tại phải lớn hơn 0."
+                );
+
+                return;
+            }
+
+            UpdateGoldPriceLoading = true;
+
+            int result = await UpdateGoldInfo.UpdateGoldPrice(
+                    EditGoldPriceId,
+                    EditGoldType.Trim(),
+                    EditGoldDescription,
+                    EditGoldBuyPrice,
+                    EditGoldNowPrice
+                );
+
+            if (result > 0)
+            {
+                ShowEditGoldPrice = false;
+                GoldInfo = await GetGoldInfo.GetGoldInfo();
+
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    "Cập nhật giá vàng thành công."
+                );
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync(
+                "alert",
+                $"Lỗi cập nhật giá vàng: {ex.Message}"
+            );
+        }
+        finally
+        {
+            UpdateGoldPriceLoading = false;
+        }
+    }
+
+    private void OnEditGoldBuyPriceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly =
+            new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            EditGoldBuyPrice = 0;
+            EditGoldBuyPriceDisplay = "";
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal amount))
+        {
+            EditGoldBuyPrice = amount;
+
+            EditGoldBuyPriceDisplay =
+                amount.ToString(
+                    "N0",
+                    new CultureInfo("vi-VN")
+                );
+        }
+    }
+
+    private void OnEditGoldNowPriceInput(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString() ?? "";
+
+        var digitsOnly =
+            new string(input.Where(char.IsDigit).ToArray());
+
+        if (string.IsNullOrEmpty(digitsOnly))
+        {
+            EditGoldNowPrice = 0;
+            EditGoldNowPriceDisplay = "";
+            return;
+        }
+
+        if (decimal.TryParse(digitsOnly, out decimal amount))
+        {
+            EditGoldNowPrice = amount;
+
+            EditGoldNowPriceDisplay =
+                amount.ToString(
+                    "N0",
+                    new CultureInfo("vi-VN")
+                );
+        }
+    }
     #endregion
 }
