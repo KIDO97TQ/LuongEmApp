@@ -646,7 +646,7 @@
                                 </td>
 
                                 <td data-label="Nguồn chi">
-                                    @foreach (var account in Accounts)
+                                    @foreach (var account in AccountsSum)
                                     {
                                         if (item.AccountId == account.Id)
                                         {
@@ -1583,6 +1583,7 @@
                     this.DataDashboardExpenses = await GetChiTieu.GetChiTieu(null, null, null);
                     this.AllAccounts = await GetUserAcount.GetUserAcount();
                     Accounts = AllAccounts.ToList();
+                    AccountsSum = AllAccounts.ToList();
                     await OnInputUserChanged();
                     CategoriesModel = await CategoriesInfo.GetCategories();
                     this.Categories = this.CategoriesModel.ToDictionary(x => x.Id, x => (x.Icon, x.Name));
@@ -2237,6 +2238,7 @@
     private string SelectedExpenseAccountId = "";
     private List<Data.DTOs.UserAccount> AllAccounts = new();
     private List<Data.DTOs.UserAccount> Accounts = new();
+    private List<Data.DTOs.UserAccount> AccountsSum = new();
 
     private async Task OnInputUserChanged()
     {
