@@ -1,4 +1,4 @@
-/* _content/FistWeb/Components/Layout/MainLayout.razor.rz.scp.css */
+/* /Components/Layout/MainLayout.razor.rz.scp.css */
 .page[b-sru35o4vx1] {
     position: relative;
     display: flex;
@@ -96,7 +96,7 @@ main[b-sru35o4vx1] {
         right: 0.75rem;
         top: 0.5rem;
     }
-/* _content/FistWeb/Components/Layout/NavMenu.razor.rz.scp.css */
+/* /Components/Layout/NavMenu.razor.rz.scp.css */
 .navbar-toggler[b-4axgcipqhk] {
     appearance: none;
     width: 3.5rem;
@@ -203,7 +203,7 @@ main[b-sru35o4vx1] {
         overflow-y: auto;
     }
 }
-/* _content/FistWeb/Components/Pages/AllDoanhThuAmy.razor.rz.scp.css */
+/* /Components/Pages/AllDoanhThuAmy.razor.rz.scp.css */
 <style >
 *[b-m4vlfi51r5] {
     margin: 0;
@@ -449,7 +449,7 @@ article.dashboard-page[b-m4vlfi51r5] {
     gap: 10px;
 }
 </style[b-m4vlfi51r5] >
-/* _content/FistWeb/Components/Pages/AllDoanhThuLuongEm.razor.rz.scp.css */
+/* /Components/Pages/AllDoanhThuLuongEm.razor.rz.scp.css */
 <style >
 *[b-pm3x1it03h] {
     margin: 0;
@@ -695,7 +695,7 @@ article.dashboard-page[b-pm3x1it03h] {
     gap: 10px;
 }
 </style[b-pm3x1it03h] >
-/* _content/FistWeb/Components/Pages/DoanhThuThueDo.razor.rz.scp.css */
+/* /Components/Pages/DoanhThuThueDo.razor.rz.scp.css */
 <style >
 *[b-sekuvkbkgj] {
     margin: 0;
@@ -941,7 +941,7 @@ article.dashboard-page[b-sekuvkbkgj] {
     gap: 10px;
 }
 </style[b-sekuvkbkgj] >
-/* _content/FistWeb/Components/Pages/Expenses.razor.rz.scp.css */
+/* /Components/Pages/Expenses.razor.rz.scp.css */
 /* =========================================================
    EXPENSE APP
    Common UI
@@ -2013,7 +2013,7 @@ textarea.form-input[b-8yebls6zrk] {
         grid-column: span 1;
     }
 }
-/* _content/FistWeb/Components/Pages/ExpensesAmy.razor.rz.scp.css */
+/* /Components/Pages/ExpensesAmy.razor.rz.scp.css */
 /* =========================================================
    EXPENSE APP
    Common UI
@@ -3067,7 +3067,7 @@ textarea.form-input[b-718fos4fct] {
     }
 
 }
-/* _content/FistWeb/Components/Pages/Home.razor.rz.scp.css */
+/* /Components/Pages/Home.razor.rz.scp.css */
 <style >
 
 body[b-l54ik2cc7b] {
@@ -3258,7 +3258,7 @@ body[b-l54ik2cc7b] {
 
 </style[b-l54ik2cc7b] >
 
-/* _content/FistWeb/Components/Pages/LichchupDung.razor.rz.scp.css */
+/* /Components/Pages/LichchupDung.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -4427,7 +4427,7 @@ body {
 }
 
 </style[b-v0dgx4v6zf] >
-/* _content/FistWeb/Components/Pages/ListOrder.razor.rz.scp.css */
+/* /Components/Pages/ListOrder.razor.rz.scp.css */
 <style >
 
 .chart-order[b-yie3h92shu] {
@@ -5194,7 +5194,7 @@ body {
     font-size: 18px;
 }
 </style[b-yie3h92shu] >
-/* _content/FistWeb/Components/Pages/ListOrderAmy.razor.rz.scp.css */
+/* /Components/Pages/ListOrderAmy.razor.rz.scp.css */
 <style >
 
 .chart-order[b-lm8ymg7stb] {
@@ -5997,7 +5997,7 @@ body {
     }
 }
 </style[b-lm8ymg7stb] >
-/* _content/FistWeb/Components/Pages/Makeup.razor.rz.scp.css */
+/* /Components/Pages/Makeup.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -6992,7 +6992,7 @@ body {
 }
 
 </style[b-oqkmri18lr] >
-/* _content/FistWeb/Components/Pages/MakeupAmy.razor.rz.scp.css */
+/* /Components/Pages/MakeupAmy.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -7989,7 +7989,7 @@ body {
 }
 
 </style[b-8nvljwcw69] >
-/* _content/FistWeb/Components/Pages/MakeupStudents.razor.rz.scp.css */
+/* /Components/Pages/MakeupStudents.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -8981,7 +8981,7 @@ body {
 }
 
 </style[b-h2ylhoyxeg] >
-/* _content/FistWeb/Components/Pages/MakeupStudentsAmy.razor.rz.scp.css */
+/* /Components/Pages/MakeupStudentsAmy.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -9973,7 +9973,7 @@ body {
 }
 
 </style[b-plxl433bzw] >
-/* _content/FistWeb/Components/Pages/Quanlydo.razor.rz.scp.css */
+/* /Components/Pages/Quanlydo.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -10858,7 +10858,7 @@ body {
     /*end tab4 */
 
     </style[b-auhx5faxoe] >
-/* _content/FistWeb/Components/Pages/QuanlydoAmy.razor.rz.scp.css */
+/* /Components/Pages/QuanlydoAmy.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -11744,7 +11744,7 @@ body {
 
 
 </style[b-e5ujpgredd] >
-/* _content/FistWeb/Components/Pages/Saving.razor.rz.scp.css */
+/* /Components/Pages/Saving.razor.rz.scp.css */
 /* =========================================================
    EXPENSE APP
    Common UI
@@ -13499,7 +13499,7 @@ textarea.form-input[b-ft8s7yi0js] {
         width: 100%;
     }
 }
-/* _content/FistWeb/Components/Pages/Test.razor.rz.scp.css */
+/* /Components/Pages/Test.razor.rz.scp.css */
 <style >
 /* =================== RESET =================== */
 /*
@@ -14375,7 +14375,7 @@ body {
     /*end tab4 */
 
     </style[b-sg4l4d7u8k] >
-/* _content/FistWeb/Components/Pages/TotalDoanhThu.razor.rz.scp.css */
+/* /Components/Pages/TotalDoanhThu.razor.rz.scp.css */
 <style >
 *[b-2zqgo1jzzp] {
     margin: 0;
@@ -14622,7 +14622,7 @@ article.dashboard-page[b-2zqgo1jzzp] {
 }
 
 </style[b-2zqgo1jzzp] >
-/* _content/FistWeb/Components/Pages/TotalDoanhThuAmy.razor.rz.scp.css */
+/* /Components/Pages/TotalDoanhThuAmy.razor.rz.scp.css */
 <style >
 *[b-p5kccdou21] {
     margin: 0;

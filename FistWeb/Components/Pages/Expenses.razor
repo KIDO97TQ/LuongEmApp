@@ -1624,6 +1624,10 @@
         this.checkload = true;
         await LoadExpenses(null, null, int.Parse(this.month));
         this.DataDashboardExpenses = await GetChiTieu.GetChiTieu(null, null, null);
+        this.AllAccounts = await GetUserAcount.GetUserAcount();
+        Accounts = AllAccounts.ToList();
+        AccountsSum = AllAccounts.ToList();
+        await OnInputUserChanged();
         CategoriesModel = await CategoriesInfo.GetCategories();
         this.Categories = this.CategoriesModel.ToDictionary(x => x.Id, x => (x.Icon, x.Name));
         await LoadDashboard(0);
